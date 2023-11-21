@@ -36,5 +36,5 @@ dataobj = Locdata(data_path = "/home/sxr280/DeepLocRNA/DeepLocRNA/data/allRNA/al
 
 
 # emb = embedgenerator(tool = "NT", sequences = xtrain, max_length = 100)
-# embedding = emb.NTgenerator()
+# embedding = emb.NTgenerator() 
 # print(embedding.shape)
