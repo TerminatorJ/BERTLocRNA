@@ -14,7 +14,6 @@ root_dir =  os.getcwd()
 @dataclass
 class embedgenerator:
     tool : str = field(default = "NT", metadata = {"help" : {"The foundation model you want to launch"}})
-    dataset : Union[DatasetDict, None] = field(default = None, metadata = {"help" : {"The hugging face dataset that can be download remotely"}})
     def __post_init__(self):
         #loading the model configuration
         with open(path_join(root_dir, "model.json"), 'r') as json_file:
@@ -53,50 +52,51 @@ class embedgenerator:
 
         return seq_modified, truncated
     
-    def merge_id(self, id_all, id_truncated, truncated_dict : Dict) -> np.ndarray:
+    def merge(self, id_all, id_truncated, truncated_dict : Dict, key) -> np.ndarray:
         count = 0
-        final_ids = []
-        for idx, input_id in enumerate(id_all):
+        final_list = []
+        
+        for idx, input_id in enumerate(id_all[key]):
             if idx in truncated_dict.keys():
-                new_id = np.hstack([input_id, id_truncated[count]])
-                final_ids.append(new_id)
+                new_id = input_id + id_truncated[key][count]
+                final_list.append(new_id)
                 count+=1
             else:
-                final_ids.append(input_id)
-        final_ids = np.vstack(final_ids)
-        return final_ids
+                final_list.append(input_id)
+        
+        return final_list
 
 
 
-    def segment_tokenizer(self, sequences : DatasetDict, kmer = 6):
+    def segment_tokenizer(self, sample : DatasetDict, kmer = 6):
         '''
         The input is a batch of sequences, which allows for faster preprocessing.
         Sequence longer than longest positional embedding should be truncated, the maximun supported sequence length should be 6*1002, which means two segements should be enough.
         '''
-        sequences = DatasetDict["Xall"]
+        sequences = sample["Xall"]
         # Break down the sequence into segments
         effective_length = kmer * self.max_length
         
         seq_modified, truncated = self.filter_sequences(sequences, effective_length)
-
-
+        # print(type(seq_modified))
+        
         ids_all = self.tokenizer(
                     seq_modified,
-                    truncation = True
+                    truncation = True,
                 )
         id_truncated = self.tokenizer(
                     list(truncated.values()),
                     truncation = True
                 )
-        final_ids = self.merge_id(ids_all, id_truncated, truncated)
-        final_ids = torch.tensor(final_ids)
-
-        return final_ids
+        final_merge = list(map(lambda x: self.merge(ids_all, id_truncated, truncated, x), ["input_ids","attention_mask"]))
+        output = dict(input_ids = final_merge[0], attention_mask = final_merge[1])
+        
+        return output
 
     @classmethod
-    def NTgenerator(cls, kmer = 6, tool = tool, dataset = dataset):
-        embed = cls(tool = tool, dataset = dataset)
-        tokenized_datasets = embed.dataset.map(embed.segment_tokenizer, batched = True)
+    def NTgenerator(cls, kmer, dataset :Union[DatasetDict, None]):
+        embed = cls(tool = "NT")
+        tokenized_datasets = dataset.map(embed.segment_tokenizer, batched = True)
         print(tokenized_datasets)
         return tokenized_datasets
         #building data collator
@@ -126,14 +126,11 @@ class embedgenerator:
 @click.command()
 @click.option("-t", "--tool", type = str, default = "NT", help = "The name of the tool you want to use to get the embeddings")
 def main(tool):
-    # sequences = ["ATTCCGATTCCGATTCCG", "ATTTCTCTCTCTCTCTGAGATCGATCGATCGAT"]
-    # emb = embedgenerator(tool = tool, sequences = sequences)
-    # embedding = emb.NTgenerator()
-    # print(embedding.shape)
+
     dataset = load_dataset("TerminatorJ/localization_multiRNA")
     #getting the embedding from NT
-    embeding = embedgenerator.NTgenerator(kmer = 6, tool = tool, dataset = dataset)
-    # embeding.NTgenerator()
+    embeding = embedgenerator.NTgenerator(kmer = 6, dataset = dataset)
+
 
     # print(tool = tool, dataset)
 
