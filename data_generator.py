@@ -10,6 +10,8 @@ import torch
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import Dataset
 import click
+from datasets import Dataset
+import pandas as pd
 #todo: fasta -> dataloader
 #5-fold: optional
 #tiny testing model: mandatory
@@ -27,6 +29,7 @@ class Gene_data:
     def __init__(self):
         self.id_label_seq_Dict = {}
         self.label_id_Dict = {}
+        self.id = []
 
     def load_sequence(self, dataset=None, left=1000, right=3000, predict=False, RNA_type=None):
         with open(dataset, 'r') as f:
@@ -109,31 +112,20 @@ class Locdata(Dataset):
     right : int = field(default = 4000, metadata = {"help": "The right length of the sequence"})
     data_path : str = field(default = "/home/sxr280/DeepLocRNA/DeepLocRNA/data/allRNA/allRNA_all_human_data_seq_mergedm3locall2_pooled_deduplicated3_filtermilncsnsno.fasta", metadata = {"help": "The input fasta, defined as '.fasta'"})
     foldnum : int = field(default = 5, metadata={"help": "setting the fold to split the data, if foldnum = 1, data will be split as train, test, val"})
-    RNA_type : str = field(default = "mRNA", metadata={"help": "which RNA you want to extract and process, allRNA means a mixture of all kinds of RNAs"})
-    save_json: bool = field(default = True, metadata = {"help": "whether saving the data as json file"})
+    RNA_type : str = field(default = "allRNA", metadata={"help": "which RNA you want to extract and process, allRNA means a mixture of all kinds of RNAs"})
+    save_json: bool = field(default = False, metadata = {"help": "whether saving the data as json file"})
     vocabulary_path: str = field(default = "./vocabulary.json", metadata = {"help" : "the vocabulary of RNA species and nucleotide, which can be used to encode and identify RNA types"})
     tiny_test: bool = field(default = False, metadata={"help": "generate a tiny testing dataset"})
     target_num: int = field(default = 9, metadata={"help": "number of target of the samples"})
-    fold: int = field(default = 0, metadata={"help": "The fold you want to get the data"})
-    parts: str = field(default = None, metadata={"help": "the part of the split data you want to get, from ['train', 'test', 'val']"})
+    save_csv : bool = field(default = True, metadata = {"help" : "whether to save the file as .csv for loading the dataset"})
     id_label_seq_Dict = None
+    
 
     
     def __post_init__(self):
+        self.encoding_keys = self.get_dict()
         OUT = self.generate_data()
-        self.Xpad = torch.tensor(OUT[self.fold]["Xpad"]).to(device = device).clone().detach()
-        self.Xtag = torch.tensor(OUT[self.fold]["Xtag"]).to(device = device).clone().detach()
-        self.mask = torch.tensor(OUT[self.fold]["mask"]).to(device = device).clone().detach()
-        self.y = torch.tensor(OUT[self.fold]["Y"]).to(device = device).clone().detach()
-        
 
-
-
-    def __len__(self):
-        return len(self.Xpad)
-    
-    def __getitem__(self, i):
-        return dict(X = self.Xpad[i], Xtag = self.Xtag[i], mask = self.mask[i], label = self.y[i])
 
 
     def get_dict(self):
@@ -165,39 +157,43 @@ class Locdata(Dataset):
         else:
 
             (Train, Test, Val) = self.group_sample(label_id_Dict)
-        # print(Train)
         for fold in range(self.foldnum):
-            if self.parts == "train":
-                Xpad, Xtag, mask, Y = self.fold_data(Train[fold])
-                OUT[fold] = dict(Xpad = Xpad, Xtag = Xtag, mask = mask, Y = Y)
-            elif self.parts == "test":
-                Xpad, Xtag, mask, Y = self.fold_data(Test[fold])
-                OUT[fold] = dict(Xpad = Xpad, Xtag = Xtag, mask = mask, Y = Y)
-            elif self.parts == "val":
-                Xpad, Xtag, mask, Y = self.fold_data(Val[fold])
-                OUT[fold] = dict(Xpad = Xpad, Xtag = Xtag, mask = mask, Y = Y)
-        
+            for partname, part in {"Train":Train, "Test":Test, "Val":Val}.items():
+                Xall, Xtag, ids, Y = self.fold_data(part[fold])
+                OUT.setdefault(partname, {}).setdefault(fold, part)
+                #saving to csv
+                if self.save_csv:
+                    data = {
+                        'idx' : [i for i in range(len(Xall))],
+                        'Xall': Xall,
+                        'Xtag': Xtag,
+                        'ids': ids,
+                        'label': Y
+                    }
+
+                    # Create a DataFrame
+                    print(Y, Xall, ids)
+                    df = pd.DataFrame(data)
+
+                    # Save the DataFrame to a CSV file
+                    df.to_csv(f'./data/{partname}_fold{fold}.csv', index=False)
+
         return OUT
 
 
 
     def fold_data(self, ids) -> Tuple[List[np.ndarray], List[str], List[List[int]]]:
-        encoding_keys = self.get_dict()
-        # print(ids)
-        X_left = [[encoding_keys.index(c) for c in list(self.id_label_seq_Dict[id].values())[0][0]] for id in ids]
-        X_right = [[encoding_keys.index(c) for c in list(self.id_label_seq_Dict[id].values())[0][1]] for id in ids]
-        Xall = [np.concatenate([x,y],axis=-1) for x,y in zip(X_left,X_right)]
-        Xtag = self.get_tag(ids, encoding_keys)
-        Xall = [torch.Tensor(x) for x in Xall]
-        Xpad = pad_sequence(Xall, batch_first=True, padding_value = torch.tensor(encoding_keys.index('UNK')))# [batch, 8000]
-        Y = np.array([self.label_dist(list(self.id_label_seq_Dict[id].keys())[0][:self.target_num]) for id in ids])#question?
 
 
-        mask = np.array([np.concatenate([np.ones(int(len(gene))),np.zeros(self.left + self.right -int(len(gene)))]) for gene in Xall],dtype='float32')
+        X_left = [[c for c in list(self.id_label_seq_Dict[id].values())[0][0]] for id in ids]
+        X_right = [[c for c in list(self.id_label_seq_Dict[id].values())[0][1]] for id in ids]
+        Xall = ["".join(list(np.concatenate([x,y],axis=-1))) for x,y in zip(X_left,X_right)]
+        Xtag = self.get_tag(ids)
+        Y = np.array([list(self.id_label_seq_Dict[id].keys())[0][:self.target_num] for id in ids])#question?
 
-        return Xpad, Xtag, mask, Y
+        return Xall, Xtag, ids, Y
 
-   
+
     def label_dist(self, dist):
         label = []
         for x in dist:
@@ -208,12 +204,12 @@ class Locdata(Dataset):
 
         return label
 
-    def get_tag(self, ids, encoding_keys) -> List[str]:
+    def get_tag(self, ids) -> List[str]:
         tags = []
         for id in ids:
             pattern = r'RNA_category:([^,\n]+)'
             RNA_types = re.findall(pattern, id)
-            RNA_tag = encoding_keys.index(RNA_types[0])
+            RNA_tag = self.encoding_keys.index(RNA_types[0])
             tags.append(RNA_tag)
         return tags
 
@@ -265,26 +261,40 @@ class Locdata(Dataset):
             val_fold_ids[i] = list(ids[val_indices])
             test_fold_ids[i] = list(ids[test_indices])
         return train_fold_ids,val_fold_ids,test_fold_ids
+    
+
+#building the customized Dataset
+
+class Locdataset(Dataset):
+    def __init__(self, train_dataset : Dataset):
+        self.Xall = train_dataset.Xall
+        self.Xpad = train_dataset.Xpad
+        self.Xtag = train_dataset.Xtag
+        self.mask = train_dataset.mask
+        self.ids = train_dataset.ids
+        self.label = train_dataset.y
+        # self.features = ["Xall", "Xpad", "Xtag", "mask", "ids", "label"]
+
+    def __len__(self):
+        return len(self.Xall)
+
+    def __getitem__(self, idx):
+        sample = {
+            "Xall" :  self.Xall[idx],
+            "Xpad" : self.Xpad[idx],
+            "Xtag" : self.Xtag[idx],
+            "mask" : self.mask[idx],
+            "ids" : self.ids[idx],
+            "label" : self.label[idx]
+
+        }
+        return sample
+        
+
+
   
 
 
-#To generate the dataloader
-# class dataloader_generator(Dataset):
-#     def __init__(self,
-#                  data_path : str,
-#                  device: str
-#                  ):
-#         super(Dataset, self).__init__()
-
-        
-#         self.Xpad = torch.tensor(Xpad).to(device = device).clone().detach()
-#         self.Xtag = torch.tensor(Xtag).to(device = device).clone().detach()
-#         self.mask = torch.tensor(mask).to(device = device).clone().detach()
-#         self.Y = torch.tensor(Y).to(device = device).clone().detach()
-#     def __len__(self):
-#         return len(self.Xpad)
-#     def __getitem__(self, i) -> Dict[str, torch.tensor]:
-#         return dict(X = self.Xpad[i], Xtag = self.Xtag[i], mask = self.mask[i], label = self.Y[i])
 
 
 @click.command()
@@ -298,10 +308,11 @@ class Locdata(Dataset):
 
 
 def main(dataset, foldnum, rna_type, save_json, vocabulary_path, parts, fold):
-    dataset_0 = Locdata(data_path = dataset, foldnum = foldnum, RNA_type = rna_type, save_json = save_json, vocabulary_path = vocabulary_path, parts = parts, fold = fold)
-
+    dataset_0 = Locdata(data_path = dataset, foldnum = foldnum, RNA_type = rna_type, save_json = save_json, vocabulary_path = vocabulary_path, parts = parts, fold = fold, encode = False)
+    for k,v in dataset_0[0].items():
+        print(k, v, type(v))
   
-    torch.save(dataset_0 ,path_join(root_dir, "data", f"{parts}data_fold{fold}.pt"))
+    # torch.save(dataset_0 ,path_join(root_dir, "data", f"{parts}data_fold{fold}.pt"))
 
     
 

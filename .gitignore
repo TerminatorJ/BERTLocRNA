@@ -1,0 +1,8 @@
+#ignore the saved data file
+/data/*
+/localization_multiRNA/
+
+
+#ignore the model file
+/model/
+
