@@ -25,6 +25,10 @@ tokenized_datasets, data_collator = embedgenerator.NTgenerator(kmer = 6, dataset
 train_dataloader = DataLoader(tokenized_datasets["train"], shuffle=True, batch_size=8, collate_fn=data_collator)
 eval_dataloader = DataLoader(tokenized_datasets["validation"], batch_size=8, collate_fn=data_collator)
 
+for batch in train_dataloader:
+    break
+print({k: v.shape for k, v in batch.items()})
+
 #Step 3: loading the subsequent model
 
 

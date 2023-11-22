@@ -8,6 +8,8 @@ import json
 from datasets import load_dataset, DatasetDict
 import numpy as np
 import logging
+from torch.utils.data import DataLoader
+
 path_join = lambda *path: os.path.abspath(os.path.join(*path))
 root_dir =  os.getcwd()
 
@@ -71,8 +73,12 @@ class embedgenerator:
         final_list = []
         
         for idx, input_id in enumerate(id_all[key]):
-            if idx in truncated_dict.keys():
+            if str(idx) in truncated_dict.keys():
+                
                 new_id = input_id + id_truncated[key][count]
+                print("left id length:", len(input_id))
+                print("right id length:", len(id_truncated[key][count]))
+                print("new_id length:", len(new_id))
                 final_list.append(new_id)
                 count+=1
             else:
@@ -90,7 +96,7 @@ class embedgenerator:
         # print(type(sequences))
         # Break down the sequence into segments
         effective_length = kmer * self.max_length
-        
+        print("effective_length:", effective_length)
         seq_modified, truncated = self.filter_sequences(sequences, effective_length)
         
         ids_all = self.tokenizer(
@@ -101,8 +107,10 @@ class embedgenerator:
                     list(truncated.values()),
                     truncation = True
                 )
+        # print([len(i) for i in id_truncated["input_ids"]])
         
         final_merge = list(map(lambda x: self.merge_input(ids_all, id_truncated, truncated, x), ["input_ids","attention_mask"]))
+        print([len(i) for i in final_merge[0]])
         output = dict(input_ids = final_merge[0], attention_mask = final_merge[1])
         
         return output
@@ -133,7 +141,7 @@ class embedgenerator:
         
 
 
-        return output
+        # return output
 
 
     @classmethod
@@ -141,7 +149,7 @@ class embedgenerator:
         embed = cls(tool = "NT")
         tokenized_datasets = dataset.map(embed.segment_tokenizer, batched = True)
         # print([len(i) for i in tokenized_datasets["train"]["input_ids"]])
-        print(tokenized_datasets)
+        # print([len(i) for i in tokenized_datasets["train"]["input_ids"]])
         
         #organize the columns of the dataset
         # 'idx', 'Xall', 'Xtag', 'ids', 'label'
@@ -149,7 +157,7 @@ class embedgenerator:
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets.set_format("torch")
         #getting the datacollator
-        data_collator = DataCollatorWithPadding(tokenizer=self.tokenizer)
+        data_collator = DataCollatorWithPadding(tokenizer=embed.tokenizer)
         
         return tokenized_datasets, data_collator
         #building data collator
@@ -187,10 +195,14 @@ def main(tool):
     # print(embedding.shape)
     dataset = load_dataset("TerminatorJ/localization_multiRNA")
     #getting the embedding from NT
-    embeding = embedgenerator.NTgenerator(kmer = 6, dataset = dataset)
+    tokenized_datasets, data_collator = embedgenerator.NTgenerator(kmer = 6, dataset = dataset)
     # embeding.NTgenerator()
+    train_dataloader = DataLoader(tokenized_datasets["train"], shuffle=True, batch_size=8, collate_fn=data_collator)
+    # eval_dataloader = DataLoader(tokenized_datasets["validation"], batch_size=8, collate_fn=data_collator)
 
-    # print(tool = tool, dataset)
+    for batch in train_dataloader:
+        print({k: v.shape for k, v in batch.items()})
+        # print(tool = tool, dataset)
 
 if __name__ == "__main__":
     main()
