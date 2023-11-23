@@ -1,7 +1,6 @@
 {
 "NT": {
-"pretrained_model_name_or_path": "InstaDeepAI/nucleotide-transformer-2.5b-multi-species",
-"trust_remote_code": false
+"pretrained_model_name_or_path": "InstaDeepAI/nucleotide-transformer-2.5b-multi-species"
 },
 "DNABERT2": {
 "pretrained_model_name_or_path": "zhihan1996/DNABERT-2-117M",
