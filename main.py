@@ -11,6 +11,7 @@ from datasets import load_dataset, DatasetDict
 # root_dir =  os.getcwd()
 
 
+
 #Step 1: getting the data
 #saving the csv file for each fold, upload dataset to the remote hugging face dataset repository
 dataobj = Locdata(data_path = "/home/sxr280/DeepLocRNA/DeepLocRNA/data/allRNA/allRNA_all_human_data_seq_mergedm3locall2_pooled_deduplicated3_filtermilncsnsno.fasta", save_csv = True, foldnum = 5)

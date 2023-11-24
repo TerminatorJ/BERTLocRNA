@@ -6,3 +6,7 @@
 #ignore the model file
 /model/
 
+
+#ignore the cluster running file
+./*.sh
+

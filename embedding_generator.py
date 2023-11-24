@@ -84,8 +84,8 @@ class NucleotideTransformerEmbedder:
         if self.v2:
             outs = self.model(tokens_ids, output_hidden_states=True)['hidden_states'][-1].detach().cpu().numpy()
         else:
-            print("tokens_ids:",tokens_ids, tokens_ids.shape)
-            print("attention_mask:", attention_mask, attention_mask.shape)
+            # print("tokens_ids:",tokens_ids, tokens_ids.shape)
+            # print("attention_mask:", attention_mask, attention_mask.shape)
             outs = self.model(tokens_ids,
                               attention_mask=attention_mask,
                               encoder_attention_mask=attention_mask,
@@ -109,7 +109,7 @@ class NucleotideTransformerEmbedder:
         truncated_masks = truncated["attention_mask"].int()
         truncated_embeds = self.get_embed(truncated_ids, truncated_masks)
 
-        print(left_masks.shape, left_embeds.shape, truncated_masks.shape, truncated_embeds.shape)
+        # print(left_masks.shape, left_embeds.shape, truncated_masks.shape, truncated_embeds.shape)
         #concatenate truncate with the truncated_dict
         return left_embeds, truncated_embeds, left_masks.detach().cpu().numpy(), truncated_masks.detach().cpu().numpy()
 
@@ -142,7 +142,7 @@ class NucleotideTransformerEmbedder:
                 right_mask = right_mask[:seq_length2]
                 
                 
-                print("left_embed", type(left_embed), left_embed.shape, "right_embed", type(right_embed), right_embed.shape)
+                # print("left_embed", type(left_embed), left_embed.shape, "right_embed", type(right_embed), right_embed.shape)
                 if len(left_embed.shape) >= 2:
                     new_embed = np.vstack([left_embed, right_embed])
                     embedding_out.append(new_embed)
@@ -150,7 +150,7 @@ class NucleotideTransformerEmbedder:
                     new_embed = np.hstack([left_embed, right_embed])
                     embedding_out.append(list(new_embed))
                 new_mask = np.hstack([left_mask, right_mask])
-                print("new_embed:", new_embed.shape)
+                # print("new_embed:", new_embed.shape)
                 
                 mask_out.append(list(new_mask))
                 count+=1
@@ -164,8 +164,8 @@ class NucleotideTransformerEmbedder:
                     embedding_out.append(list(left_embed))
                 mask_out.append(list(left_mask))
 
-        print([len(i) for i in embedding_out])
-        print("2", len(embedding_out))
+        # print([len(i) for i in embedding_out])
+        # print("2", len(embedding_out))
 
         return embedding_out, mask_out
 
@@ -184,48 +184,60 @@ class NucleotideTransformerEmbedder:
                     padding = "max_length",
                     return_tensors="pt"
                 )
-        truncated = self.tokenizer(
-                    list(truncated_d.values()),
-                    truncation = True,
-                    padding = "max_length",
-                    return_tensors="pt"
-                )
+        if len(truncated_d) > 0:
+            truncated = self.tokenizer(
+                        list(truncated_d.values()),
+                        truncation = True,
+                        padding = "max_length",
+                        return_tensors="pt"
+                    )
+
         
-        left_embeds, truncated_embeds, left_masks, truncated_masks = self.merge_input(left, truncated)
+            left_embeds, truncated_embeds, left_masks, truncated_masks = self.merge_input(left, truncated)
         
         
-        embedding, masks = self.alignment(left_embeds, truncated_embeds, left_masks, truncated_masks, truncated_d)
-        #Align the token with the attention mask
-        input_ids, masks = self.alignment(left["input_ids"].detach().cpu().numpy(), 
-                                   truncated["input_ids"].detach().cpu().numpy(), 
-                                   left["attention_mask"].detach().cpu().numpy(), 
-                                   truncated["attention_mask"].detach().cpu().numpy(), truncated_d)
-        print("input_ids:", input_ids)
-        print("attention_mask:", masks)
-        print("embedding:", len(embedding), embedding[0].shape)
-        output = {"input_ids" : input_ids, "attention_mask" : masks}#array with variant lengths
+            embedding, masks = self.alignment(left_embeds, truncated_embeds, left_masks, truncated_masks, truncated_d)
+            #Align the token with the attention mask
+            input_ids, masks = self.alignment(left["input_ids"].detach().cpu().numpy(), 
+                                    truncated["input_ids"].detach().cpu().numpy(), 
+                                    left["attention_mask"].detach().cpu().numpy(), 
+                                    truncated["attention_mask"].detach().cpu().numpy(), truncated_d)
+        else:
+            input_ids = left["input_ids"].int()
+            masks = left["attention_mask"].int()
+            embedding = self.get_embed(input_ids, masks)
+        # print("input sample size:", sample, type(sample), len(sample["Xall"]))
+        # print("input_ids:", input_ids, type(input_ids), len(input_ids))
+        # print("attention_mask:", masks, type(masks), len(masks))
+        # print("embedding:", embedding, len(embedding), len(embedding))
+        output = {"input_ids" : input_ids, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
         
         return output
 
     
     @classmethod
-    def dataloader(cls, dataset :Union[DatasetDict, None], batch_size :int = 8):
-        embed = cls()
-        tokenized_datasets = dataset.map(embed.segment_embedder, batched = True, batch_size = 10)
+    def save_embed(cls, dataset :Union[DatasetDict, None], batch_size :int = 8):
+        save_path = path_join(root_dir, "data", "NTembedding")
+        if not os.path.exists(save_path):
+            embed = cls()
+            tokenized_datasets = dataset.map(embed.segment_embedder, batched = True, batch_size = batch_size)
+            tokenized_datasets = tokenized_datasets.remove_columns(["idx", "Xall", "Xtag", "ids"])
+            tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
+            print("Saving to disk...")
+            tokenized_datasets.save_to_disk(save_path, format="json", compression="gzip")
+        else:
+            print("loading the dataset...")
+            tokenized_datasets = load_dataset("json", data_files={"train": f"{save_path}/train.json.gz", "val": f"{save_path}/val.json.gz", "test": f"{save_path}/test.json.gz"})
 
-        tokenized_datasets = tokenized_datasets.remove_columns(["idx", "Xall", "Xtag", "ids"])
-        tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
-        tokenized_datasets.set_format("torch")
-        #getting the datacollator
-        data_collator = DataCollatorWithPadding(tokenizer=embed.tokenizer)
-        train_dataloader = DataLoader(tokenized_datasets["train"], shuffle = True, batch_size = batch_size, collate_fn=data_collator)
-        val_dataloader = DataLoader(tokenized_datasets["validation"], shuffle = True, batch_size = batch_size, collate_fn=data_collator)
-        test_dataloader = DataLoader(tokenized_datasets["test"], shuffle = True, batch_size = batch_size, collate_fn=data_collator)
+        return tokenized_datasets
+        # tokenized_datasets.set_format("torch")
+        # data_collator = DataCollatorWithPadding(tokenizer = embed.tokenizer)
+        # train_dataloader = DataLoader(tokenized_datasets["train"], shuffle = True, batch_size = batch_size, data_collator = data_collator)
+        # val_dataloader = DataLoader(tokenized_datasets["validation"], shuffle = True, batch_size = batch_size, data_collator = data_collator)
+        # test_dataloader = DataLoader(tokenized_datasets["test"], shuffle = True, batch_size = batch_size, data_collator = data_collator)
+        # return train_dataloader, val_dataloader, test_dataloader
 
         
-        return train_dataloader, test_dataloader, val_dataloader
-    
-
     
 
 
@@ -240,15 +252,9 @@ def main(tool):
     # print(embedding.shape)
     dataset = load_dataset("TerminatorJ/localization_multiRNA")
     #getting the embedding from NT
-    train_dataloader, test_dataloader, val_dataloader = NucleotideTransformerEmbedder.dataloader(dataset, batch_size = 8)
-    # tokenized_datasets, data_collator = embedgenerator.NTgenerator(kmer = 6, dataset = dataset)
-    # embeding.NTgenerator()
-    # train_dataloader = DataLoader(tokenized_datasets["train"], shuffle=True, batch_size=8, collate_fn=data_collator)
-    # eval_dataloader = DataLoader(tokenized_datasets["validation"], batch_size=8, collate_fn=data_collator)
+    tokenized_datasets = NucleotideTransformerEmbedder.save_embed(dataset, batch_size = 100)
 
-    for batch in train_dataloader:
-        print({k: v.shape for k, v in batch.items()})
-        # print(tool = tool, dataset)
+
 
 if __name__ == "__main__":
     main()
