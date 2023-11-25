@@ -1,6 +1,7 @@
 #ignore the saved data file
 /data/*
 /localization_multiRNA/
+/embeddings/
 
 
 #ignore the model file
@@ -9,4 +10,5 @@
 
 #ignore the cluster running file
 ./*.sh
+./*.out
 

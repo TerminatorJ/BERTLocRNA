@@ -12,20 +12,9 @@ from torch.utils.data import DataLoader
 from utils import *
 from torch import Tensor
 
-path_join = lambda *path: os.path.abspath(os.path.join(*path))
 root_dir =  os.getcwd()
-# device =  torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# class TemplateEmbed:
-#     '''
-#     This is the template for all embedder, all of them should process the sequence in the following methods, getting the 
-#     embedding in according paradims.
-#     '''
-    
-#     def __init__(self, max_seq_len : int = None, max_tokens : int = None, tool :str = "aa"):
-#         self.max_seq_len = max_seq_len
-#         self.max_tokens = max_tokens
-#         self.tool = tool
+device =  torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     
 # https://www.biorxiv.org/content/10.1101/2023.01.11.523679v2.full
@@ -81,11 +70,13 @@ class NucleotideTransformerEmbedder:
         # super().__init__(max_seq_len = self.max_seq_len, max_tokens = self.max_tokens, tool = self.tool)
         
     def get_embed(self, tokens_ids, attention_mask) -> np.ndarray:
+        tokens_ids = tokens_ids.to(device)
+        attention_mask = attention_mask.to(device)
+        self.model = self.model.to(device)
+
         if self.v2:
             outs = self.model(tokens_ids, output_hidden_states=True)['hidden_states'][-1].detach().cpu().numpy()
         else:
-            # print("tokens_ids:",tokens_ids, tokens_ids.shape)
-            # print("attention_mask:", attention_mask, attention_mask.shape)
             outs = self.model(tokens_ids,
                               attention_mask=attention_mask,
                               encoder_attention_mask=attention_mask,
@@ -206,10 +197,7 @@ class NucleotideTransformerEmbedder:
             input_ids = left["input_ids"].int()
             masks = left["attention_mask"].int()
             embedding = self.get_embed(input_ids, masks)
-        # print("input sample size:", sample, type(sample), len(sample["Xall"]))
-        # print("input_ids:", input_ids, type(input_ids), len(input_ids))
-        # print("attention_mask:", masks, type(masks), len(masks))
-        # print("embedding:", embedding, len(embedding), len(embedding))
+
         output = {"input_ids" : input_ids, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
         
         return output
@@ -217,25 +205,17 @@ class NucleotideTransformerEmbedder:
     
     @classmethod
     def save_embed(cls, dataset :Union[DatasetDict, None], batch_size :int = 8):
-        save_path = path_join(root_dir, "data", "NTembedding")
+        save_path = path_join(root_dir, "embeddings", "NTembedding")
         if not os.path.exists(save_path):
             embed = cls()
             tokenized_datasets = dataset.map(embed.segment_embedder, batched = True, batch_size = batch_size)
-            tokenized_datasets = tokenized_datasets.remove_columns(["idx", "Xall", "Xtag", "ids"])
-            tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
-            print("Saving to disk...")
-            tokenized_datasets.save_to_disk(save_path, format="json", compression="gzip")
+            tokenized_datasets.save_to_disk(save_path)
         else:
             print("loading the dataset...")
-            tokenized_datasets = load_dataset("json", data_files={"train": f"{save_path}/train.json.gz", "val": f"{save_path}/val.json.gz", "test": f"{save_path}/test.json.gz"})
+            tokenized_datasets = load_dataset(save_path)
 
         return tokenized_datasets
-        # tokenized_datasets.set_format("torch")
-        # data_collator = DataCollatorWithPadding(tokenizer = embed.tokenizer)
-        # train_dataloader = DataLoader(tokenized_datasets["train"], shuffle = True, batch_size = batch_size, data_collator = data_collator)
-        # val_dataloader = DataLoader(tokenized_datasets["validation"], shuffle = True, batch_size = batch_size, data_collator = data_collator)
-        # test_dataloader = DataLoader(tokenized_datasets["test"], shuffle = True, batch_size = batch_size, data_collator = data_collator)
-        # return train_dataloader, val_dataloader, test_dataloader
+
 
         
     
@@ -252,7 +232,7 @@ def main(tool):
     # print(embedding.shape)
     dataset = load_dataset("TerminatorJ/localization_multiRNA")
     #getting the embedding from NT
-    tokenized_datasets = NucleotideTransformerEmbedder.save_embed(dataset, batch_size = 100)
+    tokenized_datasets = NucleotideTransformerEmbedder.save_embed(dataset, batch_size = 2)
 
 
 

@@ -1,0 +1,44 @@
+
+RNA_order: ["Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
+
+hydra: 
+  mode: MULTIRUN
+  sweeper:
+   params:
+    model:  basic_model,
+            nucleotidetransformer,
+            parnet
+
+basic_model:
+  nb_classes: 9
+  dim_attention: 80#
+  headnum: 3
+  nb_filters: 32
+  filters_length1: 5
+  filters_length2: 20
+  filters_length3: 60
+  pooling_size: 8
+  drop_input: 0.25
+  drop_cnn: 0.25
+  drop_flat: 0.25#
+  W1_regularizer: 0.001
+  Att_regularizer_weight: 0.001#
+  fc_dim: 100#
+  normalizeatt: True#
+  attmod: smooth#
+  sharp_beta: 1
+  batchnorm: False
+  predict: True
+  activation: gelu#
+  activation_att: tanh
+  input_dim: 5
+  attention: True#
+  pool_type: max 
+  fusion: False
+  RNA_dim: 4#
+  optimizer_cls: torch.optim.Adam#
+  lr: 0.001#
+  weight_decay: 1e-5#
+  gradient_clip = True#
+
+

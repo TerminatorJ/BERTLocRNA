@@ -1,5 +1,6 @@
 from typing import List, Tuple, Dict, Union
 import numpy as np
+import os
 
 def filter_sequences(seqs, effective_length):
     truncated = {}
@@ -12,6 +13,8 @@ def filter_sequences(seqs, effective_length):
             seq_modified.append(seq)
 
     return seq_modified, truncated
+
+path_join = lambda *path: os.path.abspath(os.path.join(*path))
 
 
 
