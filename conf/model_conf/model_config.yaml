@@ -1,0 +1,40 @@
+
+RNA_order: ["Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
+
+hydra: 
+  mode: MULTIRUN
+  sweeper:
+   params:
+    model:  basic_model,
+            nucleotidetransformer,
+            parnet,
+            pytorch_lightning
+
+basic_model:
+  nb_classes: 9#
+  dim_attention: 80#
+  headnum: 3#
+  drop_flat: 0.25#
+  Att_regularizer_weight: 0.001#
+  fc_dim: 100#
+  normalizeatt: True#
+  attmod: smooth#
+  sharp_beta: 1#
+  activation: gelu#
+  activation_att: tanh#
+  attention: True#
+  RNA_dim: 4#
+
+pytorch_lightning:
+  optimizer_cls: torch.optim.Adam#
+  lr: 0.001#
+  weight_decay: 1e-5#
+  gradient_clip: True#
+
+nucleotidetransformer:
+  pretrained_model_name_or_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
+  trust_remote_code: False
+
+
+
+

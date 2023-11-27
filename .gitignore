@@ -5,7 +5,7 @@
 
 
 #ignore the model file
-/model/
+/saved_model/
 
 
 #ignore the cluster running file

@@ -2,7 +2,7 @@ from data_generator import Locdata, Locdataset
 import torch
 from torch.utils.data import DataLoader
 import os
-from embedding_generator import embedgenerator
+from embedding_generator import NucleotideTransformerEmbedder
 from datasets import load_dataset, DatasetDict
 #TODO: 1) split the data 2) Dataset format
 
@@ -18,11 +18,10 @@ dataobj = Locdata(data_path = "/home/sxr280/DeepLocRNA/DeepLocRNA/data/allRNA/al
 
 #Step 2: getting the embedding
 dataset = load_dataset("TerminatorJ/localization_multiRNA")
-tokenized_datasets, data_collator = embedgenerator.NTgenerator(kmer = 6, dataset = dataset)
+tokenized_datasets = NucleotideTransformerEmbedder.get_embed(dataset, batch_size = 2)
 
 
 #Step 3: building the dataloder
-
 train_dataloader = DataLoader(tokenized_datasets["train"], shuffle=True, batch_size=8, collate_fn=data_collator)
 eval_dataloader = DataLoader(tokenized_datasets["validation"], batch_size=8, collate_fn=data_collator)
 
