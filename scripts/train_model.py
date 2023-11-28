@@ -8,8 +8,9 @@ import os
 import torch
 import sys
 sys.path.append("../")
-from utils.trainer import Trainner
+from utils.trainer import MyTrainer
 from BERTLocRNA.models.base_model import CustomizedModel
+from datasets import load_dataset, DatasetDict
 
 sys.path.append("../BERTLocRNA") #ensure the BERTLocRAN is on my sys path
 
@@ -21,28 +22,31 @@ def train(cfg : DictConfig):
     wandb.config = OmegaConf.to_container(
         cfg, resolve=True, throw_on_missing=True
         )
-    # mkdir output_dir 
-    os.makedirs(f'{cfg.output_dir}/checkpoints/', exist_ok=True)
     print("output dir of this job:", cfg.output_dir)
     # initialize wandb and document the configuration
-    run = wandb.init(**cfg.wandb, dir = cfg.output_dir, config = cfg)
+    wandb.init(**cfg.wandb, dir = cfg.output_dir, config = cfg)
     # save the config use this task to specific path
     OmegaConf.save(cfg, f"{cfg.output_dir}/train_config.yaml")
 
     #loading the model
-    model = hydra.utils.instantiate(cfg.model, config = cfg.model.config).to(device)
+    model = hydra.utils.instantiate(cfg.base_model, config = cfg.base_model.config).to(device)
 
     #loading the dataset
-    train_loader, val_loader, test_loader = hydra.utils.instantiate(cfg.data) # instantiate dataloaders, should return tensor
-
+    embedder = hydra.utils.instantiate(cfg[cfg.embedder])
+    #generating the embedding using different embedders
+    #loading the dataset for a certain task
+    dataset = load_dataset(**cfg[cfg.task])
+    #generating the embedding and save them
+    train_dataloader, test_dataloader, eval_dataloader = embedder(dataset)
+    
     #instantiate the trainner
-    trainer = Trainner(model = model)
+    Trainer = MyTrainer(model = model, config = cfg.Trainer.config)
 
     #trainning the data
-    trainer.train(train_loader, val_loader, test_loader, cfg.params.epochs, cfg.params.load_checkpoint)
+    Trainer.train(train_dataloader, eval_dataloader)
     
     # test 
-    trainer.test(test_loader, overwrite=False)
+    Trainer.test(test_dataloader)
 
 if __name__ == "__main__":
     train()

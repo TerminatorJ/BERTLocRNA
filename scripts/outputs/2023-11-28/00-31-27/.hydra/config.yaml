@@ -1,0 +1,11 @@
+batch_size: 2
+model: nucleotidetransformer
+task: RNAlocalization
+RNAlocalization:
+  path: TerminatorJ/localization_multiRNA
+nucleotidetransformer:
+  _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
+  model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
+parnet:
+  _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
+  model_path: BERTLocRNA/RBPLLM/Parnet

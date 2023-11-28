@@ -1,7 +1,4 @@
 
-
-
-from hier_attention_mask_torch import Attention_mask
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
@@ -13,8 +10,13 @@ import os
 import numpy as np
 import sys
 sys.path.append("../")
-from BERTLocRNA.utils.NTEmbedder import *
-from models.base_model import CustomizedModel
+from pytorch_lightning import Trainer
+from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
+from torchinfo import summary
+from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score,roc_auc_score,accuracy_score,matthews_corrcoef,f1_score,precision_score,recall_score
+from typing import List, Tuple, Dict, Union
+import pandas as pd
 
 #make the code reproducible 
 # Set random seed for NumPy
@@ -28,17 +30,14 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(42)
 
 device = torch.device("cuda" if torch.cuda.is_available else "cpu")
-
-parent_directory = os.path.dirname(os.getcwd())
-with open(path_join(parent_directory, "vocabulary.json"), 'r') as json_file:
-    vocab = json.load(json_file)
-
+gpus = torch.cuda.device_count()
+path_join = lambda *path: os.path.abspath(os.path.join(*path))
 
 class LightningModel(pl.LightningModule):
-    def __init__(self, config, class_weights = None):
+    def __init__(self, model, class_weights = None):
         super(LightningModel, self).__init__()
         #only used to extract the RNA types
-        self.network = CustomizedModel(config).to(device)
+        self.network = model.to(device)
         self.class_weights = class_weights
         self.epoch_start_time = None
         self.loss_fn = nn.BCELoss()
@@ -127,7 +126,7 @@ class LightningModel(pl.LightningModule):
 
     def training_step(self, batch, **kwargs):
 
-        x, mask, RNA_type, y = batch
+        x, mask, RNA_type, y = batch["embedding"], batch["attention_mask"], batch["RNA_type"], batch["labels"]
         y = y.to(torch.float32)
         y_pred = self.forward(x, mask, RNA_type)
 
@@ -171,7 +170,7 @@ class LightningModel(pl.LightningModule):
         return accuracy
     def validation_step(self, batch):
 
-        x, mask, RNA_type, y= batch
+        x, mask, RNA_type, y=  batch["embedding"], batch["attention_mask"], batch["RNA_type"], batch["labels"]
         y = y.to(torch.float32)
         y_pred = self.forward(x, mask, RNA_type)
 
@@ -211,16 +210,163 @@ class LightningModel(pl.LightningModule):
 
 
 
-class Trainner:
-    def __init__(self, model):
-        
-    def train(self, train_loader, test_loader, val_loader):
-        trainer = Trainer(accelerator="gpu", strategy='ddp', max_epochs = 500, devices = self.gpu_num, precision=32, num_nodes = 1, 
-                logger = wandb_logger,
-                log_every_n_steps = 1,
-                callbacks = make_callback(OUTPATH, "%s_%s_%s_%s_%s_%s_%s" % (RNA_type, str(self.RNA_tag), release_layer, self.fold, self.species, self.flatten_tag, str(run_value)), 20))
-        trainer.fit(model, dataloader_train, dataloader_val)
-    def test(self, ):
+class MyTrainer:
+    def __init__(self, model, config):
+        self.config = config
+        self.plmodel = LightningModel(model, class_weights = self.config.class_weights)
+        self.wandb_logger = WandbLogger(log_model = "all")
+        self.ckpt_path = path_join(self.config.output_dir, "checkpoints")
+        self.pred = None
+        self.test = None
+
+    def train(self, train_loader, val_loader):
+        samples = next(iter(train_loader))
+        embed = samples["embedding"][:2].shape
+        mask = samples["attention_mask"][:2].shape
+        RNA_types = samples["RNA_type"][:2].shape
+        summary(self.plmodel, input_size = [embed, mask, RNA_types], device = device)
+        trainer = Trainer(accelerator = self.config.accelerator, strategy = self.config.strategy, max_epochs = self.config.max_epochs, devices = gpus, precision = self.config.precison, num_nodes = self.config.num_nodes, 
+                logger = self.wandb_logger,
+                log_every_n_steps = self.config.log_every_n_steps,
+                callbacks = self.make_callback())
+        trainer.fit(self.plmodel, train_loader, val_loader)
+
+    def make_callback(self):
+
+        callbacks = [
+            ModelCheckpoint(dirpath = self.ckpt_path, filename = "checkpoints_best", save_top_k = 1, verbose = True, mode = "min", monitor = "val_loss"),
+            EarlyStopping(monitor = "val_loss", min_delta = 0.00, patience = self.config.patience, verbose = True, mode = "min")
+            ]
+        return callbacks
+    
+    def load_checkpoint(self):
+       
+        checkpoint = torch.load(path_join(self.ckpt_path, "checkpoints_best.ckpt"))
+        model_state = checkpoint['state_dict']
+        self.plmodel.load_state_dict(model_state)
+        return self.plmodel #model with new parameters
+    
+    def test(self, test_loader):
+
+        self.plmodel = self.load_checkpoint().network
+        self.plmodel.eval()
+        self.get_metrics_all(test_loader)
+
+
+    def get_metrics_all(self, dataloader_test, model):
+        all_y_pred = []
+        all_y_test = []
+        all_RNA_types = []
+        for idx, batch in enumerate(dataloader_test):
+            X_test, X_mask, RNA_type, y_test = batch["embedding"], batch["attention_mask"], batch["RNA_type"], batch["labels"]
+            y_pred = self.plmodel.forward(X_test, X_mask, RNA_type)
+            y_pred = y_pred.detach().cpu().numpy()
+            y_test = y_test.detach().cpu().numpy()
+            RNA_type = RNA_type.detach().cpu().numpy()
+            all_y_pred.append(y_pred)
+            all_y_test.append(y_test)
+            all_RNA_types.append(RNA_type)
+        y_test = np.concatenate(all_y_test, axis=0)
+        y_pred = np.concatenate(all_y_pred, axis=0)
+        RNA_types = np.concatenate(all_RNA_types, axis=0)
+        RNA_types = [self.config.RNA_order[i] for i in RNA_types]
+        #split the data with RNA types
+        RNA_libs = ["lncRNA", "miRNA", "snRNA", "snoRNA", "mRNA"]
+        dfs = []
+        for RNA in RNA_libs:
+            idx = np.where(np.isin(RNA_types, [RNA]))[0]
+            if RNA == "lncRNA":
+                idx = np.where(np.isin(RNA_types, ["lncRNA", "lincRNA"]))[0]
+            
+            try:
+                y_pred_sub = y_pred[idx]
+                y_test_sub = y_test[idx]
+                best_t = self.find_best_t(y_pred_sub, y_test_sub)
+                df = self.cal_metrics(y_test[idx], y_pred[idx], RNA, best_t)
+                dfs.append(df)
+                
+            except:
+                print("empty:", RNA)
+        all_df = pd.concat(dfs, axis=0, ignore_index=True)
+
+        all_df.to_csv(path_join(self.config.ourput_dir, "all_metrics.csv"), index = False)
+        return all_df
+    def cal_metrics(self, y_test : np.ndarray, y_pred : np.ndarray, RNA : str, best_t : Dict):
+        num_classes = y_test.shape[1]
+        metrics_data = []
+        mcc_sum = 0
+        for c in range(num_classes):  # calculate one by one
+            t = best_t[c]
+            try:
+                average_precision_c = average_precision_score(y_test[:, c], y_pred[:, c])
+                roc_auc_c = roc_auc_score(y_test[:, c], y_pred[:, c])
+            except ValueError:
+                average_precision_c = np.nan
+                roc_auc_c = np.nan
+
+            y_pred_bi = np.where(y_pred[:, c] > t, 1, 0)
+            mcc_c = matthews_corrcoef(y_test[:, c], y_pred_bi)
+            mcc_sum += mcc_c
+            f1_score_c = f1_score(y_test[:, c], y_pred_bi)
+            precision_c = precision_score(y_test[:, c], y_pred_bi)
+            recall_c = recall_score(y_test[:, c], y_pred_bi)
+            acc_c = accuracy_score(y_test[:, c], y_pred_bi)
+
+            metrics_data.append({
+                'RNA': RNA,
+                'Compartment': f'Compartment_{c}',  # You might want to replace this with the actual compartment name
+                'AveragePrecision': average_precision_c,
+                'ROCAUC': roc_auc_c,
+                'MatthewsCorrCoef': mcc_c,
+                'F1Score': f1_score_c,
+                'Precision': precision_c,
+                'Recall': recall_c,
+                'Accuracy': acc_c
+            })
+
+        metrics_data.append({
+            'RNA': RNA,
+            'Compartment': 'micro',
+            'AveragePrecision': average_precision_score(y_test, y_pred, average='micro'),
+            'ROCAUC': roc_auc_score(y_test, y_pred, average='micro'),
+            'MatthewsCorrCoef': matthews_corrcoef(y_test.ravel(), y_pred_bi.ravel()),
+            'F1Score': f1_score(y_test.ravel(), y_pred_bi.ravel(), average='micro'),
+            'Precision': precision_score(y_test.ravel(), y_pred_bi.ravel(), average='micro'),
+            'Recall': recall_score(y_test.ravel(), y_pred_bi.ravel(), average='micro'),
+            'Accuracy': accuracy_score(y_test.ravel(), y_pred_bi.ravel())
+        })
+
+        metrics_data.append({
+            'RNA': RNA,
+            'Compartment': 'macro',
+            'AveragePrecision': average_precision_score(y_test, y_pred, average='macro'),
+            'ROCAUC': roc_auc_score(y_test, y_pred, average='macro'),
+            'MatthewsCorrCoef': mcc_sum / num_classes,
+            'F1Score': f1_score(y_test, y_pred_bi, average='macro'),
+            'Precision': precision_score(y_test, y_pred_bi, average='macro'),
+            'Recall': recall_score(y_test, y_pred_bi, average='macro'),
+            'Accuracy': accuracy_score(y_test, y_pred_bi, average='macro')
+        })
+
+        df = pd.DataFrame(metrics_data)
+        return df
+
+    def get_mcc(self, t):
+        mcc = matthews_corrcoef(self.test, [1 if i>t else 0 for i in self.pred])
+        return mcc
+    def find_best_t(self, y_pred : List, y_test : List) -> None:
+        print("Calculating the best threshold for each target ...")
+        num_classes = y_test.shape[1]
+        ts = np.linspace(0, 1, 50)
+        best_t = {}
+        for c in range(num_classes):#calculate one by one
+            self.pred = y_pred[:,c]
+            self.test = y_test[:,c]
+            max_idx = np.argmax(np.array(map(self.get_mcc, ts)))
+            max_t = ts[max_idx]
+            best_t[c] = max_t
+        return best_t
+
 
 
         

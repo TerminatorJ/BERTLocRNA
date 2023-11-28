@@ -1,28 +1,31 @@
 defaults:
-  - launcher joblib
-  - _self_
-hydra : 
-  mode : MULTIRUN
+ - _self_
+
+hydra: 
+  mode: MULTIRUN
   sweeper:
     params:
-      model:  
-        - nucleotidetransformer
-        - parnet
-      task: 
-        - RNAlocalization
-      
+      embedder: parnet,
+             nucleotidetransformer
+             
+      task:  RNAlocalization
 
 
-batch_size: 2
+embedder : parnet
+task : RNAlocalization
+
 RNAlocalization:
   path: TerminatorJ/localization_multiRNA
 
-
 nucleotidetransformer:
-  __target__: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
+  _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
-
-
+  batch_size: 2
+  dataloader: false
+  max_length: 8000
 parnet:
-  __target__: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
-  model_path: BERTLocRNA/RBPLLM/Parnet
+  _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
+  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  batch_size: 50
+  dataloader: false
+  max_length: 8000

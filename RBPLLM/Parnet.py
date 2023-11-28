@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch
 from torch import Tensor
 import os
+import torch.nn.functional as F
 
 device =  torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -32,7 +33,7 @@ class ParnetTokenizer(baseclass):
         except FileNotFoundError:
             raise FileNotFoundError(f"Model file not found: {model_path}")
 
-    def output(self, sequences : List[str], return_tensors = "pt") -> List[int]:
+    def output(self, sequences : List[str], return_tensors = "pt", max_length = 8000) -> List[int]:
         assert len(sequences) >= 2, "Please ensure that the number of input sequences should larger than 2"
         encoding_keys = list(self.vocabulary.keys())
         tokens_list = []
@@ -40,9 +41,16 @@ class ParnetTokenizer(baseclass):
             tokens = [encoding_keys.index(i) for i in seq]
             tokens_list.append(tokens)
         if return_tensors == "pt":
-            tokens_list = torch.tensor(tokens_list)
-        
-        return tokens_list
+            padded_sequences = [F.pad(torch.tensor(seq), pad=(0, max_length - len(seq))) for seq in tokens_list]
+            # Convert to a tensor
+            tokens_list = torch.stack(padded_sequences)
+            masks = [torch.tensor([1] * len(seq) + [0] * (max_length - len(seq))) for seq in tokens_list]
+            masks = torch.stack(masks)
+        else:
+            raise ValueError("you must set return_tensors as pt to get the consistent tensor shape")
+
+
+        return tokens_list, masks
     
 class Parnet_model(nn.Module):
     def __init__(self, model_path):
@@ -56,6 +64,7 @@ class Parnet_model(nn.Module):
             raise FileNotFoundError(f"Checkpoint file not found: {self.ckp_path}")
         self.embedding_layer = nn.Embedding(num_embeddings=len(self.vocabulary.keys()),embedding_dim=len(list(self.vocabulary.values())[0]),_weight=torch.tensor(list(self.vocabulary.values())))
         self.parnet_model.eval()
+    
     def forward(self, x : Tensor) -> Tensor:
         x = x.long()
         embedding = self.embedding_layer(x) #[batch, T, 4]
@@ -67,7 +76,7 @@ class Parnet_model(nn.Module):
 
 class ParnetModel(baseclass):
     def from_pretrained(self, model_path : str, *args, **kwargs):
-        self.model = Parnet_model(model_path)
+        self.model = Parnet_model(model_path).to(device)
         
     
     def output(self, sequences : Tensor, *args, **kwargs) -> Tensor:

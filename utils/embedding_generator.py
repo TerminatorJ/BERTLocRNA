@@ -8,12 +8,11 @@ import json
 from datasets import load_dataset, DatasetDict
 import numpy as np
 import logging
-from torch.utils.data import DataLoader
-from BERTLocRNA.utils.NTEmbedder import *
-from torch import Tensor
 import sys
-sys.path.append("../")
-from BERTLocRNA.RBPLLM.parnet import ParnetModel, ParnetTokenizer
+sys.path.append("../../")
+from torch.utils.data import DataLoader
+from torch import Tensor
+from BERTLocRNA.RBPLLM.Parnet import ParnetModel, ParnetTokenizer
 
 root_dir =  os.getcwd()
 
@@ -112,8 +111,8 @@ class baseclass:
 
     
 
-    def __call__(self, dataset :Union[DatasetDict, None], batch_size = 2,  *args, **kwargs):
-        return self.process(dataset, batch_size = batch_size)
+    def __call__(self, dataset :Union[DatasetDict, None], dataloader : bool, *args, **kwargs):
+        return self.process(dataset, dataloader)
 
 
 
@@ -126,7 +125,7 @@ class NucleotideTransformerEmbedder(baseclass):
     """
     Embed using the Nuclieotide Transformer (NT) model https://www.biorxiv.org/content/10.1101/2023.01.11.523679v2.full
     """
-    def load_model(self, model_path : str, **kwargs):
+    def load_model(self, model_path : str, batch_size : int = 8, dataloader : bool = False, **kwargs):
 
         self.embedder_name = "NT"
         local_path = path_join(root_dir, "..", "saved_model", self.embedder_name)
@@ -163,6 +162,8 @@ class NucleotideTransformerEmbedder(baseclass):
                 self.v2 = False
    
         self.model.eval()
+        self.batch_size = batch_size
+        self.dataloader = dataloader
 
 
         
@@ -231,28 +232,47 @@ class NucleotideTransformerEmbedder(baseclass):
 
     
 
-    def process(self, dataset :Union[DatasetDict, None], batch_size :int = 8):
-        save_path = path_join(root_dir, "embeddings", self.embedder_name + "embedding")
+    def process(self, dataset :Union[DatasetDict, None]):
+        save_path = path_join(root_dir, "..", "embeddings", self.embedder_name + "embedding")
         if not os.path.exists(save_path):
-            tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = batch_size)
-            tokenized_datasets.save_to_disk(save_path)
+            tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
+            tokenized_datasets.save_to_disk(save_path, format="arrow", compress="gz")
         else:
             print("loading the dataset...")
             tokenized_datasets = load_dataset(save_path)
-
-        return tokenized_datasets
+        tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
+        tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
+        tokenized_datasets.set_format("torch")
+        if self.dataloader:
+            train_dataloader = DataLoader(
+                                            tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size
+                                        )
+            eval_dataloader = DataLoader(
+                                            tokenized_datasets["validation"], batch_size=self.batch_size
+                                        )
+            test_dataloader = DataLoader(
+                                            tokenized_datasets["test"], batch_size=self.batch_size
+                                        )
+            return train_dataloader, test_dataloader, eval_dataloader
+        else:
+            return tokenized_datasets
 
 
 
 class ParnetEmbedder(baseclass):
 
-    def load_model(self, model_path : str, **kwargs):
+    def load_model(self, model_path : str, 
+                        batch_size : int = 8, 
+                        dataloader : bool = False, 
+                        max_length : int = 8000, **kwargs):
         self.tokenizer = ParnetTokenizer(model_path)
         self.model = ParnetModel(model_path)
         self.embedder_name = "Parnet"
+        self.batch_size = batch_size
+        self.dataloader = dataloader
+        self.max_length = max_length
     def get_embed(self, tokens_ids) -> np.ndarray:
         tokens_ids = tokens_ids.to(device)
-        self.model = self.model.to(device)
         outs = self.model(tokens_ids).detach().cpu().numpy() # get last hidden state
 
         return outs
@@ -260,28 +280,44 @@ class ParnetEmbedder(baseclass):
         sequences = sample["Xall"]
         # Break down the sequence into segments, and ducument the truncated sequences
 
-        input_ids = self.tokenizer(
+        input_ids, masks = self.tokenizer(
                     sequences,
-                    return_tensors="pt"
+                    return_tensors="pt",
+                    max_length = self.max_length
                 ).int()
 
         embedding = self.get_embed(input_ids)
 
-        output = {"input_ids" : input_ids, "embedding" : embedding}#array with variant lengths
+        output = {"input_ids" : input_ids, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
         
         return output
 
-    def process(self, dataset :Union[DatasetDict, None], batch_size :int = 8):
+    def process(self, dataset :Union[DatasetDict, None]):
         
-        save_path = path_join(root_dir, "embeddings", self.embedder_name + "embedding")
+        save_path = path_join(root_dir, "..", "embeddings", self.embedder_name + "embedding")
+        print("embedding will be saved at:", save_path)
         if not os.path.exists(save_path):
-            tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = batch_size)
-            tokenized_datasets.save_to_disk(save_path)
+            tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
+            tokenized_datasets.save_to_disk(save_path, format="arrow", compress="gz")
         else:
             print("loading the dataset...")
             tokenized_datasets = load_dataset(save_path)
-
-        return tokenized_datasets
+        tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
+        tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
+        tokenized_datasets.set_format("torch")
+        if self.dataloader:
+            train_dataloader = DataLoader(
+                                            tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size
+                                        )
+            eval_dataloader = DataLoader(
+                                            tokenized_datasets["validation"], batch_size=self.batch_size
+                                        )
+            test_dataloader = DataLoader(
+                                            tokenized_datasets["test"], batch_size=self.batch_size
+                                        )
+            return train_dataloader, test_dataloader, eval_dataloader
+        else:
+            return tokenized_datasets
 
     
 
