@@ -12,3 +12,6 @@
 ./*.sh
 ./*.out
 
+
+#any log file
+./scripts/outputs/
