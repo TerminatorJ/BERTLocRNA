@@ -1,0 +1,268 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 243/243 [00:00<00:00, 407197.71it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 101224.93it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 255912.37it/s]
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+['>110100000,Gene_ID:NCBI:64240,Refseq_ID:NM_022436,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110000100,Gene_ID:NCBI:2055,Refseq_ID:NM_001034061,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110000000,Gene_ID:NCBI:91683,Refseq_ID:NM_001177880,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:728409,Refseq_ID:NR_024102.1,Species:Homo sapiens,RNA_category:lncRNA,Source:AllSeq', '>010110000,Gene_ID:NCBI:85014,Refseq_ID:NM_032928,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>111100100,Gene_ID:NCBI:9249,Refseq_ID:NM_001319225,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000100,Gene_ID:NCBI:54463,Refseq_ID:NM_001034850,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110000000,Gene_ID:NCBI:646600,Refseq_ID:NR_126326.1,Species:Homo sapiens,RNA_category:lncRNA,Source:AllSeq'] ['110100000', '110000100', '110000000', '010000000', '010110000', '111100100', '010000100', '110000000']
+embeddings after padding: torch.Size([8, 256, 8000])
+embeddings after transport: torch.Size([8, 256, 8000]) tensor([[[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [3.4964, 3.6949, 3.8419,  ..., 3.3819, 3.4362, 3.6356]],
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [2.5011, 2.2057, 2.0561,  ..., 3.3819, 3.4362, 3.6356]],
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [4.0020, 3.4293, 3.9709,  ..., 3.3819, 3.4362, 3.6356]],
+        ...,
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [2.6550, 3.4590, 3.3410,  ..., 3.3819, 3.4362, 3.6356]],
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [2.2513, 3.2927, 3.2541,  ..., 3.3819, 3.4362, 3.6356]],
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [3.0500, 2.8008, 4.2499,  ..., 3.3819, 3.4362, 3.6356]]],
+       dtype=torch.float64)
+self.tokenizer.pad_token_id 0
+masks [tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1])]
+masks after padding tensor([[[1, 1, 1,  ..., 1, 1, 1]],
+        [[1, 1, 1,  ..., 1, 1, 1]],
+        [[1, 1, 1,  ..., 1, 1, 1]],
+        ...,
+        [[1, 1, 1,  ..., 1, 1, 1]],
+        [[1, 1, 1,  ..., 1, 1, 1]],
+        [[1, 1, 1,  ..., 1, 1, 1]]])
+labels: ['110100000', '110000100', '110000000', '010000000', '010110000', '111100100', '010000100', '110000000']
+int labels [tensor([1, 1, 0, 1, 0, 0, 0, 0, 0]), tensor([1, 1, 0, 0, 0, 0, 1, 0, 0]), tensor([1, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 1, 1, 0, 0, 0, 0]), tensor([1, 1, 1, 1, 0, 0, 1, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 1, 0, 0]), tensor([1, 1, 0, 0, 0, 0, 0, 0, 0])]
+int labels tensor([[1, 1, 0, 1, 0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0, 1, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 1, 0, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0]])
+embed: torch.Size([2, 256, 8000])
+mask: torch.Size([2, 1, 8000])
+input embedding shape torch.Size([2, 256, 8000])
+embed_output shape: torch.Size([2, 256, 8000])
+mask shape torch.Size([2, 1, 8000])
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    --
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─Attention_mask: 2-1               [2, 256, 3]               20,720
+│    │    └─Tanh: 3-1                    [2, 80, 8000]             --
+│    └─Flatten: 2-2                      [2, 768]                  --
+│    └─Embedding: 2-3                    [2, 4]                    76
+│    └─Linear: 2-4                       [2, 100]                  76,900
+│    └─Actvation: 2-5                    [2, 104]                  --
+│    └─Dropout: 2-6                      [2, 104]                  --
+│    └─Linear: 2-7                       [2, 9]                    945
+│    └─Sigmoid: 2-8                      [2, 9]                    --
+==========================================================================================
+Total params: 98,641
+Trainable params: 98,641
+Non-trainable params: 0
+Total mult-adds (M): 0.16
+==========================================================================================
+Input size (MB): 16.45
+Forward/backward pass size (MB): 0.00
+Params size (MB): 0.31
+Estimated Total Size (MB): 16.76
+==========================================================================================
+[2023-12-03 13:34:21,438][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 1
+[2023-12-03 13:34:21,449][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:1 with 2 nodes.
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+['>010000000,Gene_ID:NCBI:150084,Refseq_ID:NM_001080444,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:4599,Refseq_ID:NM_001144925,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:1415,Refseq_ID:NM_000496,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:23209,Refseq_ID:NM_015166,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:3976,Refseq_ID:NM_001257135,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:64098,Refseq_ID:NM_001137605,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:83733,Refseq_ID:NM_001303484,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:1232,Refseq_ID:NM_001164680,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc'] ['010000000', '010000000', '010000000', '010000000', '010000000', '010000000', '010000000', '010000000']
+embeddings after padding: torch.Size([8, 256, 8000])
+embeddings after transport: torch.Size([8, 256, 8000]) tensor([[[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [2.3009, 2.5190, 2.5758,  ..., 3.3819, 3.4362, 3.6356]],
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [2.9562, 3.4302, 3.0793,  ..., 3.3819, 3.4362, 3.6356]],
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [2.3645, 2.4410, 2.8442,  ..., 3.3819, 3.4362, 3.6356]],
+        ...,
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [3.4340, 4.1001, 3.3522,  ..., 3.3819, 3.4362, 3.6356]],
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [2.2701, 2.5931, 2.6464,  ..., 3.3819, 3.4362, 3.6356]],
+        [[0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         ...,
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [0.0000, 0.0000, 0.0000,  ..., 0.0000, 0.0000, 0.0000],
+         [2.7968, 2.3128, 3.3220,  ..., 3.3819, 3.4362, 3.6356]]],
+       dtype=torch.float64)
+self.tokenizer.pad_token_id 0
+masks [tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1]), tensor([1, 1, 1,  ..., 1, 1, 1])]
+masks after padding tensor([[[1, 1, 1,  ..., 1, 1, 1]],
+        [[1, 1, 1,  ..., 1, 1, 1]],
+        [[1, 1, 1,  ..., 1, 1, 1]],
+        ...,
+        [[1, 1, 1,  ..., 1, 1, 1]],
+        [[1, 1, 1,  ..., 1, 1, 1]],
+        [[1, 1, 1,  ..., 1, 1, 1]]])
+labels: ['010000000', '010000000', '010000000', '010000000', '010000000', '010000000', '010000000', '010000000']
+int labels [tensor([0, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 0, 0, 0]), tensor([0, 1, 0, 0, 0, 0, 0, 0, 0])]
+int labels tensor([[0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0]])
+input embedding shape torch.Size([8, 256, 8000])
+embed_output shape: torch.Size([8, 256, 8000])
+mask shape torch.Size([8, 1, 8000])
+[2023-12-03 13:34:25,955][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=nucleotidetransformer
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/nucleotidetransformer
+/home/sxr280/BERTLocRNA/saved_model/NT  already exists, loading the model locally
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:13<00:00,  6.69s/it]
+Some weights of the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT were not used when initializing EsmModel: ['lm_head.dense.weight', 'lm_head.decoder.weight', 'lm_head.layer_norm.weight', 'lm_head.layer_norm.bias', 'lm_head.dense.bias', 'lm_head.bias']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT and are newly initialized: ['esm.pooler.dense.bias', 'esm.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Resolving data files: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 296/296 [00:00<00:00, 286922.58it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 75/75 [00:00<00:00, 302183.29it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 94/94 [00:00<00:00, 196640.69it/s]
+Error executing job with overrides: ['model=base_model', 'task=RNAlocalization', 'embedder=parnet']
+Traceback (most recent call last):
+  File "/home/sxr280/BERTLocRNA/scripts/train_model.py", line 55, in <module>
+    train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
+    raise ex
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
+    _ = r.return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/sxr280/BERTLocRNA/scripts/train_model.py", line 49, in train
+    Trainer.train(train_dataloader, eval_dataloader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 242, in train
+    trainer.fit(self.plmodel, train_loader, val_loader)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 608, in fit
+    call._call_and_handle_interrupt(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/call.py", line 38, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 650, in _fit_impl
+    self._run(model, ckpt_path=self.ckpt_path)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1112, in _run
+    results = self._run_stage()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1191, in _run_stage
+    self._run_train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1204, in _run_train
+    self._run_sanity_check()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1276, in _run_sanity_check
+    val_loop.run()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/loop.py", line 199, in run
+    self.advance(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/dataloader/evaluation_loop.py", line 152, in advance
+    dl_outputs = self.epoch_loop.run(self._data_fetcher, dl_max_batches, kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/loop.py", line 199, in run
+    self.advance(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/epoch/evaluation_epoch_loop.py", line 137, in advance
+    output = self._evaluation_step(**kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/epoch/evaluation_epoch_loop.py", line 234, in _evaluation_step
+    output = self.trainer._call_strategy_hook(hook_name, *kwargs.values())
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1494, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/strategies/ddp.py", line 359, in validation_step
+    return self.model(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/parallel/distributed.py", line 1040, in forward
+    output = self._run_ddp_forward(*inputs, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/parallel/distributed.py", line 1000, in _run_ddp_forward
+    return module_to_run(*inputs[0], **kwargs[0])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/overrides/base.py", line 110, in forward
+    return self._forward_module.validation_step(*inputs, **kwargs)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 180, in validation_step
+    y_pred = self.forward(x, mask, RNA_type)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 111, in forward
+    pred = self.network(embed, mask, RNA_type)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/models/base_model.py", line 88, in forward
+    output = self.Att(embed, x_mask) #[hidden, heads]
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/models/base_model.py", line 74, in Att
+    att1,att1_A = self.Attention_layer(embed_output, masks = True)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/models/attention.py", line 35, in forward
+    H_t = self.activation(torch.matmul(H1.transpose(1, 2), self.W1).transpose(1,2)) #[80,1000]Q?
+RuntimeError: expected scalar type Double but found Float
+loading the dataset...

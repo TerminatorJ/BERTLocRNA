@@ -17,6 +17,7 @@ from torchinfo import summary
 from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score,roc_auc_score,accuracy_score,matthews_corrcoef,f1_score,precision_score,recall_score
 from typing import List, Tuple, Dict, Union
 import pandas as pd
+import glob
 
 #make the code reproducible 
 # Set random seed for NumPy
@@ -34,11 +35,15 @@ gpus = torch.cuda.device_count()
 path_join = lambda *path: os.path.abspath(os.path.join(*path))
 
 class LightningModel(pl.LightningModule):
-    def __init__(self, model, class_weights = None):
+    def __init__(self, model, config = None):
         super(LightningModel, self).__init__()
         #only used to extract the RNA types
         self.network = model.to(device)
-        self.class_weights = class_weights
+        self.config = config
+        if "class_weights" in self.config.keys():
+            self.class_weights = self.config.class_weights
+        else:
+            self.class_weights = None
         self.epoch_start_time = None
         self.loss_fn = nn.BCELoss()
 
@@ -46,7 +51,7 @@ class LightningModel(pl.LightningModule):
 
         loss_weight_ = self.class_weights
         loss_weight = []
-        for i in range(self.nb_classes):
+        for i in range(self.config.nb_classes):
         # initialize weights
             loss_weight.append(torch.tensor(loss_weight_[i],requires_grad=False, device=device))
         num_task = self.nb_classes
@@ -98,8 +103,10 @@ class LightningModel(pl.LightningModule):
         # Compare the predicted class with the target class and calculate the mean accuracy
         return (y_pred == y_true).float().mean()
 
+
+
     def forward(self, embed, mask, RNA_type = None):
-        x = x.to(device)
+        embed = embed.to(device)
         mask = mask.to(device)
         if RNA_type != None:
             RNA_type = RNA_type.to(device)
@@ -124,7 +131,7 @@ class LightningModel(pl.LightningModule):
         penal = 0.001 * torch.sum(temp**2) / batch_size
         return penal
 
-    def training_step(self, batch, **kwargs):
+    def training_step(self, batch, batch_idx, **kwargs):
 
         x, mask, RNA_type, y = batch["embedding"], batch["attention_mask"], batch["RNA_type"], batch["labels"]
         y = y.to(torch.float32)
@@ -148,7 +155,7 @@ class LightningModel(pl.LightningModule):
 
         loss += l1_regularization*0.001
 
-        loss += self._attention_regularizer(torch.transpose(self.network.att, 1, 2))
+        loss += self._attention_regularizer(torch.transpose(self.network.att_weight, 1, 2))
         self.log("train_loss", loss, on_epoch = True, on_step = True)
 
         categorical_accuracy = self.categorical_accuracy(y_pred, y)
@@ -168,7 +175,7 @@ class LightningModel(pl.LightningModule):
         sample_num = y_true.size(0)
         accuracy = correct / sample_num
         return accuracy
-    def validation_step(self, batch):
+    def validation_step(self, batch, batch_idx, **kwargs):
 
         x, mask, RNA_type, y=  batch["embedding"], batch["attention_mask"], batch["RNA_type"], batch["labels"]
         y = y.to(torch.float32)
@@ -194,7 +201,7 @@ class LightningModel(pl.LightningModule):
                 l1_regularization += torch.norm(param, p=1)
 
         loss += l1_regularization*0.001
-        loss += self._attention_regularizer(torch.transpose(self.network.att, 1, 2))
+        loss += self._attention_regularizer(torch.transpose(self.network.att_weight, 1, 2))
            
 
         self.log("val_loss", loss, on_epoch = True, on_step = True)
@@ -213,11 +220,17 @@ class LightningModel(pl.LightningModule):
 class MyTrainer:
     def __init__(self, model, config):
         self.config = config
-        self.plmodel = LightningModel(model, class_weights = self.config.class_weights)
+        self.plmodel = LightningModel(model, config = self.config)
+        print("after initialization:")
+        for name, param in self.plmodel.named_parameters():
+            print("name of the model parameters:", name)
         self.wandb_logger = WandbLogger(log_model = "all")
         self.ckpt_path = path_join(self.config.output_dir, "checkpoints")
         self.pred = None
-        self.test = None
+        self.test_y = None
+        self.plmodel.to(device)
+
+
 
     def train(self, train_loader, val_loader):
         samples = next(iter(train_loader))
@@ -240,24 +253,28 @@ class MyTrainer:
         return callbacks
     
     def load_checkpoint(self):
-       
-        checkpoint = torch.load(path_join(self.ckpt_path, "checkpoints_best.ckpt"))
+        checkpoint_files = glob.glob(path_join(self.ckpt_path, "checkpoints_best-v*.ckpt"))
+        if not checkpoint_files:
+            print("No checkpoint files found.")
+        else:
+            latest_checkpoint = max(checkpoint_files, key=lambda x: int(x.split('-v')[-1].split('.')[0]))
+            checkpoint = torch.load(latest_checkpoint, map_location = device)
         model_state = checkpoint['state_dict']
         self.plmodel.load_state_dict(model_state)
         return self.plmodel #model with new parameters
     
     def test(self, test_loader):
 
-        self.plmodel = self.load_checkpoint().network
+        self.plmodel = self.load_checkpoint()
         self.plmodel.eval()
         self.get_metrics_all(test_loader)
 
 
-    def get_metrics_all(self, dataloader_test, model):
+    def get_metrics_all(self, dataloader_test):
         all_y_pred = []
         all_y_test = []
         all_RNA_types = []
-        for idx, batch in enumerate(dataloader_test):
+        for batch in dataloader_test:
             X_test, X_mask, RNA_type, y_test = batch["embedding"], batch["attention_mask"], batch["RNA_type"], batch["labels"]
             y_pred = self.plmodel.forward(X_test, X_mask, RNA_type)
             y_pred = y_pred.detach().cpu().numpy()
@@ -269,7 +286,10 @@ class MyTrainer:
         y_test = np.concatenate(all_y_test, axis=0)
         y_pred = np.concatenate(all_y_pred, axis=0)
         RNA_types = np.concatenate(all_RNA_types, axis=0)
-        RNA_types = [self.config.RNA_order[i] for i in RNA_types]
+        print("RNA type:", RNA_types)
+        print("y_test:",y_test)
+        print("y_pred:", y_pred)
+        RNA_types = [self.config.RNA_order[int(i)] for i in RNA_types]
         #split the data with RNA types
         RNA_libs = ["lncRNA", "miRNA", "snRNA", "snoRNA", "mRNA"]
         dfs = []
@@ -277,26 +297,31 @@ class MyTrainer:
             idx = np.where(np.isin(RNA_types, [RNA]))[0]
             if RNA == "lncRNA":
                 idx = np.where(np.isin(RNA_types, ["lncRNA", "lincRNA"]))[0]
-            
-            try:
-                y_pred_sub = y_pred[idx]
-                y_test_sub = y_test[idx]
-                best_t = self.find_best_t(y_pred_sub, y_test_sub)
-                df = self.cal_metrics(y_test[idx], y_pred[idx], RNA, best_t)
-                dfs.append(df)
+            print("this idx:", idx)
+            # try:
+            y_pred_sub = y_pred[idx]
+            y_test_sub = y_test[idx]
+            best_t = self.find_best_t(y_pred_sub, y_test_sub)
+            print("best t:", best_t)
+            df = self.cal_metrics(y_test[idx], y_pred[idx], RNA, best_t)
+            print("df:", df)
+            dfs.append(df)
                 
-            except:
-                print("empty:", RNA)
+            # except:
+            #     print("empty:", RNA)
         all_df = pd.concat(dfs, axis=0, ignore_index=True)
 
-        all_df.to_csv(path_join(self.config.ourput_dir, "all_metrics.csv"), index = False)
+        all_df.to_csv(path_join(self.config.output_dir, "all_metrics.csv"), index = False, na_rep="NAN")
         return all_df
     def cal_metrics(self, y_test : np.ndarray, y_pred : np.ndarray, RNA : str, best_t : Dict):
         num_classes = y_test.shape[1]
         metrics_data = []
         mcc_sum = 0
+        acc_sum = 0
+        print("calculating metrics:", y_test, y_pred)
         for c in range(num_classes):  # calculate one by one
             t = best_t[c]
+            cn = self.config.compartments[c]
             try:
                 average_precision_c = average_precision_score(y_test[:, c], y_pred[:, c])
                 roc_auc_c = roc_auc_score(y_test[:, c], y_pred[:, c])
@@ -311,10 +336,11 @@ class MyTrainer:
             precision_c = precision_score(y_test[:, c], y_pred_bi)
             recall_c = recall_score(y_test[:, c], y_pred_bi)
             acc_c = accuracy_score(y_test[:, c], y_pred_bi)
+            acc_sum += acc_c
 
             metrics_data.append({
                 'RNA': RNA,
-                'Compartment': f'Compartment_{c}',  # You might want to replace this with the actual compartment name
+                'Compartment': f'{cn}',  # You might want to replace this with the actual compartment name
                 'AveragePrecision': average_precision_c,
                 'ROCAUC': roc_auc_c,
                 'MatthewsCorrCoef': mcc_c,
@@ -323,46 +349,65 @@ class MyTrainer:
                 'Recall': recall_c,
                 'Accuracy': acc_c
             })
-
+        y_pred_bi_ac = np.where(y_pred > t, 1, 0)
+        print("y_test.ravel(), y_pred_bi.ravel()", y_test.ravel(), y_pred_bi.ravel())
+        print("original shape:", y_test.shape, y_pred_bi.shape)
+        print("shape:", len(y_test.ravel()), len(y_pred_bi.ravel()))
+        try: 
+            auprc_micro = average_precision_score(y_test, y_pred, average='micro')
+            auroc_micro = roc_auc_score(y_test, y_pred, average='micro')
+            auprc_macro = average_precision_score(y_test, y_pred, average='macro')
+            auroc_macro = roc_auc_score(y_test, y_pred, average='macro')
+        except ValueError:
+            auprc_micro = np.nan
+            auroc_micro = np.nan
+            auprc_macro = np.nan
+            auroc_macro = np.nan
         metrics_data.append({
             'RNA': RNA,
             'Compartment': 'micro',
-            'AveragePrecision': average_precision_score(y_test, y_pred, average='micro'),
-            'ROCAUC': roc_auc_score(y_test, y_pred, average='micro'),
-            'MatthewsCorrCoef': matthews_corrcoef(y_test.ravel(), y_pred_bi.ravel()),
-            'F1Score': f1_score(y_test.ravel(), y_pred_bi.ravel(), average='micro'),
-            'Precision': precision_score(y_test.ravel(), y_pred_bi.ravel(), average='micro'),
-            'Recall': recall_score(y_test.ravel(), y_pred_bi.ravel(), average='micro'),
-            'Accuracy': accuracy_score(y_test.ravel(), y_pred_bi.ravel())
+            'AveragePrecision': auprc_micro,
+            'ROCAUC': auroc_micro,
+            'MatthewsCorrCoef': matthews_corrcoef(y_test.ravel(), y_pred_bi_ac.ravel()),
+            'F1Score': f1_score(y_test.ravel(), y_pred_bi_ac.ravel(), average='micro'),
+            'Precision': precision_score(y_test.ravel(), y_pred_bi_ac.ravel(), average='micro'),
+            'Recall': recall_score(y_test.ravel(), y_pred_bi_ac.ravel(), average='micro'),
+            'Accuracy': accuracy_score(y_test.ravel(), y_pred_bi_ac.ravel())
         })
 
         metrics_data.append({
             'RNA': RNA,
             'Compartment': 'macro',
-            'AveragePrecision': average_precision_score(y_test, y_pred, average='macro'),
-            'ROCAUC': roc_auc_score(y_test, y_pred, average='macro'),
+            'AveragePrecision': auprc_macro,
+            'ROCAUC': auroc_macro,
             'MatthewsCorrCoef': mcc_sum / num_classes,
-            'F1Score': f1_score(y_test, y_pred_bi, average='macro'),
-            'Precision': precision_score(y_test, y_pred_bi, average='macro'),
-            'Recall': recall_score(y_test, y_pred_bi, average='macro'),
-            'Accuracy': accuracy_score(y_test, y_pred_bi, average='macro')
+            'F1Score': f1_score(y_test, y_pred_bi_ac, average='macro'),
+            'Precision': precision_score(y_test, y_pred_bi_ac, average='macro'),
+            'Recall': recall_score(y_test, y_pred_bi_ac, average='macro'),
+            'Accuracy': acc_sum / num_classes
         })
 
         df = pd.DataFrame(metrics_data)
         return df
 
     def get_mcc(self, t):
-        mcc = matthews_corrcoef(self.test, [1 if i>t else 0 for i in self.pred])
+        mcc = matthews_corrcoef(self.test_y, [1 if i>t else 0 for i in self.pred])
+        print("mcc", mcc)
         return mcc
-    def find_best_t(self, y_pred : List, y_test : List) -> None:
+    def find_best_t(self, y_pred : List, y_test : List) -> Dict:
         print("Calculating the best threshold for each target ...")
         num_classes = y_test.shape[1]
         ts = np.linspace(0, 1, 50)
         best_t = {}
         for c in range(num_classes):#calculate one by one
             self.pred = y_pred[:,c]
-            self.test = y_test[:,c]
-            max_idx = np.argmax(np.array(map(self.get_mcc, ts)))
+            self.test_y = y_test[:,c]
+            print("self.pred:", self.pred)
+            print("self.test_y:", self.test_y)
+            print("before argmax:", list(map(self.get_mcc, ts)))
+            mcc_t = list(map(self.get_mcc, ts))
+            max_idx = mcc_t.index(max(mcc_t))
+            print("after argmax:", max_idx)
             max_t = ts[max_idx]
             best_t[c] = max_t
         return best_t

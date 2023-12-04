@@ -1,7 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForMaskedLM, AutoConfig, DataCollatorWithPadding, AutoModel
 import torch
 from dataclasses import field, dataclass
-from typing import List, Tuple, Dict, Union
+from typing import List, Tuple, Dict, Union, Sequence
 import click
 import os
 import json
@@ -111,10 +111,47 @@ class baseclass:
 
     
 
-    def __call__(self, dataset :Union[DatasetDict, None], dataloader : bool, *args, **kwargs):
-        return self.process(dataset, dataloader)
+    def __call__(self, dataset :Union[DatasetDict, None], *args, **kwargs):
+        return self.process(dataset)
 
 
+
+#define the datacollator
+@dataclass
+class DataCollatorForSupervisedDataset(object):
+    """Collate examples for supervised fine-tuning."""
+
+    tokenizer: object
+    hidden_dim: 4
+    def multi_label(self, label):
+        label = list(map(lambda x: torch.tensor([int(i) for i in x]), label))
+        label = torch.stack(label, dim=0)
+        return label
+
+
+
+    def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
+        embeddings, masks, RNA_type, labels, ids = tuple([instance[key] for instance in instances] for key in ("embedding", "attention_mask","RNA_type", "labels", "ids"))
+        embeddings = torch.nn.utils.rnn.pad_sequence(
+            embeddings, batch_first=True, padding_value=self.tokenizer.pad_token_id
+        )
+        #For NR and DNABERT
+        if embeddings.shape[2] == self.hidden_dim:
+            embeddings = embeddings.transpose(1,2)
+
+        masks = torch.nn.utils.rnn.pad_sequence(
+            masks, batch_first=True, padding_value=self.tokenizer.pad_token_id
+        )
+        masks = torch.unsqueeze(masks, dim=1)
+        #get length by mask
+        labels = self.multi_label(labels)
+        RNA_type = torch.Tensor(RNA_type).long()
+        return dict(
+            embedding=embeddings,
+            RNA_type=RNA_type,
+            labels=labels,
+            attention_mask=masks,
+        )
 
 
 
@@ -125,7 +162,7 @@ class NucleotideTransformerEmbedder(baseclass):
     """
     Embed using the Nuclieotide Transformer (NT) model https://www.biorxiv.org/content/10.1101/2023.01.11.523679v2.full
     """
-    def load_model(self, model_path : str, batch_size : int = 8, dataloader : bool = False, **kwargs):
+    def load_model(self, model_path : str, batch_size : int = 8, dataloader : bool = False, hidden_dim : int = 4, **kwargs):
 
         self.embedder_name = "NT"
         local_path = path_join(root_dir, "..", "saved_model", self.embedder_name)
@@ -164,6 +201,7 @@ class NucleotideTransformerEmbedder(baseclass):
         self.model.eval()
         self.batch_size = batch_size
         self.dataloader = dataloader
+        self.hidden_dim = hidden_dim
 
 
         
@@ -230,28 +268,28 @@ class NucleotideTransformerEmbedder(baseclass):
         
         return output
 
-    
-
     def process(self, dataset :Union[DatasetDict, None]):
         save_path = path_join(root_dir, "..", "embeddings", self.embedder_name + "embedding")
         if not os.path.exists(save_path):
             tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
-            tokenized_datasets.save_to_disk(save_path, format="arrow", compress="gz")
+            tokenized_datasets.save_to_disk(save_path)
         else:
             print("loading the dataset...")
             tokenized_datasets = load_dataset(save_path)
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
+       
         tokenized_datasets.set_format("torch")
         if self.dataloader:
+            data_collator = DataCollatorForSupervisedDataset(self.tokenizer, self.hidden_dim)
             train_dataloader = DataLoader(
-                                            tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size
+                                            tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )
             eval_dataloader = DataLoader(
-                                            tokenized_datasets["validation"], batch_size=self.batch_size
+                                            tokenized_datasets["validation"], batch_size=self.batch_size, collate_fn=data_collator
                                         )
             test_dataloader = DataLoader(
-                                            tokenized_datasets["test"], batch_size=self.batch_size
+                                            tokenized_datasets["test"], batch_size=self.batch_size, collate_fn=data_collator
                                         )
             return train_dataloader, test_dataloader, eval_dataloader
         else:
@@ -264,13 +302,16 @@ class ParnetEmbedder(baseclass):
     def load_model(self, model_path : str, 
                         batch_size : int = 8, 
                         dataloader : bool = False, 
-                        max_length : int = 8000, **kwargs):
+                        max_length : int = 8000, 
+                        hidden_dim : int = 4,
+                        **kwargs):
         self.tokenizer = ParnetTokenizer(model_path)
         self.model = ParnetModel(model_path)
         self.embedder_name = "Parnet"
         self.batch_size = batch_size
         self.dataloader = dataloader
         self.max_length = max_length
+        self.hidden_dim = hidden_dim
     def get_embed(self, tokens_ids) -> np.ndarray:
         tokens_ids = tokens_ids.to(device)
         outs = self.model(tokens_ids).detach().cpu().numpy() # get last hidden state
@@ -282,9 +323,8 @@ class ParnetEmbedder(baseclass):
 
         input_ids, masks = self.tokenizer(
                     sequences,
-                    return_tensors="pt",
-                    max_length = self.max_length
-                ).int()
+                    return_tensors="pt"
+                )
 
         embedding = self.get_embed(input_ids)
 
@@ -292,28 +332,30 @@ class ParnetEmbedder(baseclass):
         
         return output
 
-    def process(self, dataset :Union[DatasetDict, None]):
+    def process(self, dataset : Union[DatasetDict, None]):
         
         save_path = path_join(root_dir, "..", "embeddings", self.embedder_name + "embedding")
         print("embedding will be saved at:", save_path)
         if not os.path.exists(save_path):
             tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
-            tokenized_datasets.save_to_disk(save_path, format="arrow", compress="gz")
+            tokenized_datasets.save_to_disk(save_path)
         else:
             print("loading the dataset...")
             tokenized_datasets = load_dataset(save_path)
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
+        # tokenized_datasets["labels"] = [list(i) for i in tokenized_datasets["labels"]]
         tokenized_datasets.set_format("torch")
         if self.dataloader:
+            data_collator = DataCollatorForSupervisedDataset(self.tokenizer, self.hidden_dim)
             train_dataloader = DataLoader(
-                                            tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size
+                                            tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )
             eval_dataloader = DataLoader(
-                                            tokenized_datasets["validation"], batch_size=self.batch_size
+                                            tokenized_datasets["validation"], batch_size=self.batch_size, collate_fn=data_collator
                                         )
             test_dataloader = DataLoader(
-                                            tokenized_datasets["test"], batch_size=self.batch_size
+                                            tokenized_datasets["test"], batch_size=self.batch_size, collate_fn=data_collator
                                         )
             return train_dataloader, test_dataloader, eval_dataloader
         else:

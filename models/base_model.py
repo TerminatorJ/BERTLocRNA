@@ -1,4 +1,4 @@
-from hier_attention_mask_torch import Attention_mask
+
 import torch
 import torch.nn as nn
 import inspect
@@ -7,7 +7,10 @@ import os
 import numpy as np
 import sys
 sys.path.append("../")
-from layers import *
+print("ok")
+print(os.getcwd())
+from BERTLocRNA.models.attention import Attention_mask
+from BERTLocRNA.models.layers import *
 from torch import Tensor
 
 #make the code reproducible 
@@ -34,18 +37,31 @@ class CustomizedModel(nn.Module):
                                                                                           
         super(CustomizedModel, self).__init__()
         self.config = config
+        neurons = int(self.config.headnum*self.config.hidden_dim)
+        #attention layers
         #fully connected layers
-        self.fc1 = None
+        self.fc1 = nn.Linear(neurons, self.config.fc_dim).to(device)
         self.fc2 = nn.Linear(self.config.fc_dim + self.config.RNA_dim, self.config.nb_classes)
 
         self.flatten = nn.Flatten()
         self.dropout = nn.Dropout(self.config.drop_flat)
         self.att_weight = None
+        self.headnum = self.config.headnum
         self.embedding_layer = nn.Embedding(num_embeddings=len(self.config.RNA_order),embedding_dim=self.config.RNA_dim,_weight=torch.zeros((len(self.config.RNA_order), self.config.RNA_dim)))
         self.sigmoid = nn.Sigmoid()
         
         self.Actvation = Actvation(self.config.activation)
-        self.Attention_layer = None
+        self.Attention_layer = Attention_mask(hidden = self.config.hidden_dim, att_dim = self.config.dim_attention, 
+                                            r = self.config.headnum, activation = self.config.activation_att, 
+                                            return_attention = True, attention_regularizer_weight = self.config.Att_regularizer_weight, 
+                                            normalize = self.config.normalizeatt,attmod = self.config.attmod,
+                                            sharp_beta = self.config.sharp_beta)
+        # self.add_module("Attention_layer", self.Attention_layer)
+        # Add Attention_mask parameters to CustomizedModel
+        # print("loading the base mode:", self.Attention_layer, self.Attention_layer.named_parameters())
+        # for name, param in self.Attention_layer.named_parameters():
+        #     print("attention layer parameters names:", name)
+        #     self.register_parameter("Attention_layer." + name, param)
         
         
 
@@ -69,21 +85,10 @@ class CustomizedModel(nn.Module):
 
     
     def forward(self, embed : Tensor, x_mask : Tensor, RNA_type : Tensor):
-        #neuron number should be define until the run time
-        neurons = int(self.config.headnum*embed.shape[1])
-        if self.fc1 is None:
-            self.fc1 = nn.Linear(neurons, self.config.fc_dim)
-        #attention layers
-        if self.Attention_layer is None:
-            self.Attention_layer = Attention_mask(hidden = embed.shape[1], att_dim = self.config.dim_attention, 
-                                            r = self.config.headnum, activation = self.config.activation_att, 
-                                            return_attention = True, attention_regularizer_weight = self.config.Att_regularizer_weight, 
-                                            normalize = self.config.normalizeatt,attmod = self.config.attmod,
-                                            sharp_beta = self.config.sharp_beta)
 
         #The input should be embedding of different pre-trained methods
         #expand the mask to 3d
-        x_mask = x_mask.unsqueeze(1).float()  
+        RNA_type = RNA_type.long()
         output = self.Att(embed, x_mask) #[hidden, heads] 
         output = self.flatten(output)
         

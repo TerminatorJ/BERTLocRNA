@@ -1,0 +1,103 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+main function initialization:
+name of the model parameters: fc1.weight
+name of the model parameters: fc1.bias
+name of the model parameters: fc2.weight
+name of the model parameters: fc2.bias
+name of the model parameters: embedding_layer.weight
+name of the model parameters: Attention_layer.W1.weight
+name of the model parameters: Attention_layer.W2.weight
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 243/243 [00:00<00:00, 395044.91it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 264006.95it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 302965.67it/s]
+after initialization:
+name of the model parameters: network.fc1.weight
+name of the model parameters: network.fc1.bias
+name of the model parameters: network.fc2.weight
+name of the model parameters: network.fc2.bias
+name of the model parameters: network.embedding_layer.weight
+name of the model parameters: network.Attention_layer.W1.weight
+name of the model parameters: network.Attention_layer.W2.weight
+H1 shape torch.Size([2, 256, 8000])
+W1 weight torch.Size([80, 256])
+ht shape torch.Size([2, 8000, 80])
+temp shape: torch.Size([2, 8000, 3])
+A shape torch.Size([2, 8000, 3])
+[2023-12-03 16:37:24,449][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=nucleotidetransformer
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loggers/wandb.py:395: UserWarning: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  rank_zero_warn(
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/nucleotidetransformer
+main function initialization:
+name of the model parameters: fc1.weight
+name of the model parameters: fc1.bias
+name of the model parameters: fc2.weight
+name of the model parameters: fc2.bias
+name of the model parameters: embedding_layer.weight
+name of the model parameters: Attention_layer.W1.weight
+name of the model parameters: Attention_layer.W2.weight
+/home/sxr280/BERTLocRNA/saved_model/NT  already exists, loading the model locally
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:07<00:00,  3.93s/it]
+Some weights of the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT were not used when initializing EsmModel: ['lm_head.dense.bias', 'lm_head.layer_norm.weight', 'lm_head.layer_norm.bias', 'lm_head.dense.weight', 'lm_head.bias', 'lm_head.decoder.weight']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT and are newly initialized: ['esm.pooler.dense.bias', 'esm.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+loading the dataset...
+Resolving data files: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 296/296 [00:00<00:00, 227425.17it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 75/75 [00:00<00:00, 326659.19it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 94/94 [00:00<00:00, 233569.06it/s]
+Error executing job with overrides: ['model=base_model', 'task=RNAlocalization', 'embedder=parnet']
+Traceback (most recent call last):
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torchinfo/torchinfo.py", line 288, in forward_pass
+    _ = model.to(device)(*x, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1212, in _call_impl
+    result = forward_call(*input, **kwargs)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 112, in forward
+    pred = self.network(embed, mask, RNA_type)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1212, in _call_impl
+    result = forward_call(*input, **kwargs)
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/models/base_model.py", line 92, in forward
+    output = self.Att(embed, x_mask) #[hidden, heads]
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/models/base_model.py", line 79, in Att
+    att1,att1_A = self.Attention_layer(embed_output, masks = True)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1212, in _call_impl
+    result = forward_call(*input, **kwargs)
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/models/attention.py", line 57, in forward
+    M = torch.bmm(H1, A.transpose(1,2)) # [none, hidden, r]
+RuntimeError: Expected size for first two dimensions of batch2 tensor to be: [2, 8000] but got: [2, 3].
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "train_model.py", line 57, in <module>
+    train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
+    raise ex
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
+    _ = r.return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "train_model.py", line 51, in train
+    Trainer.train(train_dataloader, eval_dataloader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 239, in train
+    summary(self.plmodel, input_size = [embed, mask, RNA_types], device = device)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torchinfo/torchinfo.py", line 218, in summary
+    summary_list = forward_pass(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torchinfo/torchinfo.py", line 297, in forward_pass
+    raise RuntimeError(
+RuntimeError: Failed to run torchinfo. See above stack traces for more details. Executed layers up to: [Linear: 3, Tanh: 3, Linear: 3]

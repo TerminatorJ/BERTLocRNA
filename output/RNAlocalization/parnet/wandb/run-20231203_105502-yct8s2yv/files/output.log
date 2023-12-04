@@ -1,0 +1,70 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Downloading data files: 100%|█████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 1674.37it/s]
+Extracting data files: 100%|███████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 587.60it/s]
+Generating train split: 14650 examples [00:00, 22145.53 examples/s]
+Generating test split: 4587 examples [00:00, 22428.86 examples/s]
+Generating validation split: 3670 examples [00:00, 23454.89 examples/s]
+Resolving data files: 100%|█████████████████████████████████████████████████████████| 243/243 [00:00<00:00, 357494.17it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 202371.09it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 194789.75it/s]
+['>110100000,Gene_ID:NCBI:64240,Refseq_ID:NM_022436,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110000100,Gene_ID:NCBI:2055,Refseq_ID:NM_001034061,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110000000,Gene_ID:NCBI:91683,Refseq_ID:NM_001177880,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000000,Gene_ID:NCBI:728409,Refseq_ID:NR_024102.1,Species:Homo sapiens,RNA_category:lncRNA,Source:AllSeq', '>010110000,Gene_ID:NCBI:85014,Refseq_ID:NM_032928,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>111100100,Gene_ID:NCBI:9249,Refseq_ID:NM_001319225,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000100,Gene_ID:NCBI:54463,Refseq_ID:NM_001034850,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110000000,Gene_ID:NCBI:646600,Refseq_ID:NR_126326.1,Species:Homo sapiens,RNA_category:lncRNA,Source:AllSeq'] ['110100000', '110000100', '110000000', '010000000', '010110000', '111100100', '010000100', '110000000']
+embeddings after padding: torch.Size([8, 256, 8000])
+embeddings after transport: torch.Size([8, 256, 8000])
+mask from embeddings: torch.Size([8, 1, 8000])
+labels: ['110100000', '110000100', '110000000', '010000000', '010110000', '111100100', '010000100', '110000000']
+[2023-12-03 10:55:21,790][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=nucleotidetransformer
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/nucleotidetransformer
+/home/sxr280/BERTLocRNA/saved_model/NT  already exists, loading the model locally
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loggers/wandb.py:395: UserWarning: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  rank_zero_warn(
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████| 2/2 [00:09<00:00,  4.73s/it]
+Some weights of the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT were not used when initializing EsmModel: ['lm_head.layer_norm.weight', 'lm_head.decoder.weight', 'lm_head.bias', 'lm_head.dense.weight', 'lm_head.layer_norm.bias', 'lm_head.dense.bias']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT and are newly initialized: ['esm.pooler.dense.weight', 'esm.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Map:   0%|                                                                               | 0/14650 [00:03<?, ? examples/s]
+Error executing job with overrides: ['model=base_model', 'task=RNAlocalization', 'embedder=parnet']
+Traceback (most recent call last):
+  File "train_model.py", line 55, in <module>
+    train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
+    raise ex
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
+    _ = r.return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "train_model.py", line 49, in train
+    Trainer.train(train_dataloader, eval_dataloader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 231, in train
+    samples = next(iter(train_loader))
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 628, in __next__
+    data = self._next_data()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 671, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 61, in fetch
+    return self.collate_fn(data)
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/utils/embedding_generator.py", line 154, in __call__
+    labels = self.multi_label(labels)
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/utils/embedding_generator.py", line 128, in multi_label
+    label = list(map(lambda x: torch.tensor([int(i) for i in str(x.item())]), label))
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/utils/embedding_generator.py", line 128, in <lambda>
+    label = list(map(lambda x: torch.tensor([int(i) for i in str(x.item())]), label))
+AttributeError: 'str' object has no attribute 'item'

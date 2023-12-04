@@ -1,0 +1,199 @@
+2023-12-03 14:46:15,894 INFO    StreamThr :791727 [internal.py:wandb_internal():87] W&B internal server running at pid: 791727, started at: 2023-12-03 14:46:15.892823
+2023-12-03 14:46:15,895 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status
+2023-12-03 14:46:15,896 INFO    WriterThread:791727 [datastore.py:open_for_write():85] open: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/run-fs42euqv.wandb
+2023-12-03 14:46:15,899 DEBUG   SenderThread:791727 [sender.py:send():336] send: header
+2023-12-03 14:46:15,930 DEBUG   SenderThread:791727 [sender.py:send():336] send: run
+2023-12-03 14:46:16,428 INFO    SenderThread:791727 [dir_watcher.py:__init__():219] watching files in: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files
+2023-12-03 14:46:16,428 INFO    SenderThread:791727 [sender.py:_start_run_threads():1078] run started: fs42euqv with start time 1701611175.893133
+2023-12-03 14:46:16,428 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: summary_record
+2023-12-03 14:46:16,430 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: check_version
+2023-12-03 14:46:16,431 INFO    SenderThread:791727 [sender.py:_save_file():1332] saving file wandb-summary.json with policy end
+2023-12-03 14:46:16,432 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: check_version
+2023-12-03 14:46:16,514 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: run_start
+2023-12-03 14:46:16,533 DEBUG   HandlerThread:791727 [system_info.py:__init__():31] System info init
+2023-12-03 14:46:16,533 DEBUG   HandlerThread:791727 [system_info.py:__init__():46] System info init done
+2023-12-03 14:46:16,533 INFO    HandlerThread:791727 [system_monitor.py:start():183] Starting system monitor
+2023-12-03 14:46:16,533 INFO    SystemMonitor:791727 [system_monitor.py:_start():147] Starting system asset monitoring threads
+2023-12-03 14:46:16,533 INFO    HandlerThread:791727 [system_monitor.py:probe():204] Collecting system info
+2023-12-03 14:46:16,534 INFO    SystemMonitor:791727 [interfaces.py:start():187] Started cpu monitoring
+2023-12-03 14:46:16,534 INFO    SystemMonitor:791727 [interfaces.py:start():187] Started disk monitoring
+2023-12-03 14:46:16,535 INFO    SystemMonitor:791727 [interfaces.py:start():187] Started gpu monitoring
+2023-12-03 14:46:16,535 INFO    SystemMonitor:791727 [interfaces.py:start():187] Started memory monitoring
+2023-12-03 14:46:16,536 INFO    SystemMonitor:791727 [interfaces.py:start():187] Started network monitoring
+2023-12-03 14:46:16,565 DEBUG   HandlerThread:791727 [system_info.py:probe():195] Probing system
+2023-12-03 14:46:16,573 DEBUG   HandlerThread:791727 [system_info.py:_probe_git():180] Probing git
+2023-12-03 14:46:16,591 DEBUG   HandlerThread:791727 [system_info.py:_probe_git():188] Probing git done
+2023-12-03 14:46:16,591 DEBUG   HandlerThread:791727 [system_info.py:probe():240] Probing system done
+2023-12-03 14:46:16,591 DEBUG   HandlerThread:791727 [system_monitor.py:probe():213] {'os': 'Linux-4.18.0-477.21.1.el8_8.x86_64-x86_64-with-glibc2.10', 'python': '3.8.17', 'heartbeatAt': '2023-12-03T13:46:16.565500', 'startedAt': '2023-12-03T13:46:15.859562', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'train_model.py', 'codePath': 'scripts/train_model.py', 'git': {'remote': 'https://github.com/TerminatorJ/BERTLocRNA.git', 'commit': 'fd819b76e7053626a1a17bdbd323d236c9aabae5'}, 'email': '2300869361@qq.com', 'root': '/home/sxr280/BERTLocRNA', 'host': 'hendrixgpu11fl.unicph.domain', 'username': 'sxr280', 'executable': '/home/sxr280/miniconda3/envs/deeploc_torch/bin/python', 'cpu_count': 24, 'cpu_count_logical': 48, 'cpu_freq': {'current': 2497.2744166666666, 'min': 0.0, 'max': 0.0}, 'cpu_freq_per_core': [{'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2272.73, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 3196.477, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 3199.966, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 3200.002, 'min': 0.0, 'max': 0.0}, {'current': 3199.998, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 3200.0, 'min': 0.0, 'max': 0.0}, {'current': 3199.999, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}], 'disk': {'total': 69.9658203125, 'used': 49.702171325683594}, 'gpu': 'Quadro RTX 6000', 'gpu_count': 5, 'gpu_devices': [{'name': 'Quadro RTX 6000', 'memory_total': 25769803776}, {'name': 'Quadro RTX 6000', 'memory_total': 25769803776}, {'name': 'Quadro RTX 6000', 'memory_total': 25769803776}, {'name': 'Quadro RTX 6000', 'memory_total': 25769803776}, {'name': 'Quadro RTX 6000', 'memory_total': 25769803776}], 'memory': {'total': 251.03864669799805}}
+2023-12-03 14:46:16,591 INFO    HandlerThread:791727 [system_monitor.py:probe():214] Finished collecting system info
+2023-12-03 14:46:16,591 INFO    HandlerThread:791727 [system_monitor.py:probe():217] Publishing system info
+2023-12-03 14:46:16,591 DEBUG   HandlerThread:791727 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-12-03 14:46:16,595 DEBUG   HandlerThread:791727 [system_info.py:_save_pip():67] Saving pip packages done
+2023-12-03 14:46:16,595 DEBUG   HandlerThread:791727 [system_info.py:_save_conda():74] Saving list of conda packages installed into the current environment
+2023-12-03 14:46:17,430 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/requirements.txt
+2023-12-03 14:46:17,430 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/conda-environment.yaml
+2023-12-03 14:46:17,430 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/wandb-summary.json
+2023-12-03 14:46:25,183 DEBUG   HandlerThread:791727 [system_info.py:_save_conda():86] Saving conda packages done
+2023-12-03 14:46:25,187 INFO    HandlerThread:791727 [system_monitor.py:probe():219] Finished publishing system info
+2023-12-03 14:46:25,209 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:46:25,209 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: keepalive
+2023-12-03 14:46:25,210 DEBUG   SenderThread:791727 [sender.py:send():336] send: files
+2023-12-03 14:46:25,210 INFO    SenderThread:791727 [sender.py:_save_file():1332] saving file wandb-metadata.json with policy now
+2023-12-03 14:46:25,216 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: stop_status
+2023-12-03 14:46:25,216 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: stop_status
+2023-12-03 14:46:25,439 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/conda-environment.yaml
+2023-12-03 14:46:25,439 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/wandb-metadata.json
+2023-12-03 14:46:25,472 DEBUG   SenderThread:791727 [sender.py:send():336] send: telemetry
+2023-12-03 14:46:25,778 INFO    wandb-upload_0:791727 [upload_job.py:push():138] Uploaded file /tmp/tmp4yyps5imwandb/tn8x2q3t-wandb-metadata.json
+2023-12-03 14:46:26,440 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:46:27,475 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:46:28,441 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:46:29,649 DEBUG   SenderThread:791727 [sender.py:send():336] send: telemetry
+2023-12-03 14:46:33,376 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:46:34,449 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:46:35,115 DEBUG   SenderThread:791727 [sender.py:send():336] send: telemetry
+2023-12-03 14:46:36,454 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:46:39,143 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:46:40,216 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: stop_status
+2023-12-03 14:46:40,217 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: stop_status
+2023-12-03 14:46:44,795 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:46:49,801 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:46:50,467 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/config.yaml
+2023-12-03 14:46:55,216 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: stop_status
+2023-12-03 14:46:55,217 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: stop_status
+2023-12-03 14:46:55,521 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:46:56,475 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:47:00,522 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:47:05,523 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:47:08,503 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:47:09,868 DEBUG   SenderThread:791727 [sender.py:send():336] send: exit
+2023-12-03 14:47:09,868 INFO    SenderThread:791727 [sender.py:send_exit():559] handling exit code: 1
+2023-12-03 14:47:09,868 INFO    SenderThread:791727 [sender.py:send_exit():561] handling runtime: 53
+2023-12-03 14:47:09,871 INFO    SenderThread:791727 [sender.py:_save_file():1332] saving file wandb-summary.json with policy end
+2023-12-03 14:47:09,871 INFO    SenderThread:791727 [sender.py:send_exit():567] send defer
+2023-12-03 14:47:09,871 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:09,871 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 0
+2023-12-03 14:47:09,871 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:09,871 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 0
+2023-12-03 14:47:09,871 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 1
+2023-12-03 14:47:09,871 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:09,871 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 1
+2023-12-03 14:47:09,872 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:09,872 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 1
+2023-12-03 14:47:09,872 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 2
+2023-12-03 14:47:09,872 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:09,872 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 2
+2023-12-03 14:47:09,872 INFO    HandlerThread:791727 [system_monitor.py:finish():193] Stopping system monitor
+2023-12-03 14:47:09,872 DEBUG   SystemMonitor:791727 [system_monitor.py:_start():161] Starting system metrics aggregation loop
+2023-12-03 14:47:09,872 DEBUG   SystemMonitor:791727 [system_monitor.py:_start():168] Finished system metrics aggregation loop
+2023-12-03 14:47:09,872 DEBUG   SystemMonitor:791727 [system_monitor.py:_start():172] Publishing last batch of metrics
+2023-12-03 14:47:09,874 INFO    HandlerThread:791727 [interfaces.py:finish():199] Joined cpu monitor
+2023-12-03 14:47:09,874 INFO    HandlerThread:791727 [interfaces.py:finish():199] Joined disk monitor
+2023-12-03 14:47:10,142 INFO    HandlerThread:791727 [interfaces.py:finish():199] Joined gpu monitor
+2023-12-03 14:47:10,142 INFO    HandlerThread:791727 [interfaces.py:finish():199] Joined memory monitor
+2023-12-03 14:47:10,142 INFO    HandlerThread:791727 [interfaces.py:finish():199] Joined network monitor
+2023-12-03 14:47:10,143 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:10,143 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 2
+2023-12-03 14:47:10,143 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 3
+2023-12-03 14:47:10,143 DEBUG   SenderThread:791727 [sender.py:send():336] send: stats
+2023-12-03 14:47:10,144 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:10,144 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 3
+2023-12-03 14:47:10,144 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:10,144 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 3
+2023-12-03 14:47:10,144 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 4
+2023-12-03 14:47:10,144 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:10,144 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 4
+2023-12-03 14:47:10,144 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:10,144 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 4
+2023-12-03 14:47:10,144 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 5
+2023-12-03 14:47:10,144 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:10,145 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 5
+2023-12-03 14:47:10,145 DEBUG   SenderThread:791727 [sender.py:send():336] send: summary
+2023-12-03 14:47:10,148 INFO    SenderThread:791727 [sender.py:_save_file():1332] saving file wandb-summary.json with policy end
+2023-12-03 14:47:10,148 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:10,148 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 5
+2023-12-03 14:47:10,148 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 6
+2023-12-03 14:47:10,149 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:10,149 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 6
+2023-12-03 14:47:10,149 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:10,149 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 6
+2023-12-03 14:47:10,149 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 7
+2023-12-03 14:47:10,149 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: status_report
+2023-12-03 14:47:10,149 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:10,149 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 7
+2023-12-03 14:47:10,149 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:10,149 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 7
+2023-12-03 14:47:10,506 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:47:10,506 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/wandb-summary.json
+2023-12-03 14:47:10,868 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: poll_exit
+2023-12-03 14:47:12,283 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 8
+2023-12-03 14:47:12,283 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: poll_exit
+2023-12-03 14:47:12,284 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:12,284 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 8
+2023-12-03 14:47:12,284 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:12,284 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 8
+2023-12-03 14:47:12,300 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 9
+2023-12-03 14:47:12,300 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:12,301 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 9
+2023-12-03 14:47:12,301 DEBUG   SenderThread:791727 [sender.py:send():336] send: artifact
+2023-12-03 14:47:12,507 INFO    Thread-13 :791727 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:47:13,872 INFO    SenderThread:791727 [sender.py:send_artifact():1428] sent artifact job-https___github.com_TerminatorJ_BERTLocRNA.git_scripts_train_model.py - {'id': 'QXJ0aWZhY3Q6NjU2MDI1Nzk1', 'digest': '82b07617c9004aa00d7f79227b6f1789', 'state': 'COMMITTED', 'aliases': [{'artifactCollectionName': 'job-https___github.com_TerminatorJ_BERTLocRNA.git_scripts_train_model.py', 'alias': 'latest'}, {'artifactCollectionName': 'job-https___github.com_TerminatorJ_BERTLocRNA.git_scripts_train_model.py', 'alias': 'v2'}], 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEyMDEzMDcyNw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NjU2MDQ1Mzcw', 'versionIndex': 3}}, 'version': 'v2'}
+2023-12-03 14:47:13,872 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:13,872 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 9
+2023-12-03 14:47:13,872 INFO    SenderThread:791727 [dir_watcher.py:finish():365] shutting down directory watcher
+2023-12-03 14:47:14,509 INFO    SenderThread:791727 [dir_watcher.py:finish():395] scan: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files
+2023-12-03 14:47:14,509 INFO    SenderThread:791727 [dir_watcher.py:finish():409] scan save: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/conda-environment.yaml conda-environment.yaml
+2023-12-03 14:47:14,509 INFO    SenderThread:791727 [dir_watcher.py:finish():409] scan save: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/config.yaml config.yaml
+2023-12-03 14:47:14,509 INFO    SenderThread:791727 [dir_watcher.py:finish():409] scan save: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/wandb-metadata.json wandb-metadata.json
+2023-12-03 14:47:14,509 INFO    SenderThread:791727 [dir_watcher.py:finish():409] scan save: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/requirements.txt requirements.txt
+2023-12-03 14:47:14,512 INFO    SenderThread:791727 [dir_watcher.py:finish():409] scan save: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log output.log
+2023-12-03 14:47:14,518 INFO    SenderThread:791727 [dir_watcher.py:finish():409] scan save: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/wandb-summary.json wandb-summary.json
+2023-12-03 14:47:14,518 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 10
+2023-12-03 14:47:14,521 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:14,521 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 10
+2023-12-03 14:47:14,524 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:14,524 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 10
+2023-12-03 14:47:14,524 INFO    SenderThread:791727 [file_pusher.py:finish():164] shutting down file pusher
+2023-12-03 14:47:15,049 INFO    wandb-upload_0:791727 [upload_job.py:push():138] Uploaded file /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/conda-environment.yaml
+2023-12-03 14:47:15,133 INFO    wandb-upload_4:791727 [upload_job.py:push():138] Uploaded file /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/wandb-summary.json
+2023-12-03 14:47:15,185 INFO    wandb-upload_1:791727 [upload_job.py:push():138] Uploaded file /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/config.yaml
+2023-12-03 14:47:15,190 INFO    wandb-upload_2:791727 [upload_job.py:push():138] Uploaded file /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/requirements.txt
+2023-12-03 14:47:15,191 INFO    wandb-upload_3:791727 [upload_job.py:push():138] Uploaded file /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/files/output.log
+2023-12-03 14:47:15,391 INFO    Thread-12 :791727 [sender.py:transition_state():587] send defer: 11
+2023-12-03 14:47:15,391 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:15,391 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 11
+2023-12-03 14:47:15,392 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:15,392 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 11
+2023-12-03 14:47:15,392 INFO    SenderThread:791727 [file_pusher.py:join():169] waiting for file pusher
+2023-12-03 14:47:15,392 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 12
+2023-12-03 14:47:15,392 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:15,392 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 12
+2023-12-03 14:47:15,392 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:15,392 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 12
+2023-12-03 14:47:15,663 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 13
+2023-12-03 14:47:15,663 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:15,663 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 13
+2023-12-03 14:47:15,663 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:15,663 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 13
+2023-12-03 14:47:15,663 INFO    SenderThread:791727 [sender.py:transition_state():587] send defer: 14
+2023-12-03 14:47:15,663 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: defer
+2023-12-03 14:47:15,664 INFO    HandlerThread:791727 [handler.py:handle_request_defer():170] handle defer: 14
+2023-12-03 14:47:15,664 DEBUG   SenderThread:791727 [sender.py:send():336] send: final
+2023-12-03 14:47:15,664 DEBUG   SenderThread:791727 [sender.py:send():336] send: footer
+2023-12-03 14:47:15,664 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: defer
+2023-12-03 14:47:15,664 INFO    SenderThread:791727 [sender.py:send_request_defer():583] handle sender defer: 14
+2023-12-03 14:47:15,664 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: poll_exit
+2023-12-03 14:47:15,665 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: poll_exit
+2023-12-03 14:47:15,665 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: server_info
+2023-12-03 14:47:15,665 DEBUG   SenderThread:791727 [sender.py:send_request():363] send_request: server_info
+2023-12-03 14:47:15,667 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: get_summary
+2023-12-03 14:47:15,668 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: sampled_history
+2023-12-03 14:47:15,895 INFO    MainThread:791727 [wandb_run.py:_footer_history_summary_info():3422] rendering history
+2023-12-03 14:47:15,895 INFO    MainThread:791727 [wandb_run.py:_footer_history_summary_info():3454] rendering summary
+2023-12-03 14:47:15,895 INFO    MainThread:791727 [wandb_run.py:_footer_sync_info():3380] logging synced files
+2023-12-03 14:47:15,896 DEBUG   HandlerThread:791727 [handler.py:handle_request():144] handle_request: shutdown
+2023-12-03 14:47:15,896 INFO    HandlerThread:791727 [handler.py:finish():842] shutting down handler
+2023-12-03 14:47:16,665 INFO    WriterThread:791727 [datastore.py:close():298] close: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231203_144615-fs42euqv/run-fs42euqv.wandb
+2023-12-03 14:47:16,895 INFO    SenderThread:791727 [sender.py:finish():1504] shutting down sender
+2023-12-03 14:47:16,895 INFO    SenderThread:791727 [file_pusher.py:finish():164] shutting down file pusher
+2023-12-03 14:47:16,895 INFO    SenderThread:791727 [file_pusher.py:join():169] waiting for file pusher

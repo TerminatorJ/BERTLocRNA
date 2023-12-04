@@ -10,8 +10,9 @@ hydra :
       task:
         RNAlocalization
       embedder:
-        nucleotidetransformer,
-        parnet
+        parnet,
+        nucleotidetransformer
+        
 
 
 model: base_model
@@ -20,7 +21,7 @@ embedder: parnet
 batch_size: 8
 compartments: ["Nucleus","Exosome","Cytosol","Cytoplasm","Ribosome","Membrane","Endoplasmic reticulum", "Microvesicle", "Mitochondrion"]
 output_dir: ${hydra:runtime.cwd}/../output/${task}/${embedder} #save the path at the task path 
-
+nb_classes: 9
 
 RNAlocalization:
   path: TerminatorJ/localization_multiRNA
@@ -45,6 +46,7 @@ base_model:
     activation_att: tanh
     attention: True
     RNA_dim: 4
+    hidden_dim: ${${embedder}.hidden_dim}
     RNA_order: ["UNK", "A", "C", "G", "T", "N", "Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
 
 parnet:
@@ -52,17 +54,23 @@ parnet:
   model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
   batch_size: ${batch_size}
   dataloader: true
+  hidden_dim: 256
+  collator: talse
+
+
 nucleotidetransformer:
   _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
   batch_size: ${batch_size}
   dataloader: true
+  hidden_dim: 2560
+  collator: true
 
 
 
 Trainer:
   config:
-    class_weights: None
+    # class_weights: None
     accelerator: gpu
     strategy: ddp
     max_epochs: 500
@@ -70,9 +78,15 @@ Trainer:
     num_nodes: 1
     log_every_n_steps: 1000
     patience: 20
+    gradient_clip: true
+    optimizer_cls: torch.optim.Adam
+    lr: 0.001
+    weight_decay: 1e-5
+    nb_classes: ${nb_classes}
     output_dir: ${output_dir} 
     RNA_order: ${base_model.config.RNA_order}
-    compartments: ${localizations}
+    compartments: ${compartments}
+
 
 
 

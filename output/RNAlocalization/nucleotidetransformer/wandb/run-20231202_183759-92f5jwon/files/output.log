@@ -1,0 +1,57 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+/home/sxr280/BERTLocRNA/saved_model/NT  already exists, loading the model locally
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:04<00:00,  2.12s/it]
+Some weights of the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT were not used when initializing EsmModel: ['lm_head.bias', 'lm_head.layer_norm.weight', 'lm_head.dense.weight', 'lm_head.decoder.weight', 'lm_head.layer_norm.bias', 'lm_head.dense.bias']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT and are newly initialized: ['esm.pooler.dense.bias', 'esm.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+loading the dataset...
+Resolving data files: 100%|█████████████████████████████████████████████████████████████████████████████████████████| 296/296 [00:00<00:00, 456271.22it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████| 75/75 [00:00<00:00, 273779.63it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████| 94/94 [00:00<00:00, 202706.72it/s]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loggers/wandb.py:395: UserWarning: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  rank_zero_warn(
+['>110000100,Gene_ID:NCBI:2993,Refseq_ID:NM_001308187,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010101000,Gene_ID:NCBI:253650,Refseq_ID:NM_001331100,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110100000,Gene_ID:NCBI:55247,Refseq_ID:NM_018248,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110100000,Gene_ID:NCBI:150082,Refseq_ID:NM_152505,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010110000,Gene_ID:NCBI:119032,Refseq_ID:NM_001136200,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>010000100,Gene_ID:NCBI:6529,Refseq_ID:NM_001348250,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110100100,Gene_ID:NCBI:168374,Refseq_ID:NM_001287532,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc', '>110110000,Gene_ID:NCBI:498,Refseq_ID:NM_001001935,Species:Homo sapiens,RNA_category:mRNA,Source:DM3Loc'] [110000100, 10101000, 110100000, 110100000, 10110000, 10000100, 110100100, 110110000]
+[2023-12-02 18:38:41,568][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=parnet
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet
+Error executing job with overrides: ['model=base_model', 'task=RNAlocalization', 'embedder=nucleotidetransformer']
+Traceback (most recent call last):
+  File "train_model.py", line 55, in <module>
+    train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
+    raise ex
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
+    _ = r.return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "train_model.py", line 49, in train
+    Trainer.train(train_dataloader, eval_dataloader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 231, in train
+    samples = next(iter(train_loader))
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 628, in __next__
+    data = self._next_data()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 671, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 61, in fetch
+    return self.collate_fn(data)
+  File "/home/sxr280/BERTLocRNA/scripts/../../BERTLocRNA/utils/embedding_generator.py", line 139, in __call__
+    embeddings = torch.nn.utils.rnn.pad_sequence(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/utils/rnn.py", line 398, in pad_sequence
+    return torch._C._nn.pad_sequence(sequences, batch_first, padding_value)
+TypeError: expected Tensor as element 0 in argument 0, but got list

@@ -6,12 +6,12 @@ hydra:
   sweeper:
     params:
       embedder: parnet,
-             nucleotidetransformer
+                nucleotidetransformer
              
       task:  RNAlocalization
 
 
-embedder : parnet
+embedder : nucleotidetransformer
 task : RNAlocalization
 
 RNAlocalization:
@@ -22,7 +22,7 @@ nucleotidetransformer:
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
   batch_size: 2
   dataloader: false
-  max_length: 8000
+
 parnet:
   _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
   model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet

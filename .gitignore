@@ -15,3 +15,6 @@
 
 #any log file
 ./scripts/outputs/
+./*.out
+./multirun/
+./scripts/multirun

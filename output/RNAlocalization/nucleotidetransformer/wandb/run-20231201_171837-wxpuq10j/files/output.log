@@ -1,0 +1,53 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+/home/sxr280/BERTLocRNA/saved_model/NT  already exists, loading the model locally
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:04<00:00,  2.02s/it]
+Some weights of the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT were not used when initializing EsmModel: ['lm_head.dense.bias', 'lm_head.decoder.weight', 'lm_head.bias', 'lm_head.layer_norm.weight', 'lm_head.layer_norm.bias', 'lm_head.dense.weight']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT and are newly initialized: ['esm.pooler.dense.bias', 'esm.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████| 296/296 [00:00<00:00, 531470.03it/s]
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████| 75/75 [00:00<00:00, 301603.84it/s]
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████| 94/94 [00:00<00:00, 373710.50it/s]
+loading the dataset...
+[2023-12-01 17:19:08,063][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=parnet
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████| 243/243 [00:00<00:00, 516843.75it/s]
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 162630.92it/s]
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 318502.37it/s]
+Error executing job with overrides: ['model=base_model', 'task=RNAlocalization', 'embedder=nucleotidetransformer']
+Traceback (most recent call last):
+  File "train_model.py", line 55, in <module>
+    train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
+    raise ex
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
+    _ = r.return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "train_model.py", line 46, in train
+    Trainer = MyTrainer(model = model, config = cfg.Trainer.config)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 226, in __init__
+    self.plmodel = LightningModel(model, config = self.config)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 41, in __init__
+    self.config = self.config
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1269, in __getattr__
+    raise AttributeError("'{}' object has no attribute '{}'".format(
+AttributeError: 'LightningModel' object has no attribute 'config'

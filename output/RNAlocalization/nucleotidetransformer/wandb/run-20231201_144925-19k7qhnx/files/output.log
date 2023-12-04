@@ -1,0 +1,6 @@
+[2023-12-01 14:49:33,163][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=parnet
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet
+Error executing job with overrides: ['model=base_model', 'task=RNAlocalization', 'embedder=nucleotidetransformer']
+Error locating target 'BERTLocRNA.models.base_model.CustomizedModel', set env var HYDRA_FULL_ERROR=1 to see chained exception.
+full_key: base_model
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

@@ -1,0 +1,87 @@
+2023-12-02 19:13:55.858382: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+[2023-12-02 19:14:07,353][HYDRA] Launching 2 jobs locally
+[2023-12-02 19:14:07,353][HYDRA] 	#0 : embedder=parnet task=RNAlocalization
+2023-12-02 19:14:07.489379: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2023-12-02 19:14:07.489555: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2023-12-02 19:14:07.490236: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:14:00.0 name: Quadro RTX 6000 computeCapability: 7.5
+coreClock: 1.77GHz coreCount: 72 deviceMemorySize: 23.64GiB deviceMemoryBandwidth: 625.94GiB/s
+2023-12-02 19:14:07.490772: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties: 
+pciBusID: 0000:15:00.0 name: Quadro RTX 6000 computeCapability: 7.5
+coreClock: 1.77GHz coreCount: 72 deviceMemorySize: 23.64GiB deviceMemoryBandwidth: 625.94GiB/s
+2023-12-02 19:14:07.490813: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2023-12-02 19:14:07.490870: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2023-12-02 19:14:07.490894: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2023-12-02 19:14:07.512775: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2023-12-02 19:14:07.552302: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2023-12-02 19:14:07.582438: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2023-12-02 19:14:07.607069: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2023-12-02 19:14:07.607222: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2023-12-02 19:14:07.609264: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+running the embedding for task: RNAlocalization
+running the model: parnet
+[2023-12-02 19:14:12,940][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /tmp/tmp9b40fy9g
+[2023-12-02 19:14:12,941][torch.distributed.nn.jit.instantiator][INFO] - Writing /tmp/tmp9b40fy9g/_remote_module_non_scriptable.py
+[2023-12-02 19:14:13,406][HYDRA] 	#1 : embedder=nucleotidetransformer task=RNAlocalization
+running the embedding for task: RNAlocalization
+running the model: nucleotidetransformer
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:12<00:12, 12.31s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:12<00:00,  5.33s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:12<00:00,  6.37s/it]
+Some weights of the model checkpoint at InstaDeepAI/nucleotide-transformer-2.5b-multi-species were not used when initializing EsmModel: ['lm_head.dense.weight', 'lm_head.dense.bias', 'lm_head.layer_norm.bias', 'lm_head.layer_norm.weight', 'lm_head.decoder.weight', 'lm_head.bias']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at InstaDeepAI/nucleotide-transformer-2.5b-multi-species and are newly initialized: ['esm.pooler.dense.bias', 'esm.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Creating the path  /home/sxr280/saved_model/NT
+Map:   0%|          | 0/14650 [00:00<?, ? examples/s]Map:   0%|          | 0/14650 [00:00<?, ? examples/s]
+Error executing job with overrides: ['embedder=parnet', 'task=RNAlocalization']
+Traceback (most recent call last):
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 92, in _call_target
+    return _target_(*args, **kwargs)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/utils/embedding_generator.py", line 30, in __init__
+    self.load_model(*args, **kwargs)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/utils/embedding_generator.py", line 316, in load_model
+    self.model = ParnetModel(model_path)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/RBPLLM/Parnet.py", line 16, in __init__
+    self.from_pretrained(*args, **kwargs)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/RBPLLM/Parnet.py", line 79, in from_pretrained
+    self.model = Parnet_model(model_path).to(device)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/RBPLLM/Parnet.py", line 65, in __init__
+    self.embedding_layer = nn.Embedding(num_embeddings=len(self.vocabulary.keys()),embedding_dim=len(list(self.vocabulary.values())[0]),_weight=torch.tensor(list(self.vocabulary.values())))
+TypeError: not a sequence
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sxr280/BERTLocRNA/scripts/generate_embedding.py", line 26, in <module>
+    get_embedding()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
+    raise ex
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
+    _ = r.return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/sxr280/BERTLocRNA/scripts/generate_embedding.py", line 18, in get_embedding
+    embedder = hydra.utils.instantiate(cfg[cfg.embedder])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 226, in instantiate
+    return instantiate_node(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 347, in instantiate_node
+    return _call_target(_target_, partial, args, kwargs, full_key)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 97, in _call_target
+    raise InstantiationException(msg) from e
+hydra.errors.InstantiationException: Error in call to target 'BERTLocRNA.utils.embedding_generator.ParnetEmbedder':
+TypeError('not a sequence')
+full_key: parnet

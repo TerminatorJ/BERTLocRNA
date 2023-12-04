@@ -32,7 +32,8 @@ class ParnetTokenizer(baseclass):
                 self.vocabulary = json.load(file)
         except FileNotFoundError:
             raise FileNotFoundError(f"Model file not found: {model_path}")
-
+        self.pad_token_id = 0
+        
     def output(self, sequences : List[str], return_tensors = "pt", max_length = 8000) -> List[int]:
         assert len(sequences) >= 2, "Please ensure that the number of input sequences should larger than 2"
         encoding_keys = list(self.vocabulary.keys())

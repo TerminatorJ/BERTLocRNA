@@ -1,0 +1,129 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+/home/sxr280/BERTLocRNA/saved_model/NT  already exists, loading the model locally
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:05<00:00,  2.67s/it]
+Some weights of the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT were not used when initializing EsmModel: ['lm_head.dense.weight', 'lm_head.dense.bias', 'lm_head.decoder.weight', 'lm_head.bias', 'lm_head.layer_norm.weight', 'lm_head.layer_norm.bias']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT and are newly initialized: ['esm.pooler.dense.bias', 'esm.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+loading the dataset...
+Resolving data files: 100%|█████████████████████████████████████████████████████████████████████████████████████████| 296/296 [00:00<00:00, 290548.56it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████| 75/75 [00:00<00:00, 290196.31it/s]
+Resolving data files: 100%|███████████████████████████████████████████████████████████████████████████████████████████| 94/94 [00:00<00:00, 234821.07it/s]
+embeddings after padding: torch.Size([8, 1000, 2560])
+embeddings after transport: torch.Size([8, 2560, 1000])
+mask from embeddings: torch.Size([8, 1, 1000])
+embed: torch.Size([2, 2560, 1000])
+mask: torch.Size([2, 1, 1000])
+input embedding shape torch.Size([2, 2560, 1000])
+embed_output shape: torch.Size([2, 2560, 1000])
+mask shape torch.Size([2, 1, 1000])
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    --
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─Attention_mask: 2-1               [2, 2560, 3]              205,040
+│    │    └─Tanh: 3-1                    [2, 80, 1000]             --
+│    └─Flatten: 2-2                      [2, 7680]                 --
+│    └─Embedding: 2-3                    [2, 4]                    76
+│    └─Linear: 2-4                       [2, 100]                  768,100
+│    └─Actvation: 2-5                    [2, 104]                  --
+│    └─Dropout: 2-6                      [2, 104]                  --
+│    └─Linear: 2-7                       [2, 9]                    945
+│    └─Sigmoid: 2-8                      [2, 9]                    --
+==========================================================================================
+Total params: 974,161
+Trainable params: 974,161
+Non-trainable params: 0
+Total mult-adds (M): 1.54
+==========================================================================================
+Input size (MB): 20.49
+Forward/backward pass size (MB): 0.00
+Params size (MB): 3.08
+Estimated Total Size (MB): 23.57
+==========================================================================================
+[2023-12-02 16:38:30,838][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 1
+[2023-12-02 16:38:30,848][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:1 with 2 nodes.
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+embeddings after padding: torch.Size([8, 1000, 2560])
+embeddings after transport: torch.Size([8, 2560, 1000])
+mask from embeddings: torch.Size([8, 1, 1000])
+input embedding shape torch.Size([8, 2560, 1000])
+embed_output shape: torch.Size([8, 2560, 1000])
+mask shape torch.Size([8, 1, 1000])
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+[2023-12-02 16:38:35,392][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=parnet
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet
+Error executing job with overrides: ['model=base_model', 'task=RNAlocalization', 'embedder=nucleotidetransformer']
+Traceback (most recent call last):
+  File "/home/sxr280/BERTLocRNA/scripts/train_model.py", line 55, in <module>
+    train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
+    raise ex
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
+    _ = r.return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/sxr280/BERTLocRNA/scripts/train_model.py", line 49, in train
+    Trainer.train(train_dataloader, eval_dataloader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 240, in train
+    trainer.fit(self.plmodel, train_loader, val_loader)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 608, in fit
+    call._call_and_handle_interrupt(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/call.py", line 38, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 650, in _fit_impl
+    self._run(model, ckpt_path=self.ckpt_path)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1112, in _run
+    results = self._run_stage()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1191, in _run_stage
+    self._run_train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1204, in _run_train
+    self._run_sanity_check()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1276, in _run_sanity_check
+    val_loop.run()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/loop.py", line 199, in run
+    self.advance(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/dataloader/evaluation_loop.py", line 152, in advance
+    dl_outputs = self.epoch_loop.run(self._data_fetcher, dl_max_batches, kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/loop.py", line 199, in run
+    self.advance(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/epoch/evaluation_epoch_loop.py", line 137, in advance
+    output = self._evaluation_step(**kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loops/epoch/evaluation_epoch_loop.py", line 234, in _evaluation_step
+    output = self.trainer._call_strategy_hook(hook_name, *kwargs.values())
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 1494, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/strategies/ddp.py", line 359, in validation_step
+    return self.model(*args, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/parallel/distributed.py", line 1040, in forward
+    output = self._run_ddp_forward(*inputs, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/parallel/distributed.py", line 1000, in _run_ddp_forward
+    return module_to_run(*inputs[0], **kwargs[0])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/overrides/base.py", line 110, in forward
+    return self._forward_module.validation_step(*inputs, **kwargs)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 180, in validation_step
+    categorical_accuracy = self.categorical_accuracy(y_pred, y)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 98, in categorical_accuracy
+    y_true = torch.argmax(y_true, dim=1)
+IndexError: Dimension out of range (expected to be in range of [-1, 0], but got 1)

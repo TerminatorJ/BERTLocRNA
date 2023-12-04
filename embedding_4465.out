@@ -1,0 +1,82 @@
+2023-12-02 19:16:23.439786: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+[2023-12-02 19:16:30,744][HYDRA] Launching 2 jobs locally
+[2023-12-02 19:16:30,744][HYDRA] 	#0 : embedder=parnet task=RNAlocalization
+2023-12-02 19:16:30.865048: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2023-12-02 19:16:30.865197: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2023-12-02 19:16:30.865866: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:14:00.0 name: Quadro RTX 6000 computeCapability: 7.5
+coreClock: 1.77GHz coreCount: 72 deviceMemorySize: 23.64GiB deviceMemoryBandwidth: 625.94GiB/s
+2023-12-02 19:16:30.866374: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties: 
+pciBusID: 0000:15:00.0 name: Quadro RTX 6000 computeCapability: 7.5
+coreClock: 1.77GHz coreCount: 72 deviceMemorySize: 23.64GiB deviceMemoryBandwidth: 625.94GiB/s
+2023-12-02 19:16:30.866408: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2023-12-02 19:16:30.866465: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2023-12-02 19:16:30.866487: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2023-12-02 19:16:30.879061: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2023-12-02 19:16:30.906257: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2023-12-02 19:16:30.924495: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2023-12-02 19:16:30.951248: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2023-12-02 19:16:30.951356: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2023-12-02 19:16:30.953347: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+running the embedding for task: RNAlocalization
+running the model: parnet
+[2023-12-02 19:16:34,320][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /tmp/tmp67co320g
+[2023-12-02 19:16:34,320][torch.distributed.nn.jit.instantiator][INFO] - Writing /tmp/tmp67co320g/_remote_module_non_scriptable.py
+[2023-12-02 19:16:34,614][HYDRA] 	#1 : embedder=nucleotidetransformer task=RNAlocalization
+running the embedding for task: RNAlocalization
+running the model: nucleotidetransformer
+/home/sxr280/saved_model/NT  already exists, loading the model locally
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:05<00:05,  5.92s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:06<00:00,  2.61s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:06<00:00,  3.11s/it]
+Map:   0%|          | 0/14650 [00:00<?, ? examples/s]Map:   0%|          | 0/14650 [00:00<?, ? examples/s]
+Error executing job with overrides: ['embedder=parnet', 'task=RNAlocalization']
+Traceback (most recent call last):
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 92, in _call_target
+    return _target_(*args, **kwargs)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/utils/embedding_generator.py", line 30, in __init__
+    self.load_model(*args, **kwargs)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/utils/embedding_generator.py", line 316, in load_model
+    self.model = ParnetModel(model_path)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/RBPLLM/Parnet.py", line 16, in __init__
+    self.from_pretrained(*args, **kwargs)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/RBPLLM/Parnet.py", line 79, in from_pretrained
+    self.model = Parnet_model(model_path).to(device)
+  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/RBPLLM/Parnet.py", line 65, in __init__
+    self.embedding_layer = nn.Embedding(num_embeddings=len(self.vocabulary.keys()),embedding_dim=len(list(self.vocabulary.values())[0]),_weight=torch.tensor(list(self.vocabulary.values())))
+TypeError: not a sequence
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sxr280/BERTLocRNA/scripts/generate_embedding.py", line 26, in <module>
+    get_embedding()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
+    raise ex
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
+    _ = r.return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
+    raise self._return_value
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/sxr280/BERTLocRNA/scripts/generate_embedding.py", line 18, in get_embedding
+    embedder = hydra.utils.instantiate(cfg[cfg.embedder])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 226, in instantiate
+    return instantiate_node(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 347, in instantiate_node
+    return _call_target(_target_, partial, args, kwargs, full_key)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 97, in _call_target
+    raise InstantiationException(msg) from e
+hydra.errors.InstantiationException: Error in call to target 'BERTLocRNA.utils.embedding_generator.ParnetEmbedder':
+TypeError('not a sequence')
+full_key: parnet

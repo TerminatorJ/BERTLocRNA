@@ -1,0 +1,8 @@
+[2023-12-01 14:28:13,937][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=parnet
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet
+Error executing job with overrides: ['model=base_model', 'task=RNAlocalization', 'embedder=nucleotidetransformer']
+Traceback (most recent call last):
+  File "train_model.py", line 33, in train
+    model = hydra.utils.instantiate(cfg.base_model, config = cfg.base_model.config).to(device)
+TypeError: instantiate() got multiple values for argument 'config'
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

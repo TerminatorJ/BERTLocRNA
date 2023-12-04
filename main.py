@@ -1,8 +1,8 @@
-from data_generator import Locdata, Locdataset
+from BERTLocRNA.utils.data_generator import Locdata, Locdataset
 import torch
 from torch.utils.data import DataLoader
 import os
-from embedding_generator import NucleotideTransformerEmbedder
+from BERTLocRNA.utils.embedding_generator import NucleotideTransformerEmbedder
 from datasets import load_dataset, DatasetDict
 #TODO: 1) split the data 2) Dataset format
 
@@ -14,7 +14,7 @@ from datasets import load_dataset, DatasetDict
 
 #Step 1: getting the data
 #saving the csv file for each fold, upload dataset to the remote hugging face dataset repository
-dataobj = Locdata(data_path = "/home/sxr280/DeepLocRNA/DeepLocRNA/data/allRNA/allRNA_all_human_data_seq_mergedm3locall2_pooled_deduplicated3_filtermilncsnsno.fasta", save_csv = True, foldnum = 5)
+# dataobj = Locdata(data_path = "/home/sxr280/DeepLocRNA/DeepLocRNA/data/allRNA/allRNA_all_human_data_seq_mergedm3locall2_pooled_deduplicated3_filtermilncsnsno.fasta", save_csv = True, foldnum = 5)
 
 #Step 2: getting the embedding
 dataset = load_dataset("TerminatorJ/localization_multiRNA")
