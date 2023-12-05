@@ -1,0 +1,9 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+main function initialization:
+name of the model parameters: fc1.weight
+name of the model parameters: fc1.bias
+name of the model parameters: fc2.weight
+name of the model parameters: fc2.bias
+name of the model parameters: embedding_layer.weight
+name of the model parameters: Attention_layer.W1.weight

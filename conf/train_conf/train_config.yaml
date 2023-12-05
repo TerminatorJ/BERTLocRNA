@@ -17,8 +17,8 @@ hydra :
 
 model: base_model
 task: RNAlocalization
-embedder: parnet
-batch_size: 8
+embedder: nucleotidetransformer
+batch_size: 64
 compartments: ["Nucleus","Exosome","Cytosol","Cytoplasm","Ribosome","Membrane","Endoplasmic reticulum", "Microvesicle", "Mitochondrion"]
 output_dir: ${hydra:runtime.cwd}/../output/${task}/${embedder} #save the path at the task path 
 nb_classes: 9
@@ -46,6 +46,7 @@ base_model:
     activation_att: tanh
     attention: True
     RNA_dim: 4
+    pooling_size: 8
     hidden_dim: ${${embedder}.hidden_dim}
     RNA_order: ["UNK", "A", "C", "G", "T", "N", "Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
 
@@ -55,7 +56,8 @@ parnet:
   batch_size: ${batch_size}
   dataloader: true
   hidden_dim: 256
-  collator: talse
+  collator: false
+  pool_size: 8
 
 
 nucleotidetransformer:
@@ -65,6 +67,7 @@ nucleotidetransformer:
   dataloader: true
   hidden_dim: 2560
   collator: true
+  pool_size: 8
 
 
 
@@ -73,7 +76,7 @@ Trainer:
     # class_weights: None
     accelerator: gpu
     strategy: ddp
-    max_epochs: 500
+    max_epochs: 200
     precison: 32
     num_nodes: 1
     log_every_n_steps: 1000

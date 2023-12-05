@@ -1,0 +1,194 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+main function initialization:
+name of the model parameters: fc1.weight
+name of the model parameters: fc1.bias
+name of the model parameters: fc2.weight
+name of the model parameters: fc2.bias
+name of the model parameters: embedding_layer.weight
+name of the model parameters: Attention_layer.W1.weight
+name of the model parameters: Attention_layer.W2.weight
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 243/243 [00:00<00:00, 425737.62it/s]
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 270318.97it/s]
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 271168.27it/s]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loggers/wandb.py:395: UserWarning: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  rank_zero_warn(
+Total time taken for loading one batch: 0.0739741325378418 seconds
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/lightning_fabric/plugins/environments/slurm.py:166: PossibleUserWarning: The `srun` command is available on your system but is not used. HINT: If your intention is to run Lightning on SLURM, prepend your python command with `srun` like so: srun python train_model.py ...
+  rank_zero_warn(
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/4
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    --
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─MaxPool1d: 2-1                    [2, 256, 1000]            --
+│    └─Dropout: 2-2                      [2, 256, 1000]            --
+│    └─Attention_mask: 2-3               [2, 256, 3]               --
+│    │    └─Linear: 3-1                  [2, 1000, 80]             20,480
+│    │    └─Tanh: 3-2                    [2, 1000, 80]             --
+│    │    └─Linear: 3-3                  [2, 1000, 3]              240
+│    └─Flatten: 2-4                      [2, 768]                  --
+│    └─Embedding: 2-5                    [2, 4]                    76
+│    └─Linear: 2-6                       [2, 100]                  76,900
+│    └─Actvation: 2-7                    [2, 104]                  --
+│    └─Dropout: 2-8                      [2, 104]                  --
+│    └─Linear: 2-9                       [2, 9]                    945
+│    └─Sigmoid: 2-10                     [2, 9]                    --
+==========================================================================================
+Total params: 98,641
+Trainable params: 98,641
+Non-trainable params: 0
+Total mult-adds (M): 0.20
+==========================================================================================
+Input size (MB): 16.39
+Forward/backward pass size (MB): 1.33
+Params size (MB): 0.39
+Estimated Total Size (MB): 18.12
+==========================================================================================
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 4 processes
+----------------------------------------------------------------------------------------------------
+[2023-12-04 13:39:46,767][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 0
+[2023-12-04 13:39:46,768][torch.distributed.distributed_c10d][INFO] - Rank 0: Completed store-based barrier for key:store_based_barrier_key:1 with 4 nodes.
+Sanity Checking: 0it [00:00, ?it/s]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:613: UserWarning: Checkpoint directory /home/sxr280/BERTLocRNA/output/RNAlocalization/parnet/checkpoints exists and is not empty.
+  rank_zero_warn(f"Checkpoint directory {dirpath} exists and is not empty.")
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1,2,3]
+  | Name    | Type            | Params
+--------------------------------------------
+0 | network | CustomizedModel | 98.6 K
+1 | loss_fn | BCELoss         | 0
+--------------------------------------------
+98.6 K    Trainable params
+0         Non-trainable params
+98.6 K    Total params
+0.395     Total estimated model params size (MB)
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, val_dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 48 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+Sanity Checking: 0it [00:00, ?it/s]Total time taken for loading one batch: 2.6949462890625 seconds
+Sanity Checking DataLoader 0:  50%|███████████████████████████████████████████████████████████████████████████████████████████████████████████                                                                                                           | 1/2 [00:00<00:00, 31.78it/s]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:536: PossibleUserWarning: It is recommended to use `self.log('val categorical_accuracy', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+  warning_cache.warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:536: PossibleUserWarning: It is recommended to use `self.log('val categorical_accuracy_strict', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+  warning_cache.warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:536: PossibleUserWarning: It is recommended to use `self.log('val binary_accuracy', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+  warning_cache.warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:536: PossibleUserWarning: It is recommended to use `self.log('val_loss', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+  warning_cache.warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, train_dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 48 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py:1609: PossibleUserWarning: The number of training batches (58) is smaller than the logging interval Trainer(log_every_n_steps=1000). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+Sanity Checking DataLoader 0:  50%|███████████████████████████████████████████████████████████████████████████████████████████████████████████                                                                                                           | 1/2 [00:00<00:00, 31.78it/s]Total time taken for loading one batch: 3.086900472640991 seconds
+Epoch 0:   0%|                                                                                                                                                                                                                                                  | 0/73 [00:00<?, ?it/s]Total time taken for loading one batch: 2.491424798965454 seconds
+Epoch 0:   1%|█▎                                                                                          | 1/73 [00:10<12:28, 10.40s/it, loss=1.33, v_num=o1g6, train categorical_accuracy_step=0.375, train categorical_accuracy_strict_step=0.000, train binary_accuracy_step=0.566]Total time taken for loading one batch: 2.9102084636688232 seconds
+Epoch 0:   3%|██▌                                                                                         | 2/73 [00:20<12:24, 10.48s/it, loss=1.22, v_num=o1g6, train categorical_accuracy_step=0.375, train categorical_accuracy_strict_step=0.172, train binary_accuracy_step=0.804]Total time taken for loading one batch: 2.593536853790283 seconds
+Epoch 0:   4%|███▋                                                                                       | 3/73 [00:32<12:27, 10.68s/it, loss=1.17, v_num=o1g6, train categorical_accuracy_step=0.438, train categorical_accuracy_strict_step=0.0469, train binary_accuracy_step=0.816]Total time taken for loading one batch: 2.927798271179199 seconds
+
+Epoch 0:   5%|█████                                                                                       | 4/73 [00:43<12:30, 10.88s/it, loss=1.13, v_num=o1g6, train categorical_accuracy_step=0.422, train categorical_accuracy_strict_step=0.141, train binary_accuracy_step=0.826]Total time taken for loading one batch: 2.696133613586426 seconds
+Epoch 0:   7%|██████▎                                                                                      | 5/73 [00:55<12:28, 11.01s/it, loss=1.1, v_num=o1g6, train categorical_accuracy_step=0.438, train categorical_accuracy_strict_step=0.109, train binary_accuracy_step=0.816]Total time taken for loading one batch: 2.7527639865875244 seconds
+
+Epoch 0:   8%|███████▍                                                                                   | 6/73 [01:05<12:15, 10.97s/it, loss=1.09, v_num=o1g6, train categorical_accuracy_step=0.391, train categorical_accuracy_strict_step=0.0469, train binary_accuracy_step=0.792]Total time taken for loading one batch: 2.4972362518310547 seconds
+Epoch 0:  10%|████████▊                                                                                   | 7/73 [01:16<11:59, 10.90s/it, loss=1.08, v_num=o1g6, train categorical_accuracy_step=0.453, train categorical_accuracy_strict_step=0.141, train binary_accuracy_step=0.823]Total time taken for loading one batch: 2.333566665649414 seconds
+Epoch 0:  11%|██████████                                                                                  | 8/73 [01:26<11:42, 10.81s/it, loss=1.06, v_num=o1g6, train categorical_accuracy_step=0.312, train categorical_accuracy_strict_step=0.109, train binary_accuracy_step=0.809]Total time taken for loading one batch: 2.8557775020599365 seconds
+
+Epoch 0:  12%|███████████▎                                                                                | 9/73 [01:36<11:27, 10.74s/it, loss=1.04, v_num=o1g6, train categorical_accuracy_step=0.391, train categorical_accuracy_strict_step=0.188, train binary_accuracy_step=0.816]Total time taken for loading one batch: 2.9583935737609863 seconds
+Epoch 0:  14%|████████████▎                                                                             | 10/73 [01:46<11:10, 10.64s/it, loss=1.03, v_num=o1g6, train categorical_accuracy_step=0.484, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.802]Total time taken for loading one batch: 2.1344473361968994 seconds
+Epoch 0:  15%|█████████████▋                                                                             | 11/73 [01:56<10:55, 10.57s/it, loss=1.02, v_num=o1g6, train categorical_accuracy_step=0.359, train categorical_accuracy_strict_step=0.156, train binary_accuracy_step=0.825]Total time taken for loading one batch: 2.9553825855255127 seconds
+Epoch 0:  16%|███████████████▍                                                                              | 12/73 [02:06<10:41, 10.51s/it, loss=1, v_num=o1g6, train categorical_accuracy_step=0.469, train categorical_accuracy_strict_step=0.156, train binary_accuracy_step=0.842]Total time taken for loading one batch: 2.870431900024414 seconds
+
+Epoch 0:  18%|████████████████                                                                          | 13/73 [02:15<10:26, 10.45s/it, loss=0.985, v_num=o1g6, train categorical_accuracy_step=0.500, train categorical_accuracy_strict_step=0.141, train binary_accuracy_step=0.844]Total time taken for loading one batch: 2.888392925262451 seconds
+Epoch 0:  19%|█████████████████▎                                                                        | 14/73 [02:25<10:12, 10.38s/it, loss=0.973, v_num=o1g6, train categorical_accuracy_step=0.344, train categorical_accuracy_strict_step=0.172, train binary_accuracy_step=0.839]Total time taken for loading one batch: 2.844743251800537 seconds
+Epoch 0:  21%|██████████████████▍                                                                       | 15/73 [02:35<10:00, 10.35s/it, loss=0.956, v_num=o1g6, train categorical_accuracy_step=0.484, train categorical_accuracy_strict_step=0.281, train binary_accuracy_step=0.872]Total time taken for loading one batch: 2.997466802597046 seconds
+Epoch 0:  22%|███████████████████▋                                                                      | 16/73 [02:45<09:49, 10.35s/it, loss=0.946, v_num=o1g6, train categorical_accuracy_step=0.406, train categorical_accuracy_strict_step=0.172, train binary_accuracy_step=0.819]Total time taken for loading one batch: 2.9051907062530518 seconds
+Epoch 0:  23%|████████████████████▉                                                                     | 17/73 [02:55<09:37, 10.31s/it, loss=0.936, v_num=o1g6, train categorical_accuracy_step=0.312, train categorical_accuracy_strict_step=0.172, train binary_accuracy_step=0.832]Total time taken for loading one batch: 3.06701397895813 seconds
+Epoch 0:  25%|██████████████████████▏                                                                   | 18/73 [03:05<09:25, 10.28s/it, loss=0.926, v_num=o1g6, train categorical_accuracy_step=0.391, train categorical_accuracy_strict_step=0.156, train binary_accuracy_step=0.826]Total time taken for loading one batch: 3.0734851360321045 seconds
+
+Epoch 0:  26%|███████████████████████▍                                                                  | 19/73 [03:15<09:15, 10.28s/it, loss=0.915, v_num=o1g6, train categorical_accuracy_step=0.594, train categorical_accuracy_strict_step=0.172, train binary_accuracy_step=0.849]Total time taken for loading one batch: 2.7923858165740967 seconds
+Epoch 0:  27%|████████████████████████▋                                                                 | 20/73 [03:25<09:05, 10.29s/it, loss=0.902, v_num=o1g6, train categorical_accuracy_step=0.438, train categorical_accuracy_strict_step=0.328, train binary_accuracy_step=0.878]Total time taken for loading one batch: 2.853856325149536 seconds
+Epoch 0:  29%|█████████████████████████▉                                                                | 21/73 [03:36<08:55, 10.30s/it, loss=0.872, v_num=o1g6, train categorical_accuracy_step=0.266, train categorical_accuracy_strict_step=0.109, train binary_accuracy_step=0.823]Total time taken for loading one batch: 3.4188477993011475 seconds
+Epoch 0:  30%|███████████████████████████▍                                                               | 22/73 [03:46<08:46, 10.31s/it, loss=0.85, v_num=o1g6, train categorical_accuracy_step=0.438, train categorical_accuracy_strict_step=0.234, train binary_accuracy_step=0.839]Total time taken for loading one batch: 2.667881488800049 seconds
+Epoch 0:  32%|████████████████████████████▋                                                              | 23/73 [03:57<08:35, 10.31s/it, loss=0.83, v_num=o1g6, train categorical_accuracy_step=0.625, train categorical_accuracy_strict_step=0.219, train binary_accuracy_step=0.845]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/call.py:48: UserWarning: Detected KeyboardInterrupt, attempting graceful shutdown...
+  rank_zero_warn("Detected KeyboardInterrupt, attempting graceful shutdown...")
+Traceback (most recent call last):
+  File "train_model.py", line 57, in <module>
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 178, in sweep
+    results = self.launcher.launch(batch, initial_job_idx=initial_job_idx)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_launcher.py", line 74, in launch
+    ret = run_job(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "train_model.py", line 54, in train
+    train()
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 267, in test
+    self.get_metrics_all(test_loader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 274, in get_metrics_all
+    for batch in dataloader_test:
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 628, in __next__
+    data = self._next_data()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 671, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 56, in fetch
+    data = self.dataset.__getitems__(possibly_batched_index)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2799, in __getitems__
+    batch = self.__getitem__(keys)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2795, in __getitem__
+    return self._getitem(key)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2780, in _getitem
+    formatted_output = format_table(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 629, in format_table
+    return formatter(pa_table, query_type=query_type)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 400, in __call__
+    return self.format_batch(pa_table)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 102, in format_batch
+    batch = self.recursive_tensorize(batch)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 85, in recursive_tensorize
+    return map_nested(self._recursive_tensorize, data_struct, map_list=False)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 464, in map_nested
+    mapped = [
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 465, in <listcomp>
+    _single_map_nested((function, obj, types, None, True, None))
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 367, in _single_map_nested
+    return function(data_struct)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 79, in _recursive_tensorize
+    return self._consolidate([self.recursive_tensorize(substruct) for substruct in data_struct])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 79, in <listcomp>
+    return self._consolidate([self.recursive_tensorize(substruct) for substruct in data_struct])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 85, in recursive_tensorize
+    return map_nested(self._recursive_tensorize, data_struct, map_list=False)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 456, in map_nested
+    return function(data_struct)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 79, in _recursive_tensorize
+    return self._consolidate([self.recursive_tensorize(substruct) for substruct in data_struct])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 79, in <listcomp>
+    return self._consolidate([self.recursive_tensorize(substruct) for substruct in data_struct])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 85, in recursive_tensorize
+    return map_nested(self._recursive_tensorize, data_struct, map_list=False)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 456, in map_nested
+    return function(data_struct)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 82, in _recursive_tensorize
+    return self._tensorize(data_struct)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 59, in _tensorize
+    if isinstance(value, (np.number, np.ndarray)) and np.issubdtype(value.dtype, np.integer):
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/numpy/core/numerictypes.py", line 392, in issubdtype
+    return issubclass(arg1, arg2)
+KeyboardInterrupt

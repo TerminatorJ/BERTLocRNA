@@ -7,8 +7,6 @@ import os
 import numpy as np
 import sys
 sys.path.append("../")
-print("ok")
-print(os.getcwd())
 from BERTLocRNA.models.attention import Attention_mask
 from BERTLocRNA.models.layers import *
 from torch import Tensor
@@ -56,12 +54,9 @@ class CustomizedModel(nn.Module):
                                             return_attention = True, attention_regularizer_weight = self.config.Att_regularizer_weight, 
                                             normalize = self.config.normalizeatt,attmod = self.config.attmod,
                                             sharp_beta = self.config.sharp_beta)
-        # self.add_module("Attention_layer", self.Attention_layer)
-        # Add Attention_mask parameters to CustomizedModel
-        # print("loading the base mode:", self.Attention_layer, self.Attention_layer.named_parameters())
-        # for name, param in self.Attention_layer.named_parameters():
-        #     print("attention layer parameters names:", name)
-        #     self.register_parameter("Attention_layer." + name, param)
+        #using pooling layer to downsample the sequence
+        self.maxpool = nn.MaxPool1d(self.config.pooling_size, stride = self.config.pooling_size)
+
         
         
 
@@ -87,8 +82,8 @@ class CustomizedModel(nn.Module):
     def forward(self, embed : Tensor, x_mask : Tensor, RNA_type : Tensor):
 
         #The input should be embedding of different pre-trained methods
-        #expand the mask to 3d
         RNA_type = RNA_type.long()
+        embed = self.dropout(self.maxpool(embed))
         output = self.Att(embed, x_mask) #[hidden, heads] 
         output = self.flatten(output)
         

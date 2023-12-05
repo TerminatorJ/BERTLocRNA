@@ -1,0 +1,77 @@
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    --
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─MaxPool1d: 2-1                    [2, 256, 1000]            --
+│    └─Dropout: 2-2                      [2, 256, 1000]            --
+│    └─Attention_mask: 2-3               [2, 256, 3]               --
+│    │    └─Linear: 3-1                  [2, 1000, 80]             20,480
+│    │    └─Tanh: 3-2                    [2, 1000, 80]             --
+│    │    └─Linear: 3-3                  [2, 1000, 3]              240
+│    └─Flatten: 2-4                      [2, 768]                  --
+│    └─Embedding: 2-5                    [2, 4]                    76
+│    └─Linear: 2-6                       [2, 100]                  76,900
+│    └─Actvation: 2-7                    [2, 104]                  --
+│    └─Dropout: 2-8                      [2, 104]                  --
+│    └─Linear: 2-9                       [2, 9]                    945
+│    └─Sigmoid: 2-10                     [2, 9]                    --
+==========================================================================================
+Total params: 98,641
+Trainable params: 98,641
+Non-trainable params: 0
+Total mult-adds (M): 0.20
+==========================================================================================
+Input size (MB): 16.39
+Forward/backward pass size (MB): 1.33
+Params size (MB): 0.39
+Estimated Total Size (MB): 18.12
+==========================================================================================
+[2023-12-05 16:04:15,824][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 1
+[2023-12-05 16:04:15,834][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:1 with 2 nodes.
+Resolving data files: 100%|███████████████████████████████████████████████████████| 243/243 [00:00<00:00, 527817.64it/s]
+Resolving data files: 100%|█████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 307747.75it/s]
+Resolving data files: 100%|█████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 331582.55it/s]
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+Epoch duration: 513.49 seconds
+[rank: 1] Metric val_loss improved. New best score: 0.338
+Epoch duration: 480.55 seconds
+[rank: 1] Metric val_loss improved by 0.009 >= min_delta = 0.0. New best score: 0.329
+Epoch duration: 473.52 seconds
+[rank: 1] Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.328
+Epoch duration: 472.29 seconds
+[rank: 1] Metric val_loss improved by 0.011 >= min_delta = 0.0. New best score: 0.317
+Epoch duration: 479.30 seconds
+[rank: 1] Metric val_loss improved by 0.007 >= min_delta = 0.0. New best score: 0.310
+Epoch duration: 479.12 seconds
+Epoch duration: 485.50 seconds
+Epoch duration: 479.15 seconds
+Epoch duration: 474.66 seconds
+[rank: 1] Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.310
+Epoch duration: 459.12 seconds
+[rank: 1] Metric val_loss improved by 0.003 >= min_delta = 0.0. New best score: 0.307
+Epoch duration: 459.11 seconds
+Epoch duration: 464.52 seconds
+Epoch duration: 462.16 seconds
+[rank: 1] Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.306
+Epoch duration: 468.85 seconds
+[rank: 1] Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.305
+Epoch duration: 466.69 seconds
+Epoch duration: 464.44 seconds
+[rank: 1] Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.304
+Epoch duration: 465.61 seconds
+[rank: 1] Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.302
+Epoch duration: 467.02 seconds
+Epoch duration: 460.13 seconds
+Epoch duration: 468.25 seconds
+[rank: 1] Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.302
+Epoch duration: 462.11 seconds
+[rank: 1] Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.302
+Epoch duration: 472.52 seconds
+[rank: 1] Metric val_loss improved by 0.003 >= min_delta = 0.0. New best score: 0.299
+Epoch duration: 473.00 seconds
+Epoch duration: 474.33 seconds
+Epoch duration: 476.38 seconds

@@ -1,0 +1,52 @@
+2023-12-04 12:02:37,119 INFO    StreamThr :963750 [internal.py:wandb_internal():87] W&B internal server running at pid: 963750, started at: 2023-12-04 12:02:37.117305
+2023-12-04 12:02:37,120 DEBUG   HandlerThread:963750 [handler.py:handle_request():144] handle_request: status
+2023-12-04 12:02:37,121 INFO    WriterThread:963750 [datastore.py:open_for_write():85] open: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/run-s7dya73l.wandb
+2023-12-04 12:02:37,123 DEBUG   SenderThread:963750 [sender.py:send():336] send: header
+2023-12-04 12:02:37,153 DEBUG   SenderThread:963750 [sender.py:send():336] send: run
+2023-12-04 12:02:37,633 INFO    SenderThread:963750 [dir_watcher.py:__init__():219] watching files in: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/files
+2023-12-04 12:02:37,633 INFO    SenderThread:963750 [sender.py:_start_run_threads():1078] run started: s7dya73l with start time 1701687757.117927
+2023-12-04 12:02:37,633 DEBUG   SenderThread:963750 [sender.py:send_request():363] send_request: summary_record
+2023-12-04 12:02:37,634 DEBUG   HandlerThread:963750 [handler.py:handle_request():144] handle_request: check_version
+2023-12-04 12:02:37,636 INFO    SenderThread:963750 [sender.py:_save_file():1332] saving file wandb-summary.json with policy end
+2023-12-04 12:02:37,636 DEBUG   SenderThread:963750 [sender.py:send_request():363] send_request: check_version
+2023-12-04 12:02:37,714 DEBUG   HandlerThread:963750 [handler.py:handle_request():144] handle_request: run_start
+2023-12-04 12:02:37,732 DEBUG   HandlerThread:963750 [system_info.py:__init__():31] System info init
+2023-12-04 12:02:37,732 DEBUG   HandlerThread:963750 [system_info.py:__init__():46] System info init done
+2023-12-04 12:02:37,733 INFO    HandlerThread:963750 [system_monitor.py:start():183] Starting system monitor
+2023-12-04 12:02:37,733 INFO    SystemMonitor:963750 [system_monitor.py:_start():147] Starting system asset monitoring threads
+2023-12-04 12:02:37,733 INFO    HandlerThread:963750 [system_monitor.py:probe():204] Collecting system info
+2023-12-04 12:02:37,734 INFO    SystemMonitor:963750 [interfaces.py:start():187] Started cpu monitoring
+2023-12-04 12:02:37,734 INFO    SystemMonitor:963750 [interfaces.py:start():187] Started disk monitoring
+2023-12-04 12:02:37,735 INFO    SystemMonitor:963750 [interfaces.py:start():187] Started gpu monitoring
+2023-12-04 12:02:37,735 INFO    SystemMonitor:963750 [interfaces.py:start():187] Started memory monitoring
+2023-12-04 12:02:37,735 INFO    SystemMonitor:963750 [interfaces.py:start():187] Started network monitoring
+2023-12-04 12:02:37,756 DEBUG   HandlerThread:963750 [system_info.py:probe():195] Probing system
+2023-12-04 12:02:37,764 DEBUG   HandlerThread:963750 [system_info.py:_probe_git():180] Probing git
+2023-12-04 12:02:37,781 DEBUG   HandlerThread:963750 [system_info.py:_probe_git():188] Probing git done
+2023-12-04 12:02:37,781 DEBUG   HandlerThread:963750 [system_info.py:probe():240] Probing system done
+2023-12-04 12:02:37,781 DEBUG   HandlerThread:963750 [system_monitor.py:probe():213] {'os': 'Linux-4.18.0-477.21.1.el8_8.x86_64-x86_64-with-glibc2.10', 'python': '3.8.17', 'heartbeatAt': '2023-12-04T11:02:37.756617', 'startedAt': '2023-12-04T11:02:37.073351', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'train_model.py', 'codePath': 'scripts/train_model.py', 'git': {'remote': 'https://github.com/TerminatorJ/BERTLocRNA.git', 'commit': '7f0c79863feab6c3332cbe981a7fba229972bccf'}, 'email': '2300869361@qq.com', 'root': '/home/sxr280/BERTLocRNA', 'host': 'hendrixgpu11fl.unicph.domain', 'username': 'sxr280', 'executable': '/home/sxr280/miniconda3/envs/deeploc_torch/bin/python', 'cpu_count': 24, 'cpu_count_logical': 48, 'cpu_freq': {'current': 2526.0120833333335, 'min': 0.0, 'max': 0.0}, 'cpu_freq_per_core': [{'current': 3091.268, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2957.316, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 3130.75, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 3200.0, 'min': 0.0, 'max': 0.0}, {'current': 3199.998, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 3200.0, 'min': 0.0, 'max': 0.0}, {'current': 3199.998, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 3200.0, 'min': 0.0, 'max': 0.0}, {'current': 3200.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}, {'current': 2400.0, 'min': 0.0, 'max': 0.0}], 'disk': {'total': 69.9658203125, 'used': 49.70225524902344}, 'gpu': 'Quadro RTX 6000', 'gpu_count': 3, 'gpu_devices': [{'name': 'Quadro RTX 6000', 'memory_total': 25769803776}, {'name': 'Quadro RTX 6000', 'memory_total': 25769803776}, {'name': 'Quadro RTX 6000', 'memory_total': 25769803776}], 'memory': {'total': 251.03864669799805}}
+2023-12-04 12:02:37,781 INFO    HandlerThread:963750 [system_monitor.py:probe():214] Finished collecting system info
+2023-12-04 12:02:37,781 INFO    HandlerThread:963750 [system_monitor.py:probe():217] Publishing system info
+2023-12-04 12:02:37,781 DEBUG   HandlerThread:963750 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-12-04 12:02:37,785 DEBUG   HandlerThread:963750 [system_info.py:_save_pip():67] Saving pip packages done
+2023-12-04 12:02:37,785 DEBUG   HandlerThread:963750 [system_info.py:_save_conda():74] Saving list of conda packages installed into the current environment
+2023-12-04 12:02:38,635 INFO    Thread-13 :963750 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/files/wandb-summary.json
+2023-12-04 12:02:38,635 INFO    Thread-13 :963750 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/files/conda-environment.yaml
+2023-12-04 12:02:38,635 INFO    Thread-13 :963750 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/files/requirements.txt
+2023-12-04 12:02:46,577 DEBUG   HandlerThread:963750 [system_info.py:_save_conda():86] Saving conda packages done
+2023-12-04 12:02:46,581 INFO    HandlerThread:963750 [system_monitor.py:probe():219] Finished publishing system info
+2023-12-04 12:02:46,609 DEBUG   HandlerThread:963750 [handler.py:handle_request():144] handle_request: status_report
+2023-12-04 12:02:46,609 DEBUG   HandlerThread:963750 [handler.py:handle_request():144] handle_request: keepalive
+2023-12-04 12:02:46,610 DEBUG   SenderThread:963750 [sender.py:send():336] send: files
+2023-12-04 12:02:46,610 INFO    SenderThread:963750 [sender.py:_save_file():1332] saving file wandb-metadata.json with policy now
+2023-12-04 12:02:46,615 DEBUG   HandlerThread:963750 [handler.py:handle_request():144] handle_request: stop_status
+2023-12-04 12:02:46,615 DEBUG   SenderThread:963750 [sender.py:send_request():363] send_request: stop_status
+2023-12-04 12:02:46,643 INFO    Thread-13 :963750 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/files/conda-environment.yaml
+2023-12-04 12:02:46,644 INFO    Thread-13 :963750 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/files/wandb-metadata.json
+2023-12-04 12:02:46,870 DEBUG   SenderThread:963750 [sender.py:send():336] send: telemetry
+2023-12-04 12:02:47,126 INFO    wandb-upload_0:963750 [upload_job.py:push():138] Uploaded file /tmp/tmps85j07u2wandb/do9zg89n-wandb-metadata.json
+2023-12-04 12:02:47,645 INFO    Thread-13 :963750 [dir_watcher.py:_on_file_created():278] file/dir created: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/files/output.log
+2023-12-04 12:02:47,874 DEBUG   HandlerThread:963750 [handler.py:handle_request():144] handle_request: status_report
+2023-12-04 12:02:49,646 INFO    Thread-13 :963750 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231204_120237-s7dya73l/files/output.log
+2023-12-04 12:02:51,894 DEBUG   SenderThread:963750 [sender.py:send():336] send: telemetry
+2023-12-04 12:02:52,895 DEBUG   HandlerThread:963750 [handler.py:handle_request():144] handle_request: status_report

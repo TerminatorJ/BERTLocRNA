@@ -5,8 +5,8 @@ hydra:
   mode: MULTIRUN
   sweeper:
     params:
-      embedder: parnet,
-                nucleotidetransformer
+      embedder: nucleotidetransformer,
+                parnet
              
       task:  RNAlocalization
 

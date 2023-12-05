@@ -1,0 +1,122 @@
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 243/243 [00:00<00:00, 349765.23it/s]
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 198509.04it/s]
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 242645.69it/s]
+Total time taken for loading one batch: 0.07888484001159668 seconds
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loggers/wandb.py:395: UserWarning: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  rank_zero_warn(
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    --
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─MaxPool1d: 2-1                    [2, 256, 1000]            --
+│    └─Dropout: 2-2                      [2, 256, 1000]            --
+│    └─Attention_mask: 2-3               [2, 256, 3]               --
+│    │    └─Linear: 3-1                  [2, 1000, 80]             20,480
+│    │    └─Tanh: 3-2                    [2, 1000, 80]             --
+│    │    └─Linear: 3-3                  [2, 1000, 3]              240
+│    └─Flatten: 2-4                      [2, 768]                  --
+│    └─Embedding: 2-5                    [2, 4]                    76
+│    └─Linear: 2-6                       [2, 100]                  76,900
+│    └─Actvation: 2-7                    [2, 104]                  --
+│    └─Dropout: 2-8                      [2, 104]                  --
+│    └─Linear: 2-9                       [2, 9]                    945
+│    └─Sigmoid: 2-10                     [2, 9]                    --
+==========================================================================================
+Total params: 98,641
+Trainable params: 98,641
+Non-trainable params: 0
+Total mult-adds (M): 0.20
+==========================================================================================
+Input size (MB): 16.39
+Forward/backward pass size (MB): 1.33
+Params size (MB): 0.39
+Estimated Total Size (MB): 18.12
+==========================================================================================
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/lightning_fabric/plugins/environments/slurm.py:166: PossibleUserWarning: The `srun` command is available on your system but is not used. HINT: If your intention is to run Lightning on SLURM, prepend your python command with `srun` like so: srun python train_model.py ...
+  rank_zero_warn(
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/4
+[2023-12-04 13:45:46,049][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 0
+[2023-12-04 13:45:46,049][torch.distributed.distributed_c10d][INFO] - Rank 0: Completed store-based barrier for key:store_based_barrier_key:1 with 4 nodes.
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 4 processes
+----------------------------------------------------------------------------------------------------
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:613: UserWarning: Checkpoint directory /home/sxr280/BERTLocRNA/output/RNAlocalization/parnet/checkpoints exists and is not empty.
+  rank_zero_warn(f"Checkpoint directory {dirpath} exists and is not empty.")
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1,2,3]
+Sanity Checking: 0it [00:00, ?it/s]
+  | Name    | Type            | Params
+--------------------------------------------
+0 | network | CustomizedModel | 98.6 K
+1 | loss_fn | BCELoss         | 0
+--------------------------------------------
+98.6 K    Trainable params
+0         Non-trainable params
+98.6 K    Total params
+0.395     Total estimated model params size (MB)
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, val_dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 48 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+Sanity Checking: 0it [00:00, ?it/s]Total time taken for loading one batch: 2.8939812183380127 seconds
+Sanity Checking DataLoader 0:  50%|███████████████████████████████████████████████████████████████████████████████████████████████████████████                                                                                                           | 1/2 [00:00<00:00, 29.19it/s]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/call.py:48: UserWarning: Detected KeyboardInterrupt, attempting graceful shutdown...
+  rank_zero_warn("Detected KeyboardInterrupt, attempting graceful shutdown...")
+Traceback (most recent call last):
+  File "train_model.py", line 54, in <module>
+    train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 178, in sweep
+    results = self.launcher.launch(batch, initial_job_idx=initial_job_idx)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_launcher.py", line 74, in launch
+    ret = run_job(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "train_model.py", line 51, in train
+    Trainer.test(test_dataloader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 267, in test
+    self.get_metrics_all(test_loader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 274, in get_metrics_all
+    for batch in dataloader_test:
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 628, in __next__
+    data = self._next_data()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 671, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 56, in fetch
+    data = self.dataset.__getitems__(possibly_batched_index)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2799, in __getitems__
+    batch = self.__getitem__(keys)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2795, in __getitem__
+    return self._getitem(key)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2780, in _getitem
+    formatted_output = format_table(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 629, in format_table
+    return formatter(pa_table, query_type=query_type)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 400, in __call__
+    return self.format_batch(pa_table)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 100, in format_batch
+    batch = self.numpy_arrow_extractor().extract_batch(pa_table)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 164, in extract_batch
+    return {col: self._arrow_array_to_numpy(pa_table[col]) for col in pa_table.column_names}
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 164, in <dictcomp>
+    return {col: self._arrow_array_to_numpy(pa_table[col]) for col in pa_table.column_names}
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 178, in _arrow_array_to_numpy
+    array: List = [
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 179, in <listcomp>
+    row for chunk in pa_array.chunks for row in chunk.to_numpy(zero_copy_only=zero_copy_only)
+KeyboardInterrupt

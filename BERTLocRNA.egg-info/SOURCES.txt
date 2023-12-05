@@ -1,0 +1,8 @@
+LICENSE
+README.md
+setup.py
+BERTLocRNA.egg-info/PKG-INFO
+BERTLocRNA.egg-info/SOURCES.txt
+BERTLocRNA.egg-info/dependency_links.txt
+BERTLocRNA.egg-info/requires.txt
+BERTLocRNA.egg-info/top_level.txt

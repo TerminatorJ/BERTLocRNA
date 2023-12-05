@@ -1,0 +1,70 @@
+
+/home/sxr280/BERTLocRNA/saved_model/NT  already exists, loading the model locally
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:05<00:00,  2.59s/it]
+Some weights of the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT were not used when initializing EsmModel: ['lm_head.dense.bias', 'lm_head.bias', 'lm_head.decoder.weight', 'lm_head.layer_norm.bias', 'lm_head.dense.weight', 'lm_head.layer_norm.weight']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT and are newly initialized: ['esm.pooler.dense.weight', 'esm.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+loading the dataset...
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 296/296 [00:00<00:00, 420424.65it/s]
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 75/75 [00:00<00:00, 277156.65it/s]
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 94/94 [00:00<00:00, 282424.48it/s]
+Total time taken for loading one batch: 0.08640646934509277 seconds
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    --
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─MaxPool1d: 2-1                    [2, 2560, 167]            --
+│    └─Dropout: 2-2                      [2, 2560, 167]            --
+│    └─Attention_mask: 2-3               [2, 2560, 3]              --
+│    │    └─Linear: 3-1                  [2, 167, 80]              204,800
+│    │    └─Tanh: 3-2                    [2, 167, 80]              --
+│    │    └─Linear: 3-3                  [2, 167, 3]               240
+│    └─Flatten: 2-4                      [2, 7680]                 --
+│    └─Embedding: 2-5                    [2, 4]                    76
+│    └─Linear: 2-6                       [2, 100]                  768,100
+│    └─Actvation: 2-7                    [2, 104]                  --
+│    └─Dropout: 2-8                      [2, 104]                  --
+│    └─Linear: 2-9                       [2, 9]                    945
+│    └─Sigmoid: 2-10                     [2, 9]                    --
+==========================================================================================
+Total params: 974,161
+Trainable params: 974,161
+Non-trainable params: 0
+Total mult-adds (M): 1.95
+==========================================================================================
+Input size (MB): 27.36
+Forward/backward pass size (MB): 0.22
+Params size (MB): 3.90
+Estimated Total Size (MB): 31.48
+==========================================================================================
+[2023-12-04 15:25:15,864][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 1
+[2023-12-04 15:25:15,875][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:1 with 2 nodes.
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+Total time taken for loading one batch: 0.7649219036102295 seconds
+Total time taken for loading one batch: 0.7434070110321045 seconds
+Total time taken for loading one batch: 0.6429836750030518 seconds
+Total time taken for loading one batch: 0.27593183517456055 seconds
+Total time taken for loading one batch: 0.7915220260620117 seconds
+Total time taken for loading one batch: 0.5846426486968994 seconds
+Total time taken for loading one batch: 1.0652990341186523 seconds
+Total time taken for loading one batch: 1.0670135021209717 seconds
+Total time taken for loading one batch: 0.7907040119171143 seconds
+Total time taken for loading one batch: 1.156773567199707 seconds
+Total time taken for loading one batch: 1.1841251850128174 seconds
+Total time taken for loading one batch: 1.0312190055847168 seconds
+Total time taken for loading one batch: 1.180389404296875 seconds
+Total time taken for loading one batch: 1.0098917484283447 seconds
+Total time taken for loading one batch: 0.9024901390075684 seconds
+Total time taken for loading one batch: 0.6735725402832031 seconds
+Total time taken for loading one batch: 1.1243889331817627 seconds
+Total time taken for loading one batch: 0.9845743179321289 seconds
+Total time taken for loading one batch: 1.1627755165100098 seconds
+Total time taken for loading one batch: 0.8542230129241943 seconds
+Total time taken for loading one batch: 1.2056794166564941 seconds
+Total time taken for loading one batch: 0.9061899185180664 seconds
+Total time taken for loading one batch: 1.097858190536499 seconds
+Total time taken for loading one batch: 0.9685869216918945 seconds

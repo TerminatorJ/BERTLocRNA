@@ -1,0 +1,502 @@
+
+/home/sxr280/BERTLocRNA/saved_model/NT  already exists, loading the model locally
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:05<00:00,  2.68s/it]
+Some weights of the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT were not used when initializing EsmModel: ['lm_head.bias', 'lm_head.decoder.weight', 'lm_head.dense.bias', 'lm_head.dense.weight', 'lm_head.layer_norm.bias', 'lm_head.layer_norm.weight']
+- This IS expected if you are initializing EsmModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing EsmModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of EsmModel were not initialized from the model checkpoint at /home/sxr280/BERTLocRNA/saved_model/NT and are newly initialized: ['esm.pooler.dense.weight', 'esm.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+loading the dataset...
+checkpoint_orig ['/home/sxr280/BERTLocRNA/output/RNAlocalization/nucleotidetransformer/checkpoints/checkpoints_best.ckpt']
+checkpoint_topup []
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 296/296 [00:00<00:00, 532381.64it/s]
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 75/75 [00:00<00:00, 264124.94it/s]
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 94/94 [00:00<00:00, 232056.84it/s]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loggers/wandb.py:395: UserWarning: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  rank_zero_warn(
+Calculating the best threshold for each target ...
+calculating metrics: [[0 1 0 ... 0 0 0]
+ [0 1 0 ... 0 0 0]
+ [0 1 0 ... 0 0 0]
+ ...
+ [0 0 1 ... 0 0 0]
+ [0 1 0 ... 0 0 0]
+ [0 1 0 ... 0 0 0]] [[0.5219846  0.94978666 0.4019537  ... 0.26535556 0.05319415 0.04274627]
+ [0.46147126 0.6554147  0.44882834 ... 0.400993   0.342498   0.29747406]
+ [0.597898   0.9317984  0.37712273 ... 0.30226266 0.02811425 0.07416547]
+ ...
+ [0.45215565 0.5554896  0.4720638  ... 0.41021186 0.4649134  0.35761166]
+ [0.53834176 0.8737921  0.418494   ... 0.33853012 0.08462784 0.12040909]
+ [0.45667756 0.5394161  0.48152852 ... 0.41095293 0.47760856 0.37151045]]
+Calculating the best threshold for each target ...
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+calculating metrics: [[1 1 0 ... 0 0 0]
+ [1 1 0 ... 0 0 0]
+ [1 1 0 ... 0 0 0]
+ ...
+ [0 1 0 ... 0 1 1]
+ [0 1 0 ... 0 1 1]
+ [0 1 0 ... 0 1 1]] [[0.4752719  0.50204074 0.48580638 ... 0.40453455 0.51927215 0.4082507 ]
+ [0.4724026  0.4967087  0.47881824 ... 0.41201067 0.5258783  0.4245762 ]
+ [0.47137746 0.49705476 0.4776015  ... 0.415152   0.52301586 0.42963412]
+ ...
+ [0.46425003 0.4894842  0.46805352 ... 0.43451872 0.5279767  0.46038616]
+ [0.46449733 0.49147543 0.46806857 ... 0.4296167  0.5283076  0.4531392 ]
+ [0.465551   0.49084422 0.4697749  ... 0.43063298 0.5272759  0.45437944]]
+Calculating the best threshold for each target ...
+calculating metrics: [[1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]] [[0.5120791  0.51950884 0.49932048 0.40340132 0.45617878 0.42642462
+  0.42899397 0.48784626 0.38162497]
+ [0.5099209  0.52031803 0.499418   0.40436903 0.45573905 0.42452136
+  0.42833078 0.49031183 0.37617844]
+ [0.5113686  0.5187637  0.50070333 0.40297118 0.45663303 0.42555213
+  0.42914158 0.4896742  0.3813634 ]
+ [0.5115426  0.5143001  0.4976922  0.4021434  0.4577843  0.42619938
+  0.42990538 0.49591726 0.38844067]]
+Calculating the best threshold for each target ...
+calculating metrics: [[1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [1 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [0 1 0 0 0 0 0 1 0]
+ [1 1 0 1 0 0 0 1 0]
+ [1 1 0 1 0 0 0 1 0]
+ [1 1 0 1 0 0 0 1 0]
+ [1 1 0 1 0 0 0 1 0]
+ [1 1 0 1 0 0 0 1 0]
+ [1 1 0 1 0 0 0 1 0]
+ [1 1 0 1 0 0 0 1 0]
+ [1 1 0 1 0 0 0 1 0]] [[0.48549443 0.5030548  0.4821664  0.38379818 0.44377172 0.41827738
+  0.4177106  0.51943517 0.4122539 ]
+ [0.48807192 0.50788856 0.48820716 0.37930673 0.43899786 0.41596237
+  0.4129729  0.51336056 0.39950562]
+ [0.48547623 0.50435156 0.48248324 0.3815032  0.44189045 0.41571605
+  0.41523033 0.51953655 0.40713224]
+ [0.4855149  0.50306654 0.48167655 0.38412592 0.44402644 0.41833895
+  0.41789523 0.5194779  0.4125697 ]
+ [0.48603815 0.5032355  0.48275834 0.38350537 0.44353962 0.41826102
+  0.41736943 0.51900655 0.4114796 ]
+ [0.4856034  0.5014453  0.48224837 0.3887133  0.44815958 0.42251846
+  0.42360973 0.51704574 0.42153072]
+ [0.4856386  0.5030969  0.48234785 0.38495025 0.4449805  0.41935942
+  0.419129   0.5180348  0.41420683]
+ [0.48589557 0.50309706 0.48327255 0.3816761  0.4420955  0.41673106
+  0.41564876 0.52105594 0.40860125]
+ [0.48780632 0.506108   0.48671812 0.38068017 0.44015798 0.41738123
+  0.41389278 0.51503175 0.40343547]
+ [0.4879062  0.50860727 0.48762596 0.37815684 0.43684438 0.41434494
+  0.40999734 0.51486576 0.39413086]
+ [0.4851992  0.5024277  0.48084003 0.38788968 0.44704452 0.4210664
+  0.4222353  0.5169616  0.41916272]
+ [0.4887565  0.50506574 0.4871868  0.3853856  0.4440808  0.42258644
+  0.41944382 0.5101644  0.4129177 ]
+ [0.48744622 0.5117434  0.49105763 0.37892848 0.43542296 0.41424078
+  0.40906525 0.51147586 0.38675773]
+ [0.4855597  0.4984399  0.48308775 0.39183283 0.4509952  0.42571637
+  0.4277962  0.5186556  0.42883754]
+ [0.4872709  0.5093596  0.48749375 0.37739977 0.43675098 0.41308346
+  0.4090944  0.51439947 0.39282662]
+ [0.4820322  0.5207308  0.4916119  0.38815922 0.43639162 0.41464284
+  0.4114011  0.5039264  0.37329808]
+ [0.48529142 0.5033538  0.48264015 0.3836715  0.44361168 0.4182937
+  0.4176818  0.51956165 0.4120326 ]
+ [0.48811    0.5054742  0.48900062 0.38235813 0.44233224 0.42036846
+  0.41691846 0.5124117  0.40784222]
+ [0.48583817 0.5025853  0.48284838 0.38593292 0.4458294  0.42054555
+  0.42057335 0.5172957  0.4164831 ]
+ [0.48796362 0.5088543  0.488754   0.37856904 0.43750432 0.4151059
+  0.41080847 0.5130292  0.3948889 ]
+ [0.4868806  0.5069727  0.48619804 0.37765595 0.43734455 0.41354108
+  0.41000584 0.5190036  0.39589313]
+ [0.4882656  0.51071674 0.49123916 0.37879136 0.43758765 0.41522008
+  0.41113847 0.50903136 0.39248016]
+ [0.48200148 0.53293544 0.48975512 0.39619336 0.43797007 0.41720048
+  0.41405976 0.48379987 0.36736155]
+ [0.48802868 0.52240354 0.49386826 0.38397604 0.436129   0.416304
+  0.4110014  0.49245843 0.3789796 ]
+ [0.48434997 0.5215418  0.4936709  0.38661847 0.43666032 0.415189
+  0.41142085 0.49926177 0.37536865]
+ [0.48764554 0.5060865  0.4853963  0.3820863  0.4416935  0.4177561
+  0.4157464  0.5138556  0.4064937 ]
+ [0.486621   0.5158457  0.4909475  0.3788834  0.43453923 0.41313073
+  0.40765172 0.50686115 0.38159072]
+ [0.4831679  0.52301514 0.4924249  0.3854868  0.4352752  0.413353
+  0.40983978 0.49982798 0.37278783]
+ [0.48359868 0.52124244 0.4894704  0.3828709  0.43297812 0.41178474
+  0.40634406 0.50420636 0.37221935]
+ [0.48530015 0.52176166 0.49335572 0.38648987 0.43658406 0.41564912
+  0.41115338 0.49762136 0.37576917]
+ [0.48744348 0.5061399  0.48860538 0.37856048 0.43855423 0.41537204
+  0.4118883  0.5172113  0.39823845]
+ [0.48777238 0.5055627  0.4863429  0.3803742  0.44004902 0.41696316
+  0.41364482 0.5162635  0.40289146]
+ [0.48684534 0.50578713 0.48475066 0.3879727  0.44650888 0.42283642
+  0.4224373  0.50795734 0.41737035]
+ [0.4895322  0.51115775 0.4922312  0.38021296 0.43798393 0.4174908
+  0.41205624 0.5056903  0.39418364]
+ [0.48723647 0.5063257  0.48697692 0.3783252  0.43748078 0.4144389
+  0.41057086 0.5183976  0.3967235 ]
+ [0.48057348 0.5211517  0.4867643  0.3879301  0.43422532 0.41101488
+  0.40843835 0.5082377  0.3691162 ]
+ [0.4864783  0.50780267 0.48673907 0.377382   0.43744823 0.41318792
+  0.4099868  0.51750416 0.3953517 ]
+ [0.48645797 0.52129817 0.49180433 0.38259417 0.43464714 0.4139436
+  0.40833074 0.49855414 0.37639287]
+ [0.48863438 0.5130556  0.49108657 0.3792443  0.43601683 0.41528946
+  0.4096789  0.5058877  0.38971347]
+ [0.4914094  0.52115583 0.49783397 0.3839357  0.43887025 0.4205375
+  0.41501847 0.4853494  0.3880327 ]
+ [0.4885553  0.51082    0.4905368  0.379055   0.4367096  0.41600966
+  0.41007507 0.50971746 0.39260644]
+ [0.48788732 0.5131806  0.48994175 0.37814748 0.43636376 0.41418868
+  0.40947333 0.50625294 0.38916454]
+ [0.4860793  0.5143718  0.49038234 0.3793946  0.43417048 0.4124044
+  0.40739048 0.5101744  0.38096383]
+ [0.489033   0.51322997 0.48985088 0.37973127 0.43758565 0.41687366
+  0.4107819  0.5033471  0.39296293]
+ [0.48995295 0.5101206  0.4933781  0.3805294  0.43888742 0.4185098
+  0.4131628  0.50621724 0.39638084]
+ [0.48426384 0.5156012  0.490763   0.3812555  0.4346062  0.41170266
+  0.40814796 0.5111439  0.37735334]
+ [0.4875771  0.5118627  0.49086213 0.37859705 0.43557897 0.4135208
+  0.4083624  0.5115435  0.3865086 ]
+ [0.48435923 0.524572   0.49219885 0.3871635  0.43632784 0.4147659
+  0.41088644 0.49499226 0.37305036]
+ [0.4874631  0.50626415 0.48764217 0.3790904  0.4388381  0.4157625
+  0.41220713 0.5171326  0.39985958]
+ [0.4863331  0.5125238  0.4909622  0.3787907  0.4346403  0.4135189
+  0.40822288 0.51250786 0.3842875 ]
+ [0.48963895 0.5118862  0.49239796 0.380023   0.4373002  0.41762325
+  0.41136518 0.5057347  0.39270908]
+ [0.48739806 0.5060459  0.48725    0.3787603  0.43868938 0.4154857
+  0.41199958 0.51751053 0.399531  ]
+ [0.48885027 0.51128125 0.49236432 0.3796781  0.43725246 0.41646108
+  0.41128114 0.5070426  0.3912524 ]
+ [0.48964283 0.51173717 0.49267733 0.380193   0.43739605 0.41619647
+  0.41132835 0.5069867  0.3906899 ]
+ [0.48860562 0.5036993  0.48663554 0.3885934  0.44661117 0.42519093
+  0.42339927 0.5099012  0.41944245]
+ [0.48103723 0.5219454  0.48951575 0.38926008 0.43563968 0.4132837
+  0.41038924 0.50482994 0.37062585]
+ [0.48186463 0.5335614  0.48934898 0.39235735 0.43639585 0.41502276
+  0.4114132  0.48372054 0.3653006 ]
+ [0.48934373 0.5117083  0.49343464 0.3801752  0.4376     0.41723043
+  0.41201204 0.5060437  0.39244062]
+ [0.47686574 0.5319705  0.4858224  0.39736956 0.43668604 0.41426608
+  0.41315392 0.49378812 0.36363345]
+ [0.4827234  0.5205944  0.4888337  0.38520488 0.4345182  0.4122786
+  0.40816694 0.505308   0.37148738]
+ [0.48389873 0.5232239  0.4906646  0.38392207 0.43434402 0.4117814
+  0.4079363  0.5004098  0.37186095]
+ [0.48716855 0.50170594 0.48477587 0.39116418 0.44945937 0.42619097
+  0.42639002 0.51246595 0.42525953]
+ [0.4884844  0.51207095 0.4927561  0.38034835 0.43628338 0.4163266
+  0.41067788 0.50853467 0.3882921 ]
+ [0.48778474 0.5057413  0.48682585 0.37963238 0.43948543 0.41601014
+  0.41294572 0.5174533  0.40126178]
+ [0.48622987 0.5139238  0.49022788 0.37931874 0.43424717 0.41242293
+  0.40732527 0.51095957 0.38106298]
+ [0.48772538 0.50425506 0.4870017  0.38390824 0.44419292 0.42046368
+  0.41926068 0.5129155  0.4120925 ]
+ [0.48957232 0.512428   0.4919101  0.37998444 0.43743584 0.41690364
+  0.4111022  0.50532687 0.39145732]
+ [0.48772997 0.51610184 0.48894203 0.37791935 0.43440005 0.41282767
+  0.40743068 0.5051931  0.38483766]
+ [0.48877144 0.511504   0.4919745  0.37943366 0.4372676  0.4162933
+  0.41124505 0.5066649  0.39207256]
+ [0.4768463  0.533462   0.4838404  0.39879802 0.4371654  0.4128411
+  0.4124643  0.49349618 0.3606884 ]
+ [0.4833681  0.5204724  0.4914756  0.38725615 0.43612275 0.4148058
+  0.4110841  0.50290096 0.37397107]
+ [0.4872702  0.5069815  0.48756304 0.37877244 0.4388068  0.41546702
+  0.41205293 0.5162138  0.399167  ]
+ [0.4883454  0.51165515 0.49064612 0.37873524 0.4371132  0.41545373
+  0.41050735 0.50806165 0.39227125]
+ [0.4898385  0.51146644 0.49291646 0.38043466 0.4386828  0.41840643
+  0.41291216 0.5038183  0.39606786]
+ [0.48597443 0.5201689  0.49502194 0.38524607 0.43667823 0.4171539
+  0.41171768 0.4978381  0.3789641 ]
+ [0.487283   0.50674313 0.48616096 0.37854162 0.43814176 0.4148885
+  0.41087887 0.51742274 0.39785424]
+ [0.4875347  0.5178702  0.49973336 0.38706467 0.43924132 0.42117855
+  0.41634563 0.49620926 0.38544226]
+ [0.48944914 0.5109055  0.49384993 0.3802515  0.43825388 0.41797218
+  0.4123188  0.5062897  0.39396343]
+ [0.48803344 0.5168655  0.49598306 0.38415498 0.43763724 0.41845164
+  0.412732   0.49952582 0.3845248 ]
+ [0.48485196 0.51493555 0.48926038 0.37924546 0.4333238  0.41112715
+  0.4060272  0.5124034  0.3778607 ]
+ [0.4861737  0.52640945 0.49605268 0.39127403 0.43833032 0.42128345
+  0.41545054 0.48616952 0.37708667]
+ [0.48605087 0.52162194 0.49230653 0.38311517 0.43539828 0.41383266
+  0.40913063 0.49826166 0.37642977]
+ [0.48801687 0.5053516  0.48737133 0.38053846 0.44041687 0.41737166
+  0.41422957 0.5160808  0.40357545]
+ [0.48106784 0.5267181  0.4877853  0.38647464 0.43368986 0.41083112
+  0.4072335  0.498783   0.36603191]
+ [0.48617515 0.5216066  0.49173364 0.38408703 0.43521336 0.41509047
+  0.40944117 0.49777514 0.3762153 ]
+ [0.48874068 0.5084152  0.4881479  0.3802664  0.43944243 0.41718844
+  0.41338107 0.51088995 0.40012443]
+ [0.4908897  0.5126871  0.49277747 0.38147938 0.43877172 0.41918895
+  0.41346696 0.50097424 0.39643818]
+ [0.48588815 0.5182556  0.49376494 0.38362247 0.4362934  0.41538534
+  0.41085818 0.50244874 0.37926763]
+ [0.485494   0.5026954  0.48170388 0.38563383 0.44509143 0.4197478
+  0.4194688  0.51888543 0.415285  ]
+ [0.48836547 0.5078178  0.489098   0.37936527 0.4385346  0.4163101
+  0.41211706 0.5137368  0.3983311 ]
+ [0.4836613  0.52208304 0.48912704 0.38101473 0.4330003  0.41097903
+  0.40604964 0.50229204 0.37182492]
+ [0.4861442  0.5010741  0.48356605 0.3856371  0.44625002 0.42071092
+  0.42103392 0.51958865 0.41745716]
+ [0.48670948 0.5024042  0.48435813 0.38437256 0.4446922  0.4196319
+  0.41903478 0.51837784 0.41378847]
+ [0.48862657 0.5065067  0.48892924 0.38163087 0.44163743 0.41902578
+  0.41593182 0.5112128  0.4053246 ]
+ [0.48813927 0.50868964 0.48893973 0.37824914 0.43693393 0.4145178
+  0.40998477 0.5140907  0.39320615]
+ [0.48491666 0.5019402  0.48084354 0.3896736  0.44847834 0.42276457
+  0.42408267 0.5164344  0.42262146]]
+Calculating the best threshold for each target ...
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+calculating metrics: [[0 1 0 ... 0 0 0]
+ [0 1 0 ... 0 0 0]
+ [0 1 0 ... 0 0 0]
+ ...
+ [0 1 0 ... 1 0 0]
+ [0 1 0 ... 1 0 0]
+ [0 1 0 ... 1 0 0]] [[6.01497352e-01 8.99214864e-01 4.38043743e-01 ... 3.82116050e-01
+  6.13703653e-02 9.36801508e-02]
+ [8.31890047e-01 9.99579966e-01 3.32267880e-01 ... 1.66892260e-01
+  4.39552641e-05 4.91055776e-04]
+ [6.05859518e-01 9.11943316e-01 4.18927938e-01 ... 3.53940457e-01
+  5.16531952e-02 8.54513049e-02]
+ ...
+ [7.95168817e-01 9.99693274e-01 3.34147841e-01 ... 1.24796279e-01
+  8.12959770e-05 3.27487796e-04]
+ [6.79506660e-01 9.62452948e-01 3.70773226e-01 ... 3.05888385e-01
+  1.19071985e-02 4.17510457e-02]
+ [6.16807461e-01 9.03018057e-01 4.03601825e-01 ... 3.58726174e-01
+  4.61814813e-02 9.66343582e-02]]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1318: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))

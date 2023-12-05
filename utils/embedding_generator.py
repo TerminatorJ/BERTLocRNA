@@ -9,10 +9,13 @@ from datasets import load_dataset, DatasetDict
 import numpy as np
 import logging
 import sys
+import torch.nn as nn
 sys.path.append("../../")
 from torch.utils.data import DataLoader
 from torch import Tensor
 from BERTLocRNA.RBPLLM.Parnet import ParnetModel, ParnetTokenizer
+import time
+import shutil
 
 root_dir =  os.getcwd()
 
@@ -61,14 +64,15 @@ class baseclass:
                 seq_length1 = np.sum(left_mask)
                 #filter out the cls token
                 left_embed = left_embed[1:seq_length1]
-                left_mask = left_mask[:seq_length1]
+                left_mask = left_mask[1:seq_length1]
                 
                 right_embed = truncated_embeds[count]
                 right_mask = truncated_masks[count]
                 #removing the padding
                 seq_length2 = np.sum(right_mask)
-                right_embed = right_embed[:seq_length2]
-                right_mask = right_mask[:seq_length2]
+                #removing the cls
+                right_embed = right_embed[1:seq_length2]
+                right_mask = right_mask[1:seq_length2]
                 if len(left_embed.shape) >= 2:
                     new_embed = np.vstack([left_embed, right_embed])
                     embedding_out.append(new_embed)
@@ -81,7 +85,7 @@ class baseclass:
             else:
                 seq_length1 = np.sum(left_mask)
                 left_embed = left_embed[1:seq_length1]
-                left_mask = left_mask[:seq_length1]
+                left_mask = left_mask[1:seq_length1]
                 if len(left_embed.shape) >= 2:
                     embedding_out.append(left_embed)
                 else:
@@ -123,29 +127,43 @@ class DataCollatorForSupervisedDataset(object):
 
     tokenizer: object
     hidden_dim: 4
-    def multi_label(self, label):
-        label = list(map(lambda x: torch.tensor([int(i) for i in x]), label))
-        label = torch.stack(label, dim=0)
-        return label
-
+    pool_size: 8
+    def multi_label(self, label: List[List[str]]) -> torch.Tensor:
+        return torch.tensor([[int(i) for i in x] for x in label])
 
 
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
-        embeddings, masks, RNA_type, labels, ids = tuple([instance[key] for instance in instances] for key in ("embedding", "attention_mask","RNA_type", "labels", "ids"))
-        embeddings = torch.nn.utils.rnn.pad_sequence(
-            embeddings, batch_first=True, padding_value=self.tokenizer.pad_token_id
+        # start_time = time.time()
+        embeddings, masks, RNA_type, labels, ids = tuple(
+            [instance[key] for instance in instances] for key in ("embedding", "attention_mask", "RNA_type", "labels", "ids")
         )
-        #For NR and DNABERT
-        if embeddings.shape[2] == self.hidden_dim:
-            embeddings = embeddings.transpose(1,2)
+        # print([i.shape for i in embeddings])
+        # print([len(i) for i in masks])
 
-        masks = torch.nn.utils.rnn.pad_sequence(
-            masks, batch_first=True, padding_value=self.tokenizer.pad_token_id
+        embeddings = torch.nn.utils.rnn.pad_sequence(
+            embeddings, batch_first=True, padding_value=0
         )
-        masks = torch.unsqueeze(masks, dim=1)
-        #get length by mask
+        if embeddings.shape[2] == self.hidden_dim:
+            embeddings = embeddings.transpose(1, 2)
+        masks = torch.nn.utils.rnn.pad_sequence(
+            masks, batch_first=True, padding_value=0
+        ).float()
+        if masks.shape[1] > embeddings.shape[2]:
+            masks = masks[:, 1:]
+        # print("embeddings shape", embeddings.shape, embeddings)
+        # print("masks shape", masks.shape, masks)
+        
+        # Downsample the mask
+        pooling = nn.MaxPool1d(self.pool_size, stride=self.pool_size)
+        masks = torch.unsqueeze(pooling(masks), dim=1)
+
+        # Get length by mask
         labels = self.multi_label(labels)
-        RNA_type = torch.Tensor(RNA_type).long()
+        RNA_type = torch.tensor(RNA_type).long()
+        end_time = time.time()
+        # elapsed_time = end_time-start_time
+
+        # print(f"Total time taken for loading one batch: {elapsed_time} seconds")
         return dict(
             embedding=embeddings,
             RNA_type=RNA_type,
@@ -162,7 +180,7 @@ class NucleotideTransformerEmbedder(baseclass):
     """
     Embed using the Nuclieotide Transformer (NT) model https://www.biorxiv.org/content/10.1101/2023.01.11.523679v2.full
     """
-    def load_model(self, model_path : str, batch_size : int = 8, dataloader : bool = False, hidden_dim : int = 4, **kwargs):
+    def load_model(self, model_path : str, batch_size : int = 8, dataloader : bool = False, hidden_dim : int = 4, pool_size : int = 8, **kwargs):
 
         self.embedder_name = "NT"
         local_path = path_join(root_dir, "..", "saved_model", self.embedder_name)
@@ -202,6 +220,7 @@ class NucleotideTransformerEmbedder(baseclass):
         self.batch_size = batch_size
         self.dataloader = dataloader
         self.hidden_dim = hidden_dim
+        self.pool_size = pool_size
 
 
         
@@ -278,10 +297,16 @@ class NucleotideTransformerEmbedder(baseclass):
             tokenized_datasets = load_dataset(save_path)
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
-       
+        # cache_directory = os.path.expanduser("~/.cache")
+        # try:
+        #     # Attempt to remove the cache directory
+        #     shutil.rmtree(cache_directory)
+        #     print(f"Successfully removed {cache_directory}")
+        # except Exception as e:
+        #     print(f"Error: {e}")
         tokenized_datasets.set_format("torch")
         if self.dataloader:
-            data_collator = DataCollatorForSupervisedDataset(self.tokenizer, self.hidden_dim)
+            data_collator = DataCollatorForSupervisedDataset(self.tokenizer, self.hidden_dim, self.pool_size)
             train_dataloader = DataLoader(
                                             tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )
@@ -304,6 +329,7 @@ class ParnetEmbedder(baseclass):
                         dataloader : bool = False, 
                         max_length : int = 8000, 
                         hidden_dim : int = 4,
+                        pool_size : int = 8,
                         **kwargs):
         self.tokenizer = ParnetTokenizer(model_path)
         self.model = ParnetModel(model_path)
@@ -312,6 +338,7 @@ class ParnetEmbedder(baseclass):
         self.dataloader = dataloader
         self.max_length = max_length
         self.hidden_dim = hidden_dim
+        self.pool_size = pool_size
     def get_embed(self, tokens_ids) -> np.ndarray:
         tokens_ids = tokens_ids.to(device)
         outs = self.model(tokens_ids).detach().cpu().numpy() # get last hidden state
@@ -342,12 +369,14 @@ class ParnetEmbedder(baseclass):
         else:
             print("loading the dataset...")
             tokenized_datasets = load_dataset(save_path)
+        # print("removing the cache")
+
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
-        # tokenized_datasets["labels"] = [list(i) for i in tokenized_datasets["labels"]]
         tokenized_datasets.set_format("torch")
+        
         if self.dataloader:
-            data_collator = DataCollatorForSupervisedDataset(self.tokenizer, self.hidden_dim)
+            data_collator = DataCollatorForSupervisedDataset(self.tokenizer, self.hidden_dim, self.pool_size)
             train_dataloader = DataLoader(
                                             tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )

@@ -1,70 +1,0 @@
-2023-12-03 09:58:47.442435: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
-[2023-12-03 09:58:57,976][HYDRA] Launching 2 jobs locally
-[2023-12-03 09:58:57,976][HYDRA] 	#0 : embedder=parnet task=RNAlocalization
-2023-12-03 09:58:58.082118: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
-2023-12-03 09:58:58.082241: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
-2023-12-03 09:58:58.084880: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
-pciBusID: 0000:01:00.0 name: NVIDIA A100-SXM4-40GB computeCapability: 8.0
-coreClock: 1.41GHz coreCount: 108 deviceMemorySize: 39.39GiB deviceMemoryBandwidth: 1.41TiB/s
-2023-12-03 09:58:58.084905: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
-2023-12-03 09:58:58.084951: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
-2023-12-03 09:58:58.084973: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
-2023-12-03 09:58:58.106883: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
-2023-12-03 09:58:58.165659: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
-2023-12-03 09:58:58.210323: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
-2023-12-03 09:58:58.238405: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
-2023-12-03 09:58:58.238461: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
-2023-12-03 09:58:58.243345: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0
-running the embedding for task: RNAlocalization
-running the model: parnet
-[2023-12-03 09:59:02,953][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /tmp/tmp9vb6qjin
-[2023-12-03 09:59:02,954][torch.distributed.nn.jit.instantiator][INFO] - Writing /tmp/tmp9vb6qjin/_remote_module_non_scriptable.py
-embedding will be saved at: /home/sxr280/embeddings/Parnetembedding
-loading the dataset...
-Resolving data files:   0%|          | 0/243 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 243/243 [00:00<00:00, 817990.27it/s]
-Resolving data files:   0%|          | 0/62 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 62/62 [00:00<00:00, 163038.78it/s]
-Resolving data files:   0%|          | 0/77 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 77/77 [00:00<00:00, 553016.11it/s]
-[2023-12-03 09:59:07,522][HYDRA] 	#1 : embedder=nucleotidetransformer task=RNAlocalization
-running the embedding for task: RNAlocalization
-running the model: nucleotidetransformer
-/home/sxr280/saved_model/NT  already exists, loading the model locally
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.96s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:12<00:00,  5.13s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:12<00:00,  6.15s/it]
-loading the dataset...
-Resolving data files:   0%|          | 0/296 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 296/296 [00:00<00:00, 631813.73it/s]
-Resolving data files:   0%|          | 0/75 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 75/75 [00:00<00:00, 282128.07it/s]
-Resolving data files:   0%|          | 0/94 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 94/94 [00:00<00:00, 458447.18it/s]
-Error executing job with overrides: ['embedder=parnet', 'task=RNAlocalization']
-Traceback (most recent call last):
-  File "/home/sxr280/BERTLocRNA/scripts/generate_embedding.py", line 30, in <module>
-    get_embedding()
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
-    _run_hydra(
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
-    _run_app(
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
-    run_and_report(
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 222, in run_and_report
-    raise ex
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
-    return func()
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
-    lambda: hydra.multirun(
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
-    ret = sweeper.sweep(arguments=task_overrides)
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 182, in sweep
-    _ = r.return_value
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 260, in return_value
-    raise self._return_value
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
-    ret.return_value = task_function(task_cfg)
-  File "/home/sxr280/BERTLocRNA/scripts/generate_embedding.py", line 28, in get_embedding
-    tokenized_datasets = embedder(dataset)
-  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/utils/embedding_generator.py", line 115, in __call__
-    return self.process(dataset)
-  File "/home/sxr280/BERTLocRNA/../BERTLocRNA/utils/embedding_generator.py", line 351, in process
-    tokenized_datasets = load_dataset(save_path)
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/load.py", line 2152, in load_dataset
-    builder_instance.download_and_prepare(
-  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/builder.py", line 888, in download_and_prepare
-    raise OSError(
-OSError: Not enough disk space. Needed: Unknown size (download: Unknown size, generated: Unknown size, post-processed: Unknown size)

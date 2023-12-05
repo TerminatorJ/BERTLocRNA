@@ -1,0 +1,33 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+main function initialization:
+name of the model parameters: fc1.weight
+name of the model parameters: fc1.bias
+name of the model parameters: fc2.weight
+name of the model parameters: fc2.bias
+name of the model parameters: embedding_layer.weight
+name of the model parameters: Attention_layer.W1.weight
+name of the model parameters: Attention_layer.W2.weight
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 243/243 [00:00<00:00, 360019.74it/s]
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 206878.96it/s]
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 221509.88it/s]
+after initialization:
+name of the model parameters: network.fc1.weight
+name of the model parameters: network.fc1.bias
+name of the model parameters: network.fc2.weight
+name of the model parameters: network.fc2.bias
+name of the model parameters: network.embedding_layer.weight
+name of the model parameters: network.Attention_layer.W1.weight
+name of the model parameters: network.Attention_layer.W2.weight
+[2023-12-04 13:20:45,243][HYDRA] 	#1 : model=base_model task=RNAlocalization embedder=nucleotidetransformer
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/nucleotidetransformer
+main function initialization:
+name of the model parameters: fc1.weight
+name of the model parameters: fc1.bias
+name of the model parameters: fc2.weight
+name of the model parameters: fc2.bias
+name of the model parameters: embedding_layer.weight
+name of the model parameters: Attention_layer.W1.weight
+name of the model parameters: Attention_layer.W2.weight

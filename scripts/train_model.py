@@ -9,7 +9,7 @@ import torch
 import sys
 sys.path.append("../")
 sys.path.append("../..")
-from utils.trainer import MyTrainer
+from BERTLocRNA.utils.trainer import MyTrainer
 from datasets import load_dataset
 
 os.environ["HYDRA_FULL_ERROR"] = "1"
@@ -33,9 +33,6 @@ def train(cfg : DictConfig):
 
     #loading the model
     model = hydra.utils.instantiate(cfg.base_model)
-    print("main function initialization:")
-    for name, param in model.named_parameters():
-        print("name of the model parameters:", name)
     #loading the dataset
     embedder = hydra.utils.instantiate(cfg[cfg.embedder])
     #generating the embedding using different embedders

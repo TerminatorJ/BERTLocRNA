@@ -2,8 +2,10 @@ import hydra
 from omegaconf import DictConfig, OmegaConf, open_dict
 import sys
 sys.path.append("../")
+sys.path.append("../../")
 import os
 from datasets import load_dataset, Value, Features
+import BERTLocRNA
 
 os.environ["HYDRA_FULL_ERROR"] = "1"
 

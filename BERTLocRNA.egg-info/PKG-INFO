@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: BERTLocRNA
+Version: 0.0.4
+Summary: Predicting RNA localization based on RBP binding information in BERT architecture
+Home-page: https://github.com/TerminatorJ/BERTLocRNA
+Author: TerminatorJ
+Author-email: wangjun19950708@gmail.com
+License: MIT
+License-File: LICENSE

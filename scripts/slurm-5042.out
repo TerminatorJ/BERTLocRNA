@@ -1,0 +1,2 @@
+read: Connection reset by peer
+fusermount: failed to chdir to /home/sxr280/BERTLocRNA/mnt: Permission denied

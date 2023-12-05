@@ -1,0 +1,40 @@
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files: 100%|██████████| 243/243 [00:00<00:00, 504312.65it/s]
+Resolving data files: 100%|██████████| 62/62 [00:00<00:00, 115885.40it/s]
+Resolving data files: 100%|██████████| 77/77 [00:00<00:00, 296023.29it/s]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loggers/wandb.py:395: UserWarning: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  rank_zero_warn(
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    --
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─MaxPool1d: 2-1                    [2, 256, 1000]            --
+│    └─Dropout: 2-2                      [2, 256, 1000]            --
+│    └─Attention_mask: 2-3               [2, 256, 3]               --
+│    │    └─Linear: 3-1                  [2, 1000, 80]             20,480
+│    │    └─Tanh: 3-2                    [2, 1000, 80]             --
+│    │    └─Linear: 3-3                  [2, 1000, 3]              240
+│    └─Flatten: 2-4                      [2, 768]                  --
+│    └─Embedding: 2-5                    [2, 4]                    76
+│    └─Linear: 2-6                       [2, 100]                  76,900
+│    └─Actvation: 2-7                    [2, 104]                  --
+│    └─Dropout: 2-8                      [2, 104]                  --
+│    └─Linear: 2-9                       [2, 9]                    945
+│    └─Sigmoid: 2-10                     [2, 9]                    --
+==========================================================================================
+Total params: 98,641
+Trainable params: 98,641
+Non-trainable params: 0
+Total mult-adds (M): 0.20
+==========================================================================================
+Input size (MB): 16.39
+Forward/backward pass size (MB): 1.33
+Params size (MB): 0.39
+Estimated Total Size (MB): 18.12
+==========================================================================================
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs

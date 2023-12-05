@@ -221,9 +221,6 @@ class MyTrainer:
     def __init__(self, model, config):
         self.config = config
         self.plmodel = LightningModel(model, config = self.config)
-        print("after initialization:")
-        for name, param in self.plmodel.named_parameters():
-            print("name of the model parameters:", name)
         self.wandb_logger = WandbLogger(log_model = "all")
         self.ckpt_path = path_join(self.config.output_dir, "checkpoints")
         self.pred = None
@@ -253,12 +250,18 @@ class MyTrainer:
         return callbacks
     
     def load_checkpoint(self):
-        checkpoint_files = glob.glob(path_join(self.ckpt_path, "checkpoints_best-v*.ckpt"))
-        if not checkpoint_files:
+        checkpoint_orig = glob.glob(path_join(self.ckpt_path, "checkpoints_best.ckpt"))
+        print("checkpoint_orig", checkpoint_orig)
+        checkpoint_topup = glob.glob(path_join(self.ckpt_path, "checkpoints_best-v*.ckpt"))
+        print("checkpoint_topup", checkpoint_topup)
+        if not checkpoint_orig:
             print("No checkpoint files found.")
         else:
-            latest_checkpoint = max(checkpoint_files, key=lambda x: int(x.split('-v')[-1].split('.')[0]))
-            checkpoint = torch.load(latest_checkpoint, map_location = device)
+            if checkpoint_topup:
+                latest_checkpoint = max(checkpoint_topup, key=lambda x: int(x.split('-v')[-1].split('.')[0]))
+                checkpoint = torch.load(latest_checkpoint, map_location = device)
+            else:
+                checkpoint = torch.load(checkpoint_orig[0], map_location = device)
         model_state = checkpoint['state_dict']
         self.plmodel.load_state_dict(model_state)
         return self.plmodel #model with new parameters
@@ -286,9 +289,6 @@ class MyTrainer:
         y_test = np.concatenate(all_y_test, axis=0)
         y_pred = np.concatenate(all_y_pred, axis=0)
         RNA_types = np.concatenate(all_RNA_types, axis=0)
-        print("RNA type:", RNA_types)
-        print("y_test:",y_test)
-        print("y_pred:", y_pred)
         RNA_types = [self.config.RNA_order[int(i)] for i in RNA_types]
         #split the data with RNA types
         RNA_libs = ["lncRNA", "miRNA", "snRNA", "snoRNA", "mRNA"]
@@ -297,18 +297,12 @@ class MyTrainer:
             idx = np.where(np.isin(RNA_types, [RNA]))[0]
             if RNA == "lncRNA":
                 idx = np.where(np.isin(RNA_types, ["lncRNA", "lincRNA"]))[0]
-            print("this idx:", idx)
             # try:
             y_pred_sub = y_pred[idx]
             y_test_sub = y_test[idx]
             best_t = self.find_best_t(y_pred_sub, y_test_sub)
-            print("best t:", best_t)
             df = self.cal_metrics(y_test[idx], y_pred[idx], RNA, best_t)
-            print("df:", df)
             dfs.append(df)
-                
-            # except:
-            #     print("empty:", RNA)
         all_df = pd.concat(dfs, axis=0, ignore_index=True)
 
         all_df.to_csv(path_join(self.config.output_dir, "all_metrics.csv"), index = False, na_rep="NAN")
@@ -350,9 +344,6 @@ class MyTrainer:
                 'Accuracy': acc_c
             })
         y_pred_bi_ac = np.where(y_pred > t, 1, 0)
-        print("y_test.ravel(), y_pred_bi.ravel()", y_test.ravel(), y_pred_bi.ravel())
-        print("original shape:", y_test.shape, y_pred_bi.shape)
-        print("shape:", len(y_test.ravel()), len(y_pred_bi.ravel()))
         try: 
             auprc_micro = average_precision_score(y_test, y_pred, average='micro')
             auroc_micro = roc_auc_score(y_test, y_pred, average='micro')
@@ -392,7 +383,6 @@ class MyTrainer:
 
     def get_mcc(self, t):
         mcc = matthews_corrcoef(self.test_y, [1 if i>t else 0 for i in self.pred])
-        print("mcc", mcc)
         return mcc
     def find_best_t(self, y_pred : List, y_test : List) -> Dict:
         print("Calculating the best threshold for each target ...")
@@ -402,12 +392,8 @@ class MyTrainer:
         for c in range(num_classes):#calculate one by one
             self.pred = y_pred[:,c]
             self.test_y = y_test[:,c]
-            print("self.pred:", self.pred)
-            print("self.test_y:", self.test_y)
-            print("before argmax:", list(map(self.get_mcc, ts)))
             mcc_t = list(map(self.get_mcc, ts))
             max_idx = mcc_t.index(max(mcc_t))
-            print("after argmax:", max_idx)
             max_t = ts[max_idx]
             best_t[c] = max_t
         return best_t

@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/home/sxr280/BERTLocRNA/scripts/generate_embedding.py", line 5, in <module>
-    from BERTLocRNA.utils.embedding_generator import NucleotideTransformerEmbedder
-ModuleNotFoundError: No module named 'BERTLocRNA'

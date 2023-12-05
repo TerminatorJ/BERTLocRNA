@@ -1,0 +1,132 @@
+ok
+/home/sxr280/BERTLocRNA/scripts
+main function initialization:
+name of the model parameters: fc1.weight
+name of the model parameters: fc1.bias
+name of the model parameters: fc2.weight
+name of the model parameters: fc2.bias
+name of the model parameters: embedding_layer.weight
+name of the model parameters: Attention_layer.W1.weight
+name of the model parameters: Attention_layer.W2.weight
+embedding will be saved at: /home/sxr280/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 243/243 [00:00<00:00, 437995.65it/s]
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 62/62 [00:00<00:00, 143040.07it/s]
+Resolving data files: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 77/77 [00:00<00:00, 249970.13it/s]
+after initialization:
+name of the model parameters: network.fc1.weight
+name of the model parameters: network.fc1.bias
+name of the model parameters: network.fc2.weight
+name of the model parameters: network.fc2.bias
+name of the model parameters: network.embedding_layer.weight
+name of the model parameters: network.Attention_layer.W1.weight
+name of the model parameters: network.Attention_layer.W2.weight
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/4
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    --
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─MaxPool1d: 2-1                    [2, 256, 1000]            --
+│    └─Dropout: 2-2                      [2, 256, 1000]            --
+│    └─Attention_mask: 2-3               [2, 256, 3]               --
+│    │    └─Linear: 3-1                  [2, 1000, 80]             20,480
+│    │    └─Tanh: 3-2                    [2, 1000, 80]             --
+│    │    └─Linear: 3-3                  [2, 1000, 3]              240
+│    └─Flatten: 2-4                      [2, 768]                  --
+│    └─Embedding: 2-5                    [2, 4]                    76
+│    └─Linear: 2-6                       [2, 100]                  76,900
+│    └─Actvation: 2-7                    [2, 104]                  --
+│    └─Dropout: 2-8                      [2, 104]                  --
+│    └─Linear: 2-9                       [2, 9]                    945
+│    └─Sigmoid: 2-10                     [2, 9]                    --
+==========================================================================================
+Total params: 98,641
+Trainable params: 98,641
+Non-trainable params: 0
+Total mult-adds (M): 0.20
+==========================================================================================
+Input size (MB): 16.39
+Forward/backward pass size (MB): 1.33
+Params size (MB): 0.39
+Estimated Total Size (MB): 18.12
+==========================================================================================
+[2023-12-04 12:26:27,049][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 1
+[2023-12-04 12:26:27,060][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:1 with 4 nodes.
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1,2,3]
+[rank: 1] Metric val_loss improved. New best score: 0.745
+Epoch duration: 631.15 seconds
+Traceback (most recent call last):
+  File "/home/sxr280/BERTLocRNA/scripts/train_model.py", line 57, in <module>
+    train()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 465, in _run_app
+    run_and_report(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 219, in run_and_report
+    return func()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/utils.py", line 466, in <lambda>
+    lambda: hydra.multirun(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 162, in multirun
+    ret = sweeper.sweep(arguments=task_overrides)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_sweeper.py", line 178, in sweep
+    results = self.launcher.launch(batch, initial_job_idx=initial_job_idx)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/_internal/core_plugins/basic_launcher.py", line 74, in launch
+    ret = run_job(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/sxr280/BERTLocRNA/scripts/train_model.py", line 54, in train
+    Trainer.test(test_dataloader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 270, in test
+    self.get_metrics_all(test_loader)
+  File "/home/sxr280/BERTLocRNA/scripts/../utils/trainer.py", line 277, in get_metrics_all
+    for batch in dataloader_test:
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 628, in __next__
+    data = self._next_data()
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 671, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 56, in fetch
+    data = self.dataset.__getitems__(possibly_batched_index)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2799, in __getitems__
+    batch = self.__getitem__(keys)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2795, in __getitem__
+    return self._getitem(key)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/arrow_dataset.py", line 2780, in _getitem
+    formatted_output = format_table(
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 629, in format_table
+    return formatter(pa_table, query_type=query_type)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/formatting.py", line 400, in __call__
+    return self.format_batch(pa_table)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 102, in format_batch
+    batch = self.recursive_tensorize(batch)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 85, in recursive_tensorize
+    return map_nested(self._recursive_tensorize, data_struct, map_list=False)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 464, in map_nested
+    mapped = [
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 465, in <listcomp>
+    _single_map_nested((function, obj, types, None, True, None))
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 367, in _single_map_nested
+    return function(data_struct)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 79, in _recursive_tensorize
+    return self._consolidate([self.recursive_tensorize(substruct) for substruct in data_struct])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 79, in <listcomp>
+    return self._consolidate([self.recursive_tensorize(substruct) for substruct in data_struct])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 85, in recursive_tensorize
+    return map_nested(self._recursive_tensorize, data_struct, map_list=False)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 456, in map_nested
+    return function(data_struct)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 79, in _recursive_tensorize
+    return self._consolidate([self.recursive_tensorize(substruct) for substruct in data_struct])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 79, in <listcomp>
+    return self._consolidate([self.recursive_tensorize(substruct) for substruct in data_struct])
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 85, in recursive_tensorize
+    return map_nested(self._recursive_tensorize, data_struct, map_list=False)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 456, in map_nested
+    return function(data_struct)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 82, in _recursive_tensorize
+    return self._tensorize(data_struct)
+  File "/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/datasets/formatting/torch_formatter.py", line 68, in _tensorize
+    return torch.tensor(value, **{**default_dtype, **self.torch_tensor_kwargs})
+KeyboardInterrupt
