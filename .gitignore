@@ -18,3 +18,10 @@
 ./*.out
 ./multirun/
 ./scripts/multirun
+
+#wandb log file
+**/wandb/
+
+#checkpoints
+**/checkpoints
+**/*.out

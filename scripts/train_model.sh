@@ -13,6 +13,6 @@
 #SBATCH --output=train_model_%j.out
 #SBATCH --array=1  # Specify the range of job array tasks (corresponding to 10 layers)
 
-
+sh ./mount_erda.sh
 ~/miniconda3/envs/deeploc_torch/bin/python /home/sxr280/BERTLocRNA/scripts/train_model.py
-
+sh ./unmount_erda.sh

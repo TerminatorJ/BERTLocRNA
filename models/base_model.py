@@ -78,6 +78,11 @@ class CustomizedModel(nn.Module):
         
         return att1
 
+    def mergelncRNA(self, RNA_type):
+        idx = torch.where(RNA_type == self.config.RNA_order.index("lincRNA"))[0]
+        if len(idx) > 0:
+            RNA_type[idx] = self.config.RNA_order.index("lncRNA")
+        return RNA_type
     
     def forward(self, embed : Tensor, x_mask : Tensor, RNA_type : Tensor):
 
@@ -88,7 +93,7 @@ class CustomizedModel(nn.Module):
         output = self.flatten(output)
         
         #getting RNA types identify layer
-        embedding_output = self.embedding_layer(RNA_type)#n*4
+        embedding_output = self.embedding_layer(self.mergelncRNA(RNA_type))#n*4
         output = self.fc1(output)
         output = torch.cat((output, embedding_output), dim=1)
         output = self.Actvation(output)

@@ -1,0 +1,208 @@
+[2023-12-13 10:15:08,156][HYDRA] Launching 2 jobs locally
+[2023-12-13 10:15:08,157][HYDRA] 	#0 : model=base_model task=RNAlocalization embedder=parnet
+wandb: WARNING Path /home/sxr280/wandb_logs/wandb/ wasn't writable, using system temp directory
+wandb: WARNING Path /home/sxr280/wandb_logs/wandb/ wasn't writable, using system temp directory
+wandb: Currently logged in as: junwang666 (junwanggroup). Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.16.1 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231213_101510-5rrrg9ym
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run benchmark_embedding
+wandb: ⭐️ View project at https://wandb.ai/junwanggroup/BERTLocRNA
+wandb: 🚀 View run at https://wandb.ai/junwanggroup/BERTLocRNA/runs/5rrrg9ym
+2023-12-13 10:15:21.389928: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2023-12-13 10:15:26.843723: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2023-12-13 10:15:26.843828: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2023-12-13 10:15:26.846064: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:88:00.0 name: NVIDIA A100-PCIE-40GB computeCapability: 8.0
+coreClock: 1.41GHz coreCount: 108 deviceMemorySize: 39.39GiB deviceMemoryBandwidth: 1.41TiB/s
+2023-12-13 10:15:26.848559: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties: 
+pciBusID: 0000:89:00.0 name: NVIDIA A100-PCIE-40GB computeCapability: 8.0
+coreClock: 1.41GHz coreCount: 108 deviceMemorySize: 39.39GiB deviceMemoryBandwidth: 1.41TiB/s
+2023-12-13 10:15:26.848597: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2023-12-13 10:15:26.848633: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2023-12-13 10:15:26.848650: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2023-12-13 10:15:26.870281: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2023-12-13 10:15:26.918278: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2023-12-13 10:15:26.952914: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2023-12-13 10:15:26.977521: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2023-12-13 10:15:26.977579: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2023-12-13 10:15:26.986026: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet
+initializing
+weight_dict {'lncRNA': [0.8969458861870055, 0.24384255318528325, 3.053073549251424, 0.0, 0.0, 5.806138011376286, 0.0, 0.0, 0.0], 'mRNA': [0.5106930304115337, 0.36113995907232, 2.5254766994106728, 0.6264803401068899, 1.145488696375963, 1.834995696302938, 2.9957255783196834, 0.0, 0.0], 'miRNA': [2.751022931164908, 0.8092170313344499, 0.0, 5.553215100891041, 0.0, 0.0, 0.0, 0.8865449366096001, 0.0], 'snRNA': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'snoRNA': [0.0, 4.934740455322644, 0.0, 0.0, 0.0, 0.0, 0.0, 5.065259544677355, 0.0]}
+flt_dict {'lncRNA': [0, 1, 2, 5], 'mRNA': [0, 1, 2, 3, 4, 5, 6], 'miRNA': [0, 1, 3, 7], 'snRNA': [], 'snoRNA': [1, 7]}
+embedding will be saved at: /tmp/erda/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files:   0%|          | 0/243 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 243/243 [00:00<00:00, 509607.94it/s]
+Resolving data files:   0%|          | 0/62 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 62/62 [00:00<00:00, 302732.07it/s]
+Resolving data files:   0%|          | 0/77 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 77/77 [00:00<00:00, 270260.59it/s]
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/loggers/wandb.py:395: UserWarning: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  rank_zero_warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/lightning_fabric/plugins/environments/slurm.py:166: PossibleUserWarning: The `srun` command is available on your system but is not used. HINT: If your intention is to run Lightning on SLURM, prepend your python command with `srun` like so: srun python train_embedding_model.py ...
+  rank_zero_warn(
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[2023-12-13 10:15:44,296][HYDRA] Launching 2 jobs locally
+[2023-12-13 10:15:44,296][HYDRA] 	#0 : model=base_model task=RNAlocalization embedder=parnet
+wandb: WARNING Path /home/sxr280/wandb_logs/wandb/ wasn't writable, using system temp directory
+wandb: Currently logged in as: junwang666 (junwanggroup). Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.16.1 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231213_101544-bcvgw08y
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run benchmark_embedding
+wandb: ⭐️ View project at https://wandb.ai/junwanggroup/BERTLocRNA
+wandb: 🚀 View run at https://wandb.ai/junwanggroup/BERTLocRNA/runs/bcvgw08y
+output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet
+initializing
+weight_dict {'lncRNA': [0.8969458861870055, 0.24384255318528325, 3.053073549251424, 0.0, 0.0, 5.806138011376286, 0.0, 0.0, 0.0], 'mRNA': [0.5106930304115337, 0.36113995907232, 2.5254766994106728, 0.6264803401068899, 1.145488696375963, 1.834995696302938, 2.9957255783196834, 0.0, 0.0], 'miRNA': [2.751022931164908, 0.8092170313344499, 0.0, 5.553215100891041, 0.0, 0.0, 0.0, 0.8865449366096001, 0.0], 'snRNA': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'snoRNA': [0.0, 4.934740455322644, 0.0, 0.0, 0.0, 0.0, 0.0, 5.065259544677355, 0.0]}
+flt_dict {'lncRNA': [0, 1, 2, 5], 'mRNA': [0, 1, 2, 3, 4, 5, 6], 'miRNA': [0, 1, 3, 7], 'snRNA': [], 'snoRNA': [1, 7]}
+embedding will be saved at: /tmp/erda/BERTLocRNA/embeddings/Parnetembedding
+loading the dataset...
+Resolving data files:   0%|          | 0/243 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 243/243 [00:00<00:00, 531395.14it/s]
+Resolving data files:   0%|          | 0/62 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 62/62 [00:00<00:00, 265083.43it/s]
+Resolving data files:   0%|          | 0/77 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 77/77 [00:00<00:00, 270940.78it/s]
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    9
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─MaxPool1d: 2-1                    [2, 256, 1000]            --
+│    └─Dropout: 2-2                      [2, 256, 1000]            --
+│    └─Attention_mask: 2-3               [2, 256, 3]               --
+│    │    └─Linear: 3-1                  [2, 1000, 80]             20,480
+│    │    └─Tanh: 3-2                    [2, 1000, 80]             --
+│    │    └─Linear: 3-3                  [2, 1000, 3]              240
+│    └─Flatten: 2-4                      [2, 768]                  --
+│    └─Embedding: 2-5                    [2, 4]                    76
+│    └─Linear: 2-6                       [2, 100]                  76,900
+│    └─Actvation: 2-7                    [2, 104]                  --
+│    └─Dropout: 2-8                      [2, 104]                  --
+│    └─Linear: 2-9                       [2, 9]                    945
+│    └─Sigmoid: 2-10                     [2, 9]                    --
+==========================================================================================
+Total params: 98,650
+Trainable params: 98,650
+Non-trainable params: 0
+Total mult-adds (M): 0.20
+==========================================================================================
+Input size (MB): 16.39
+Forward/backward pass size (MB): 1.33
+Params size (MB): 0.39
+Estimated Total Size (MB): 18.12
+==========================================================================================
+[2023-12-13 10:15:59,352][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 1
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LightningModel                           [2, 9]                    9
+├─CustomizedModel: 1-1                   [2, 9]                    --
+│    └─MaxPool1d: 2-1                    [2, 256, 1000]            --
+│    └─Dropout: 2-2                      [2, 256, 1000]            --
+│    └─Attention_mask: 2-3               [2, 256, 3]               --
+│    │    └─Linear: 3-1                  [2, 1000, 80]             20,480
+│    │    └─Tanh: 3-2                    [2, 1000, 80]             --
+│    │    └─Linear: 3-3                  [2, 1000, 3]              240
+│    └─Flatten: 2-4                      [2, 768]                  --
+│    └─Embedding: 2-5                    [2, 4]                    76
+│    └─Linear: 2-6                       [2, 100]                  76,900
+│    └─Actvation: 2-7                    [2, 104]                  --
+│    └─Dropout: 2-8                      [2, 104]                  --
+│    └─Linear: 2-9                       [2, 9]                    945
+│    └─Sigmoid: 2-10                     [2, 9]                    --
+==========================================================================================
+Total params: 98,650
+Trainable params: 98,650
+Non-trainable params: 0
+Total mult-adds (M): 0.20
+==========================================================================================
+Input size (MB): 16.39
+Forward/backward pass size (MB): 1.33
+Params size (MB): 0.39
+Estimated Total Size (MB): 18.12
+==========================================================================================
+[2023-12-13 10:15:59,353][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 0
+[2023-12-13 10:15:59,353][torch.distributed.distributed_c10d][INFO] - Rank 0: Completed store-based barrier for key:store_based_barrier_key:1 with 2 nodes.
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+You are using a CUDA device ('NVIDIA A100-PCIE-40GB') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+[2023-12-13 10:15:59,362][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:1 with 2 nodes.
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:613: UserWarning: Checkpoint directory /home/sxr280/BERTLocRNA/output/RNAlocalization/parnet/checkpoints exists and is not empty.
+  rank_zero_warn(f"Checkpoint directory {dirpath} exists and is not empty.")
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+
+  | Name           | Type                 | Params
+--------------------------------------------------------
+0 | network        | CustomizedModel      | 98.6 K
+1 | learnable_loss | MultiTaskLossWrapper | 9     
+--------------------------------------------------------
+98.7 K    Trainable params
+0         Non-trainable params
+98.7 K    Total params
+0.395     Total estimated model params size (MB)
+Sanity Checking: 0it [00:00, ?it/s]Sanity Checking:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]loss for each class: tensor([2.4651, 0.2428, 5.6431, 2.0104, 0.4456, 4.8520, 2.5386, 2.7765, 8.2975],
+       device='cuda:0')
+Sanity Checking DataLoader 0:  50%|█████     | 1/2 [00:00<00:00, 54.77it/s]loss for each class: tensor([2.2749, 0.1958, 4.0490, 1.9726, 0.4568, 5.2602, 2.6978, 3.1756, 7.6285],
+       device='cuda:0')
+Sanity Checking DataLoader 0: 100%|██████████| 2/2 [00:01<00:00,  1.16it/s]                                                                           /home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, val_dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 96 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:536: PossibleUserWarning: It is recommended to use `self.log('val categorical_accuracy', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+  warning_cache.warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:536: PossibleUserWarning: It is recommended to use `self.log('val categorical_accuracy_strict', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+  warning_cache.warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:536: PossibleUserWarning: It is recommended to use `self.log('val binary_accuracy', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+  warning_cache.warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:536: PossibleUserWarning: It is recommended to use `self.log('val_loss', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+  warning_cache.warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, train_dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 96 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/sxr280/miniconda3/envs/deeploc_torch/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py:1609: PossibleUserWarning: The number of training batches (115) is smaller than the logging interval Trainer(log_every_n_steps=1000). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+  rank_zero_warn(
+Training: 0it [00:00, ?it/s]Training:   0%|          | 0/144 [00:00<?, ?it/s]Epoch 0:   0%|          | 0/144 [00:00<?, ?it/s] loss for each class: tensor([9.3014, 1.0371, 6.9881, 9.8608, 6.1102, 8.6404, 3.9116, 4.1011, 9.7847],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   1%|          | 1/144 [00:04<10:17,  4.32s/it]Epoch 0:   1%|          | 1/144 [00:04<10:18,  4.32s/it, loss=0.763, v_num=g9ym, train categorical_accuracy_step=0.312, train categorical_accuracy_strict_step=0.000, train binary_accuracy_step=0.547]loss for each class: tensor([6.8472, 0.3103, 3.8510, 7.5437, 5.2044, 4.3958, 3.4452, 2.9501, 0.1737],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   1%|▏         | 2/144 [00:08<10:20,  4.37s/it, loss=0.763, v_num=g9ym, train categorical_accuracy_step=0.312, train categorical_accuracy_strict_step=0.000, train binary_accuracy_step=0.547]Epoch 0:   1%|▏         | 2/144 [00:08<10:20,  4.37s/it, loss=0.731, v_num=g9ym, train categorical_accuracy_step=0.453, train categorical_accuracy_strict_step=0.125, train binary_accuracy_step=0.800]loss for each class: tensor([5.4470, 0.8366, 2.8746, 5.6129, 8.0564, 4.4297, 5.9037, 1.8533, 1.9334],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   2%|▏         | 3/144 [00:13<10:12,  4.34s/it, loss=0.731, v_num=g9ym, train categorical_accuracy_step=0.453, train categorical_accuracy_strict_step=0.125, train binary_accuracy_step=0.800]Epoch 0:   2%|▏         | 3/144 [00:13<10:12,  4.34s/it, loss=0.715, v_num=g9ym, train categorical_accuracy_step=0.281, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.771]loss for each class: tensor([6.7420, 0.3710, 3.0296, 6.7775, 6.0868, 5.4217, 3.1558, 1.1502, 2.0548],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   3%|▎         | 4/144 [00:16<09:47,  4.20s/it, loss=0.715, v_num=g9ym, train categorical_accuracy_step=0.281, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.771]Epoch 0:   3%|▎         | 4/144 [00:16<09:47,  4.20s/it, loss=0.701, v_num=g9ym, train categorical_accuracy_step=0.500, train categorical_accuracy_strict_step=0.0312, train binary_accuracy_step=0.745]loss for each class: tensor([5.1050, 1.5996, 3.8125, 6.7218, 6.1534, 5.7706, 4.3778, 1.8195, 0.0092],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   3%|▎         | 5/144 [00:20<09:39,  4.17s/it, loss=0.701, v_num=g9ym, train categorical_accuracy_step=0.500, train categorical_accuracy_strict_step=0.0312, train binary_accuracy_step=0.745]Epoch 0:   3%|▎         | 5/144 [00:20<09:39,  4.17s/it, loss=0.689, v_num=g9ym, train categorical_accuracy_step=0.344, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.747]loss for each class: tensor([6.0889, 0.5862, 2.7459, 5.3120, 6.3323, 6.8428, 2.5497, 4.8024, 0.0132],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   4%|▍         | 6/144 [00:25<09:46,  4.25s/it, loss=0.689, v_num=g9ym, train categorical_accuracy_step=0.344, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.747]Epoch 0:   4%|▍         | 6/144 [00:25<09:46,  4.25s/it, loss=0.678, v_num=g9ym, train categorical_accuracy_step=0.500, train categorical_accuracy_strict_step=0.0469, train binary_accuracy_step=0.748]loss for each class: tensor([7.3537, 2.2387, 3.4345, 6.4277, 4.6310, 5.7307, 3.6062, 1.3135, 0.0369],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   5%|▍         | 7/144 [00:28<09:22,  4.11s/it, loss=0.678, v_num=g9ym, train categorical_accuracy_step=0.500, train categorical_accuracy_strict_step=0.0469, train binary_accuracy_step=0.748]Epoch 0:   5%|▍         | 7/144 [00:28<09:22,  4.11s/it, loss=0.668, v_num=g9ym, train categorical_accuracy_step=0.312, train categorical_accuracy_strict_step=0.0781, train binary_accuracy_step=0.736]loss for each class: tensor([4.4521, 1.6923, 3.9473, 5.7047, 5.4761, 3.2024, 3.1486, 1.9007, 0.0584],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   6%|▌         | 8/144 [00:32<09:16,  4.09s/it, loss=0.668, v_num=g9ym, train categorical_accuracy_step=0.312, train categorical_accuracy_strict_step=0.0781, train binary_accuracy_step=0.736]Epoch 0:   6%|▌         | 8/144 [00:32<09:16,  4.09s/it, loss=0.656, v_num=g9ym, train categorical_accuracy_step=0.359, train categorical_accuracy_strict_step=0.0781, train binary_accuracy_step=0.778]loss for each class: tensor([4.7407, 1.2229, 2.5715, 6.0656, 5.0402, 2.7875, 2.7373, 2.6938, 0.0521],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   6%|▋         | 9/144 [00:36<09:04,  4.04s/it, loss=0.656, v_num=g9ym, train categorical_accuracy_step=0.359, train categorical_accuracy_strict_step=0.0781, train binary_accuracy_step=0.778]Epoch 0:   6%|▋         | 9/144 [00:36<09:04,  4.04s/it, loss=0.645, v_num=g9ym, train categorical_accuracy_step=0.359, train categorical_accuracy_strict_step=0.109, train binary_accuracy_step=0.792] loss for each class: tensor([5.9071, 0.2136, 3.1641, 5.6293, 5.3625, 4.1251, 2.1806, 2.2499, 0.1106],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   7%|▋         | 10/144 [00:39<08:54,  3.99s/it, loss=0.645, v_num=g9ym, train categorical_accuracy_step=0.359, train categorical_accuracy_strict_step=0.109, train binary_accuracy_step=0.792]Epoch 0:   7%|▋         | 10/144 [00:39<08:54,  3.99s/it, loss=0.634, v_num=g9ym, train categorical_accuracy_step=0.531, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.771]loss for each class: tensor([5.2113, 0.9580, 3.2987, 5.0199, 5.2334, 4.3194, 3.3364, 1.9618, 0.1894],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   8%|▊         | 11/144 [00:43<08:49,  3.98s/it, loss=0.634, v_num=g9ym, train categorical_accuracy_step=0.531, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.771]Epoch 0:   8%|▊         | 11/144 [00:43<08:49,  3.98s/it, loss=0.624, v_num=g9ym, train categorical_accuracy_step=0.438, train categorical_accuracy_strict_step=0.0312, train binary_accuracy_step=0.766]loss for each class: tensor([4.6314, 0.4669, 3.8767, 4.8635, 5.2316, 2.9937, 2.8435, 1.4985, 0.4016],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   8%|▊         | 12/144 [00:47<08:39,  3.94s/it, loss=0.624, v_num=g9ym, train categorical_accuracy_step=0.438, train categorical_accuracy_strict_step=0.0312, train binary_accuracy_step=0.766]Epoch 0:   8%|▊         | 12/144 [00:47<08:39,  3.94s/it, loss=0.614, v_num=g9ym, train categorical_accuracy_step=0.469, train categorical_accuracy_strict_step=0.0312, train binary_accuracy_step=0.774]loss for each class: tensor([4.6637, 0.9142, 2.9045, 4.4412, 4.5241, 3.2188, 2.6562, 2.4713, 0.5950],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:   9%|▉         | 13/144 [00:50<08:28,  3.88s/it, loss=0.614, v_num=g9ym, train categorical_accuracy_step=0.469, train categorical_accuracy_strict_step=0.0312, train binary_accuracy_step=0.774]Epoch 0:   9%|▉         | 13/144 [00:50<08:28,  3.88s/it, loss=0.604, v_num=g9ym, train categorical_accuracy_step=0.469, train categorical_accuracy_strict_step=0.000, train binary_accuracy_step=0.759] loss for each class: tensor([5.1183, 1.6953, 2.7072, 4.8123, 4.1938, 2.7355, 2.8349, 2.5264, 1.6116],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:  10%|▉         | 14/144 [00:53<08:20,  3.85s/it, loss=0.604, v_num=g9ym, train categorical_accuracy_step=0.469, train categorical_accuracy_strict_step=0.000, train binary_accuracy_step=0.759]Epoch 0:  10%|▉         | 14/144 [00:53<08:20,  3.85s/it, loss=0.595, v_num=g9ym, train categorical_accuracy_step=0.547, train categorical_accuracy_strict_step=0.0938, train binary_accuracy_step=0.790]loss for each class: tensor([5.4674, 1.3258, 2.7667, 5.0342, 5.0472, 4.7387, 2.3668, 2.0545, 0.8217],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:  10%|█         | 15/144 [00:57<08:13,  3.82s/it, loss=0.595, v_num=g9ym, train categorical_accuracy_step=0.547, train categorical_accuracy_strict_step=0.0938, train binary_accuracy_step=0.790]Epoch 0:  10%|█         | 15/144 [00:57<08:13,  3.82s/it, loss=0.585, v_num=g9ym, train categorical_accuracy_step=0.328, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.814]loss for each class: tensor([4.8179, 1.3724, 2.6886, 4.8868, 5.6647, 2.8016, 2.8482, 2.1031, 1.1194],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:  11%|█         | 16/144 [01:01<08:09,  3.83s/it, loss=0.585, v_num=g9ym, train categorical_accuracy_step=0.328, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.814]Epoch 0:  11%|█         | 16/144 [01:01<08:09,  3.83s/it, loss=0.576, v_num=g9ym, train categorical_accuracy_step=0.391, train categorical_accuracy_strict_step=0.109, train binary_accuracy_step=0.807] loss for each class: tensor([4.7798, 0.6514, 3.2378, 5.0356, 3.9264, 4.0192, 2.3029, 2.2252, 1.0909],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:  12%|█▏        | 17/144 [01:05<08:05,  3.83s/it, loss=0.576, v_num=g9ym, train categorical_accuracy_step=0.391, train categorical_accuracy_strict_step=0.109, train binary_accuracy_step=0.807]Epoch 0:  12%|█▏        | 17/144 [01:05<08:05,  3.83s/it, loss=0.567, v_num=g9ym, train categorical_accuracy_step=0.438, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.802]loss for each class: tensor([4.6257, 1.4575, 3.5915, 4.6136, 4.5890, 3.5212, 3.2593, 1.3535, 1.1828],
+       device='cuda:0', grad_fn=<SumBackward1>)
+Epoch 0:  12%|█▎        | 18/144 [01:08<08:02,  3.83s/it, loss=0.567, v_num=g9ym, train categorical_accuracy_step=0.438, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.802]Epoch 0:  12%|█▎        | 18/144 [01:08<08:02,  3.83s/it, loss=0.559, v_num=g9ym, train categorical_accuracy_step=0.375, train categorical_accuracy_strict_step=0.0625, train binary_accuracy_step=0.790]

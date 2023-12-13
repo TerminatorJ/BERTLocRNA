@@ -14,6 +14,8 @@ hydra :
         nucleotidetransformer
         
 
+        
+
 
 model: base_model
 task: RNAlocalization
@@ -22,6 +24,8 @@ batch_size: 64
 compartments: ["Nucleus","Exosome","Cytosol","Cytoplasm","Ribosome","Membrane","Endoplasmic reticulum", "Microvesicle", "Mitochondrion"]
 output_dir: ${hydra:runtime.cwd}/../output/${task}/${embedder} #save the path at the task path 
 nb_classes: 9
+sample_t: 80 #the thredshold for each class, in overall 100 as filter
+loss_weight: True
 
 RNAlocalization:
   path: TerminatorJ/localization_multiRNA
@@ -73,6 +77,7 @@ nucleotidetransformer:
 
 Trainer:
   config:
+    rna_ref: ["lncRNA", "mRNA", "miRNA", "snRNA", "snoRNA"]
     # class_weights: None
     accelerator: gpu
     strategy: ddp
@@ -80,7 +85,7 @@ Trainer:
     precison: 32
     num_nodes: 1
     log_every_n_steps: 1000
-    patience: 20
+    patience: 10
     gradient_clip: true
     optimizer_cls: torch.optim.Adam
     lr: 0.001

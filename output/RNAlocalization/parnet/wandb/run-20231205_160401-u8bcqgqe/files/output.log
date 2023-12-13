@@ -75,3 +75,11 @@ Epoch duration: 472.52 seconds
 Epoch duration: 473.00 seconds
 Epoch duration: 474.33 seconds
 Epoch duration: 476.38 seconds
+[rank: 1] Metric val_loss improved by 0.003 >= min_delta = 0.0. New best score: 0.296
+Epoch duration: 475.65 seconds
+Epoch duration: 465.41 seconds
+Epoch duration: 468.66 seconds
+[rank: 1] Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.295
+Epoch duration: 463.20 seconds
+[rank: 1] Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.295
+Epoch duration: 461.35 seconds

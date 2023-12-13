@@ -54,7 +54,7 @@ class ParnetTokenizer(baseclass):
         return tokens_list, masks
     
 class Parnet_model(nn.Module):
-    def __init__(self, model_path):
+    def __init__(self, model_path, fine_tune_layers = None):
         super(Parnet_model, self).__init__()
         self.tokenizer = ParnetTokenizer(model_path)
         self.vocabulary = self.tokenizer.vocabulary
@@ -64,7 +64,17 @@ class Parnet_model(nn.Module):
         except FileNotFoundError:
             raise FileNotFoundError(f"Checkpoint file not found: {self.ckp_path}")
         self.embedding_layer = nn.Embedding(num_embeddings=len(self.vocabulary.keys()),embedding_dim=len(list(self.vocabulary.values())[0]),_weight=torch.tensor(list(self.vocabulary.values())))
-        self.parnet_model.eval()
+        if fine_tune_layers is None:
+            self.parnet_model.eval()
+        else:
+            total_layers = len([i for i in self.parnet_model.named_parameters()])
+            freeze_index = total_layers - fine_tune_layers
+            for i, (name, param) in enumerate(self.parnet_model.named_parameters()):
+                if i < freeze_index:
+                    param = param.to(torch.float32)
+                    param.requires_grad = False
+                else:
+                    param.requires_grad = True
     
     def forward(self, x : Tensor) -> Tensor:
         x = x.long()
@@ -75,8 +85,10 @@ class Parnet_model(nn.Module):
         return embedding
 
 
+
 class ParnetModel(baseclass):
     def from_pretrained(self, model_path : str, *args, **kwargs):
+
         self.model = Parnet_model(model_path).to(device)
         
     

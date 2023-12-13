@@ -29,3 +29,10 @@ parnet:
   batch_size: 50
   dataloader: false
   max_length: 8000
+
+RNAFM:
+  _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedding
+  model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  batch_size: 2
+  dataloader: false
+  max_length: 8000
