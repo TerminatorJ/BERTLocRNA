@@ -36,7 +36,10 @@ class Weights:
         labels_array = np.array(labels)
         # import pdb; pdb.set_trace()
         all_labels_int = np.array([list(map(int, label)) for label in labels])
-        pos_weight = np.sum(all_labels_int)/len(all_labels_int.ravel())
+        pos_weight = 1/(np.sum(all_labels_int, axis = 0)/all_labels_int.shape[0])
+        #lower down the mito
+        pos_weight[-1] = pos_weight[-2]*2
+        print("pos weight:", pos_weight)
 
         for rna in unique_rnas:
             rna = int(rna)

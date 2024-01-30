@@ -1,40 +1,0 @@
-[2023-12-10 18:07:43,070][HYDRA] Launching 2 jobs locally
-[2023-12-10 18:07:43,071][HYDRA] 	#0 : model=base_model task=RNAlocalization embedder=parnet
-wandb: WARNING Path /home/sxr280/wandb_logs/wandb/ wasn't writable, using system temp directory
-wandb: WARNING Path /home/sxr280/wandb_logs/wandb/ wasn't writable, using system temp directory
-wandb: Currently logged in as: junwang666 (junwanggroup). Use `wandb login --relogin` to force relogin
-wandb: wandb version 0.16.1 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.14.0
-wandb: Run data is saved locally in /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet/wandb/run-20231210_180744-7rvyc12f
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run benchmark_embedding
-wandb: ⭐️ View project at https://wandb.ai/junwanggroup/BERTLocRNA
-wandb: 🚀 View run at https://wandb.ai/junwanggroup/BERTLocRNA/runs/7rvyc12f
-2023-12-10 18:07:53.836781: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
-2023-12-10 18:07:55.917946: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
-2023-12-10 18:07:55.918040: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
-2023-12-10 18:07:55.918627: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
-pciBusID: 0000:3e:00.0 name: NVIDIA TITAN RTX computeCapability: 7.5
-coreClock: 1.77GHz coreCount: 72 deviceMemorySize: 23.64GiB deviceMemoryBandwidth: 625.94GiB/s
-2023-12-10 18:07:55.919069: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties: 
-pciBusID: 0000:88:00.0 name: NVIDIA TITAN RTX computeCapability: 7.5
-coreClock: 1.77GHz coreCount: 72 deviceMemorySize: 23.64GiB deviceMemoryBandwidth: 625.94GiB/s
-2023-12-10 18:07:55.919104: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
-2023-12-10 18:07:55.919137: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
-2023-12-10 18:07:55.919154: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
-2023-12-10 18:07:55.925534: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
-2023-12-10 18:07:55.935649: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
-2023-12-10 18:07:55.945091: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
-2023-12-10 18:07:55.947061: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
-2023-12-10 18:07:55.947106: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
-2023-12-10 18:07:55.948828: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
-output dir of this job: /home/sxr280/BERTLocRNA/scripts/../output/RNAlocalization/parnet
-initializing
-weight_dict {'lncRNA': [0.08969458861870055, 0.024384255318528326, 0.3053073549251424, 0.5806138011376286], 'mRNA': [0.05106930304115337, 0.036113995907232, 0.25254766994106725, 0.062648034010689, 0.1145488696375963, 0.1834995696302938, 0.29957255783196834], 'miRNA': [0.2751022931164908, 0.08092170313344499, 0.5553215100891041, 0.08865449366096001], 'snRNA': [], 'snoRNA': [0.4934740455322644, 0.5065259544677355]}
-flt_dict {'lncRNA': [0, 1, 2, 5], 'mRNA': [0, 1, 2, 3, 4, 5, 6], 'miRNA': [0, 1, 3, 7], 'snRNA': [], 'snoRNA': [1, 7]}
-embedding will be saved at: /tmp/erda/BERTLocRNA/embeddings/Parnetembedding
-loading the dataset...
-Resolving data files:   0%|          | 0/243 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 243/243 [00:00<00:00, 521604.85it/s]
-Resolving data files:   0%|          | 0/62 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 62/62 [00:00<00:00, 225735.11it/s]
-Resolving data files:   0%|          | 0/77 [00:00<?, ?it/s]Resolving data files: 100%|██████████| 77/77 [00:00<00:00, 343210.85it/s]

@@ -1,9 +1,0 @@
-[2023-12-04 13:58:50,710][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 1
-[2023-12-04 13:59:00,713][torch.distributed.distributed_c10d][INFO] - Waiting in store based barrier to initialize process group for rank: 1, key: store_based_barrier_key:1 (world_size=4, worker_count=2, timeout=0:30:00)
-[2023-12-04 13:59:10,718][torch.distributed.distributed_c10d][INFO] - Waiting in store based barrier to initialize process group for rank: 1, key: store_based_barrier_key:1 (world_size=4, worker_count=2, timeout=0:30:00)
-[2023-12-04 13:59:20,722][torch.distributed.distributed_c10d][INFO] - Waiting in store based barrier to initialize process group for rank: 1, key: store_based_barrier_key:1 (world_size=4, worker_count=2, timeout=0:30:00)
-[2023-12-04 13:59:30,724][torch.distributed.distributed_c10d][INFO] - Waiting in store based barrier to initialize process group for rank: 1, key: store_based_barrier_key:1 (world_size=4, worker_count=2, timeout=0:30:00)
-[2023-12-04 13:59:40,733][torch.distributed.distributed_c10d][INFO] - Waiting in store based barrier to initialize process group for rank: 1, key: store_based_barrier_key:1 (world_size=4, worker_count=2, timeout=0:30:00)
-[2023-12-04 13:59:50,737][torch.distributed.distributed_c10d][INFO] - Waiting in store based barrier to initialize process group for rank: 1, key: store_based_barrier_key:1 (world_size=4, worker_count=2, timeout=0:30:00)
-[2023-12-04 14:00:00,741][torch.distributed.distributed_c10d][INFO] - Waiting in store based barrier to initialize process group for rank: 1, key: store_based_barrier_key:1 (world_size=4, worker_count=2, timeout=0:30:00)
-[2023-12-04 14:00:10,747][torch.distributed.distributed_c10d][INFO] - Waiting in store based barrier to initialize process group for rank: 1, key: store_based_barrier_key:1 (world_size=4, worker_count=2, timeout=0:30:00)

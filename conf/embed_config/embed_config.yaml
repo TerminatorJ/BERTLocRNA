@@ -5,9 +5,13 @@ hydra:
   mode: MULTIRUN
   sweeper:
     params:
-      embedder: nucleotidetransformer,
-                parnet
-             
+      embedder: 
+        DNABERT2
+        # RNAFM
+        # nucleotidetransformer,
+        # parnet
+                
+    
       task:  RNAlocalization
 
 
@@ -31,8 +35,14 @@ parnet:
   max_length: 8000
 
 RNAFM:
-  _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedding
+  _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedder
   model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  batch_size: 4
+  dataloader: false
+
+DNABERT2:
+  _target_: BERTLocRNA.utils.embedding_generator.DNABERT2Embedder
+  model_path: zhihan1996/DNABERT-2-117M
   batch_size: 2
   dataloader: false
-  max_length: 8000
+

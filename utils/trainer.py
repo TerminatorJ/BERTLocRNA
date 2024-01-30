@@ -32,7 +32,8 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(42)
 
 device = torch.device("cuda" if torch.cuda.is_available else "cpu")
-gpus = torch.cuda.device_count()
+# gpus = torch.cuda.device_count()
+gpus = 1
 path_join = lambda *path: os.path.abspath(os.path.join(*path))
 
 
@@ -70,6 +71,7 @@ class LightningModel(pl.LightningModule):
         self.flt_dict = flt_dict
         self.learnable_loss = MultiTaskLossWrapper(self.config.nb_classes)
         self.learnable_loss.to(device)
+        self.loss_fn = nn.BCELoss()
     def binary_cross_entropy(self, x, y,focal=True):
         alpha = 0.7
         gamma = 2
@@ -86,29 +88,6 @@ class LightningModel(pl.LightningModule):
             x = torch.clamp(x, epsilon, 1 - epsilon)
             loss = -(torch.log(x) * y + torch.log(1 - x) * (1 - y))
         return loss
-    def hier_weight_loss(self, y_pred, y_true, RNA_type, ohem=False, focal=True):
-        
-        # loss_weight = {}
-        # # initialize weights with tensor on device
-        # for rna_str in self.class_weights.keys():
-        #     loss_weight[rna_str] = torch.tensor(self.class_weights[rna_str],requires_grad=False, device=device)
-
-        # #usual weight
-        # loss = self.binary_cross_entropy(y_pred,y_true,focal)
-       
-        # weights = torch.stack([torch.tensor(self.class_weights[self.config.RNA_order[int(i)]], device = device) for i in RNA_type], dim=0)
-        # # Replace 0 with low weight (0.01)
-        # weights[weights == 0] = 0.01
-        # # print("weights:", weights)
-        # weighted_loss = loss * weights       
-        # loss = torch.mean(weighted_loss)
-        loss = self.binary_cross_entropy(y_pred, y_true, focal)
-        print("loss for each class:", torch.sum(loss, axis=0))
-        focal_loss = torch.mean(loss)
-        # loss = self.learnable_loss(y_pred, y_true)
-        
-
-        return focal_loss
     
     def hier_loss(self, y_pred, y_true, RNA_type, ohem=False, focal=False):
         
@@ -136,8 +115,6 @@ class LightningModel(pl.LightningModule):
             loss_output[loss_output<val[-1]] = 0
         loss = torch.sum(loss_output)/num_examples
         return loss
-    
-
     
     def binary_accuracy(self, y_pred, y_true):
         # Round the predicted values to 0 or 1
@@ -190,7 +167,7 @@ class LightningModel(pl.LightningModule):
         y_pred = self.forward(x, mask, RNA_type)
 
         if self.class_weights is None:
-            loss = self.hier_loss(y_pred, y, RNA_type)
+            loss = self.loss_fn(y_pred, y)
         else:
             loss = self.hier_weight_loss(y_pred, y, RNA_type)
 
@@ -242,7 +219,7 @@ class LightningModel(pl.LightningModule):
         self.log('val binary_accuracy', binary_accuracy, on_step = True, on_epoch=True, prog_bar = True)
 
         if self.class_weights is None:
-            loss = self.hier_loss(y_pred, y, RNA_type)
+            loss = self.loss_fn(y_pred, y)
         else:
             loss = self.hier_weight_loss(y_pred, y, RNA_type)
         l1_regularization = torch.tensor(0., device=device)
@@ -295,6 +272,8 @@ class MyTrainer:
                 callbacks = self.make_callback())
         trainer.fit(self.plmodel, train_loader, val_loader)
 
+
+
     def make_callback(self):
 
         callbacks = [
@@ -316,30 +295,45 @@ class MyTrainer:
                 checkpoint = torch.load(latest_checkpoint, map_location = device)
             else:
                 checkpoint = torch.load(checkpoint_orig[0], map_location = device)
+        # checkpoint = torch.load(path_join(self.ckpt_path, "checkpoints_best-v24.ckpt"), map_location = device)
         model_state = checkpoint['state_dict']
         self.plmodel.load_state_dict(model_state)
         return self.plmodel #model with new parameters
     
     def test(self, test_loader, flt_dict):
 
+        #only running the evaluation in 1 gpu
+
+        # if torch.distributed.get_rank() not in [0, -1]:
+        #     torch.distributed.barrier()
+
+        print("evaluating only on one gpu")
+        torch.distributed.destroy_process_group()
         self.plmodel = self.load_checkpoint()
+        self.plmodel = self.plmodel.to(device)
         self.plmodel.eval()
+        
         self.get_metrics_all(test_loader, flt_dict)
+
+        # if torch.distributed.get_rank() == 0:
+        #     torch.distributed.barrier()
+        
 
 
     def get_metrics_all(self, dataloader_test, flt_dict):
         all_y_pred = []
         all_y_test = []
         all_RNA_types = []
-        for batch in dataloader_test:
-            X_test, X_mask, RNA_type, y_test = batch["embedding"], batch["attention_mask"], batch["RNA_type"], batch["labels"]
-            y_pred = self.plmodel.forward(X_test, X_mask, RNA_type)
-            y_pred = y_pred.detach().cpu().numpy()
-            y_test = y_test.detach().cpu().numpy()
-            RNA_type = RNA_type.detach().cpu().numpy()
-            all_y_pred.append(y_pred)
-            all_y_test.append(y_test)
-            all_RNA_types.append(RNA_type)
+        with torch.no_grad():
+            for batch in dataloader_test:
+                X_test, X_mask, RNA_type, y_test = batch["embedding"], batch["attention_mask"], batch["RNA_type"], batch["labels"]
+                y_pred = self.plmodel.forward(X_test, X_mask, RNA_type)
+                y_pred = y_pred.detach().cpu().numpy()
+                y_test = y_test.detach().cpu().numpy()
+                RNA_type = RNA_type.detach().cpu().numpy()
+                all_y_pred.append(y_pred)
+                all_y_test.append(y_test)
+                all_RNA_types.append(RNA_type)
         y_test = np.concatenate(all_y_test, axis=0)
         y_pred = np.concatenate(all_y_pred, axis=0)
         RNA_types = np.concatenate(all_RNA_types, axis=0)
@@ -436,8 +430,9 @@ class MyTrainer:
             except ValueError:
                 auroc_micro = np.nan
                 auroc_macro = np.nan
-            print("y_test_flt", y_test_flt.shape, y_test_flt)
-            print("y_pred_bi_ac", y_pred_bi_ac.shape, y_pred_bi_ac)
+
+            # print("y_test_flt", y_test_flt.shape, y_test_flt)
+            # print("y_pred_bi_ac", y_pred_bi_ac.shape, y_pred_bi_ac)
             metrics_data.append({
                 'RNA': RNA,
                 'Compartment': 'micro',

@@ -22,6 +22,8 @@ root_dir =  os.getcwd()
 
 device =  torch.device("cuda" if torch.cuda.is_available() else "cpu")
 path_join = lambda *path: os.path.abspath(os.path.join(*path))
+hf_cache = "/tmp/erda/BERTLocRNA/cache"
+
 
 
 #define a overall class for loading a certain embedding
@@ -37,12 +39,19 @@ class baseclass:
     def process(self, *args, **kwargs):
         raise NotImplementedError
     def filter_sequences(self, seqs, effective_length):
+        '''
+        The return value of the truncated depends on the number of pieces that have been splitted
+        '''
         truncated = {}
         seq_modified = []
         for idx,seq in enumerate(seqs):
             if len(seq) > effective_length:
                 seq_modified.append(seq[:effective_length])
-                truncated[str(idx)] = seq[effective_length:]
+                truncated_num = len(seq)//effective_length + 1
+                if truncated_num == 2:
+                    truncated[str(idx)] = [seq[effective_length:]]
+                elif truncated_num > 2:
+                    truncated[str(idx)] = [seq[(effective_length + effective_length*t) : min((effective_length + effective_length*(t+1)), len(seq))] for t in range(truncated_num-1)]
             else:
                 seq_modified.append(seq)
 
@@ -62,27 +71,52 @@ class baseclass:
             left_mask = left_masks[idx]
             if str(idx) in truncated_d.keys():
                 #remove the padding
-                seq_length1 = np.sum(left_mask)
-                #filter out the cls token
-                left_embed = left_embed[1:seq_length1]
-                left_mask = left_mask[1:seq_length1]
+                # import pdb; pdb.set_trace()
+
                 
                 right_embed = truncated_embeds[count]
                 right_mask = truncated_masks[count]
-                #removing the padding
-                seq_length2 = np.sum(right_mask)
-                #removing the cls
-                right_embed = right_embed[1:seq_length2]
-                right_mask = right_mask[1:seq_length2]
-                if len(left_embed.shape) >= 2:
-                    new_embed = np.vstack([left_embed, right_embed])
-                    embedding_out.append(new_embed)
+                if len(right_embed.shape)  != 3:
+                    seq_length1 = np.sum(left_mask)
+                    #filter out the cls token
+                    left_embed = left_embed[1:seq_length1]
+                    left_mask = left_mask[1:seq_length1]
+
+                    #removing the padding
+                    seq_length2 = np.sum(right_mask)
+                    #removing the cls
+                    right_embed = right_embed[1:seq_length2]
+                    right_mask = right_mask[1:seq_length2]
+                    if len(left_embed.shape) >= 2:
+                        new_embed = np.vstack([left_embed, right_embed])
+                        embedding_out.append(new_embed)
+                    else:
+                        new_embed = np.hstack([left_embed, right_embed])
+                        embedding_out.append(list(new_embed))
+                    new_mask = np.hstack([left_mask, right_mask]) 
+                    mask_out.append(list(new_mask))
+                    count+=1
                 else:
-                    new_embed = np.hstack([left_embed, right_embed])
-                    embedding_out.append(list(new_embed))
-                new_mask = np.hstack([left_mask, right_mask]) 
-                mask_out.append(list(new_mask))
-                count+=1
+                    seq_length1 = np.sum(left_mask)
+                    #filter out the cls token
+                    left_embed = left_embed[:seq_length1]
+                    left_mask = left_mask[:seq_length1]
+
+                    res = []
+                    rmsk = []
+                    for idx, mask in enumerate(right_mask):
+                        # import pdb; pdb.set_trace()
+                        res.append(right_embed[idx, :len(mask), :])
+                        rmsk += mask
+                    # import pdb; pdb.set_trace()
+                    #concate right embeddings
+                    right_embed = np.concatenate(res, axis = 0)
+                    new_embed = np.concatenate([left_embed, right_embed], axis = 0)
+                    embedding_out.append(new_embed)
+                    new_mask = np.hstack([left_mask, rmsk]) 
+                    mask_out.append(list(new_mask))
+                    count+=1
+                    # import pdb; pdb.set_trace()
             else:
                 seq_length1 = np.sum(left_mask)
                 left_embed = left_embed[1:seq_length1]
@@ -94,6 +128,17 @@ class baseclass:
                 mask_out.append(list(left_mask))
 
         return embedding_out, mask_out
+    
+    def simple_alignment(self, masks : np.ndarray, embeddings : np.ndarray):
+        embed_out = []
+        for idx, mask in enumerate(masks):
+            length = len(mask)
+            embed = embeddings[idx][:length]
+            embed_out.append(embed)
+        return embed_out
+
+
+
     
     def get_embed(self, *args, **kwargs):
         raise NotImplementedError
@@ -113,10 +158,23 @@ class baseclass:
         # print(left_masks.shape, left_embeds.shape, truncated_masks.shape, truncated_embeds.shape)
         #concatenate truncate with the truncated_dict
         return left_embeds, truncated_embeds, left_masks.detach().cpu().numpy(), truncated_masks.detach().cpu().numpy()
+    
+
 
     
 
     def __call__(self, dataset :Union[DatasetDict, None], *args, **kwargs):
+        #mounting the erda
+        try:
+            assert os.path.exists(hf_cache), "ERROR: You haven't mount the erda!!!"
+        except AssertionError:
+            os.system("sh /home/sxr280/BERTLocRNA/scripts/mount_erda.sh")
+        except:
+            print("erda already mounted by last channel, reconnecting again")
+            os.system("sh /home/sxr280/BERTLocRNA/scripts/unmount_erda.sh")
+            os.system("sh /home/sxr280/BERTLocRNA/scripts/mount_erda.sh")
+
+        os.system("sh /home/sxr280/BERTLocRNA/scripts/unmount_erda.sh")
         return self.process(dataset)
 
 
@@ -299,12 +357,14 @@ class NucleotideTransformerEmbedder(baseclass):
 
     def process(self, dataset :Union[DatasetDict, None]):
         save_path = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.embedder_name + "embedding")
+        dirs = os.listdir(save_path)
+        print("/tmp/erda:",dirs)
         if not os.path.exists(save_path):
             tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
             tokenized_datasets.save_to_disk(save_path)
         else:
             print("loading the dataset...")
-            tokenized_datasets = load_dataset(save_path)
+            tokenized_datasets = load_dataset(save_path, cache_dir = hf_cache)
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
         # cache_directory = os.path.expanduser("~/.cache")
@@ -378,7 +438,7 @@ class ParnetEmbedder(baseclass):
             tokenized_datasets.save_to_disk(save_path)
         else:
             print("loading the dataset...")
-            tokenized_datasets = load_dataset(save_path)
+            tokenized_datasets = load_dataset(save_path, cache_dir = hf_cache)
         # print("removing the cache")
 
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
@@ -401,37 +461,78 @@ class ParnetEmbedder(baseclass):
             return tokenized_datasets
 
 
-class RNAFMEmbedding(baseclass):
+class RNAFMEmbedder(baseclass):
     def load_model(self, model_path : str, 
                         batch_size : int = 8, 
                         dataloader : bool = False, 
-                        max_length : int = 8000, 
-                        hidden_dim : int = 4,
+                        hidden_dim : int = 640,
                         pool_size : int = 8,
                         **kwargs):
-        self.model,self.alphabet = fm.pretrained.rna_fm_t12(path_join(model_path, "RNA-FM_pretrained.pth"))
-        self.batch_converter = self.alphabet.get_batch_converter()
+        self.model, self.alphabet = fm.pretrained.rna_fm_t12(path_join(model_path, "RNA-FM_pretrained.pth"))
+        self.tokenizer = self.alphabet.get_batch_converter()
         self.embedder_name = "RNAFM"
         self.batch_size = batch_size
         self.dataloader = dataloader
-        self.max_length = max_length
+        self.max_tokens = 1024 # 
+        self.max_seq_len = 1024 #because this methods use one-hot-encode
         self.hidden_dim = hidden_dim
         self.pool_size = pool_size
         self.model.eval() 
 
+    def get_embed(self, tokens : Tensor) -> Tensor:
+        self.model = self.model.to(device)
+        tokens = tokens.to(device)
+        with torch.no_grad():
+            results = self.model(tokens, repr_layers=[12])
+            embeds = results["representations"][12]
+        embeds = embeds.detach().cpu().numpy()
+        return embeds
+
     def segment_embedder(self, sample : DatasetDict) -> Dict:
-        data = [(id, seq) for id, seq in zip(sample["ids"], sample["Xall"])]
+        #split the sequence to multiple pieces 8000/1024 ~ 8
         sequences = sample["Xall"]
         # Break down the sequence into segments, and ducument the truncated sequences
         seq_modified, truncated_d = self.filter_sequences(sequences, self.max_seq_len)
-        batch_labels, batch_strs, batch_tokens = self.batch_converter(data)
-        with torch.no_grad():
-            results = self.model(batch_tokens, repr_layers=[12])
-        embedding = results["representations"][12]
+        # indexing the sequence
+        data_left = [(id, seq) for id, seq in zip(sample["ids"], seq_modified)]
+        #process the left side firstly
+        left_tokens = self.tokenizer(data_left)[2][:,1:-1] #filtered out the CLS and SEP tags
+        left_masks = [[1]*len(seq) for seq in seq_modified]
+        left_embeds = self.get_embed(left_tokens)
+        right_embeds = []
+        right_masks = []
+        right_tokens = []
+        # import pdb; pdb.set_trace()
+        if len(truncated_d) > 0:
+            for idx, chunks in truncated_d.items():
+                # import pdb; pdb.set_trace()
+                data_right = [(sample["ids"][int(idx)], chunk) for chunk in chunks]
+                right_token = self.tokenizer(data_right)[2][:,1:-1] #filtered out the CLS and SEP
+                right_mask = [[1]*len(chunk) for chunk in chunks]#for a certain sequence
+                #getting the embedding
+                # import pdb; pdb.set_trace()
+                right_embed = self.get_embed(right_token)
+                right_embeds.append(right_embed)
+                right_masks.append(right_mask)
+                right_tokens.append(right_token)
+                # import pdb; pdb.set_trace()
+            #integrate embeddings together
+            embedding, masks = self.alignment(left_embeds, right_embeds, left_masks, right_masks, truncated_d)
 
-        output = {"input_ids" : batch_tokens, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
+
+        else:
+            # input_ids = left_tokens.int()
+            masks = left_masks
+            embedding = left_embeds
+            #simple algnment according to the mask
+            embedding = self.simple_alignment(masks, embedding)
+            # import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
+        output = {"input_ids" : len(masks)*[1], "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
         
         return output
+
+
 
     def process(self, dataset : Union[DatasetDict, None]):
         
@@ -440,9 +541,11 @@ class RNAFMEmbedding(baseclass):
         if not os.path.exists(save_path):
             tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
             tokenized_datasets.save_to_disk(save_path)
+            # import pdb; pdb.set_trace()
         else:
             print("loading the dataset...")
-            tokenized_datasets = load_dataset(save_path)
+            # print("The cache file will be saved at:", os.environ["HF_HOME"])
+            tokenized_datasets = load_dataset(save_path, cache_dir = hf_cache)
         # print("removing the cache")
 
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
@@ -464,16 +567,109 @@ class RNAFMEmbedding(baseclass):
         else:
             return tokenized_datasets
 
-#Class DM3Loc
+class DNABERT2Embedder(baseclass):
+    """
+    Embed using the DNABERT2 model https://arxiv.org/abs/2306.15006
+    """
+    def load_model(self, model_path : str, batch_size : int = 8, 
+                   dataloader : bool = False, hidden_dim : int = 768, 
+                   **kwargs):
+
+        self.embedder_name = "DNABERT2"
+        model_path = "zhihan1996/DNABERT-2-117M"
+        cache_dir = path_join(root_dir, "..", "saved_model", self.embedder_name)
+        self.model = AutoModel.from_pretrained(model_path, trust_remote_code=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path, cache_dir = cache_dir, trust_remote_code = True)
+        self.max_seq_len = 10000 
+        self.batch_size = batch_size
+        self.dataloader = dataloader
+        self.hidden_dim = hidden_dim
+        self.pad_id = 3
+        self.sep_id = 2
+        self.cls_id = 1 
+        self.model.eval()
+
+    def get_embed(self, tokens_ids) -> np.ndarray:
+        tokens_ids = tokens_ids.to(device)
+        self.model = self.model.to(device)
+        outs = self.model(tokens_ids)[0].detach().cpu().numpy() # [batch, sequence_length, 768]
+        return outs
+
+
+    def segment_embedder(self, sample : DatasetDict) -> Dict:
+        '''
+        The input is a batch of sequences, which allows for faster preprocessing.
+        The BPE tokenization allows long sequence encoding scheme. So, we don't need to truncated the sequence.
+        '''
+        sequences = sample["Xall"]
+        #Tokenize the sequences
+        tokens_ids = self.tokenizer(sequences, return_tensors = 'pt', padding=True)["input_ids"]
+        #Getting masks
+        masks = [[1]*len(id[(id != self.cls_id) & (id != self.sep_id) & (id != self.pad_id)]) for id in tokens_ids]
+        embedding_raw = self.get_embed(tokens_ids) #[batch, sequence_length, 768]-> np.ndarray
+        #Remove the CLS and SEP tags
+        embedding = [embed[1:len(masks[idx])+1,:] for idx,embed in enumerate(embedding_raw)]
+        output = {"input_ids" : tokens_ids, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
+        
+        return output
+    def process(self, dataset : Union[DatasetDict, None]):
+        
+        save_path = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.embedder_name + "embedding")
+        print("embedding will be saved at:", save_path)
+        if not os.path.exists(save_path):
+            tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
+            tokenized_datasets.save_to_disk(save_path)
+            # import pdb; pdb.set_trace()
+        else:
+            print("loading the dataset...")
+            tokenized_datasets = load_dataset(save_path, cache_dir = hf_cache)
+
+        tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
+        tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
+        tokenized_datasets.set_format("torch")
+        
+        if self.dataloader:
+            data_collator = DataCollatorForSupervisedDataset(self.tokenizer, self.hidden_dim, self.pool_size)
+            train_dataloader = DataLoader(
+                                            tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
+                                        )
+            eval_dataloader = DataLoader(
+                                            tokenized_datasets["validation"], batch_size=self.batch_size, collate_fn=data_collator
+                                        )
+            test_dataloader = DataLoader(
+                                            tokenized_datasets["test"], batch_size=self.batch_size, collate_fn=data_collator
+                                        )
+            return train_dataloader, test_dataloader, eval_dataloader
+        else:
+            return tokenized_datasets
+        
+
+
+class RNAFMEmbedder(baseclass):
+    def load_model(self, model_path : str, 
+                        batch_size : int = 8, 
+                        dataloader : bool = False, 
+                        hidden_dim : int = 640,
+                        pool_size : int = 8,
+                        **kwargs):
+        self.model, self.alphabet = fm.pretrained.rna_fm_t12(path_join(model_path, "RNA-FM_pretrained.pth"))
+        self.tokenizer = self.alphabet.get_batch_converter()
+        self.embedder_name = "RNAFM"
+        self.batch_size = batch_size
+        self.dataloader = dataloader
+        self.max_tokens = 1024 # 
+        self.max_seq_len = 1024 #because this methods use one-hot-encode
+        self.hidden_dim = hidden_dim
+        self.pool_size = pool_size
+        self.model.eval() 
+
+
 
 
 @click.command()
 @click.option("-t", "--tool", type = str, default = "NT", help = "The name of the tool you want to use to get the embeddings")
 def main(tool):
-    # sequences = ["ATTCCGATTCCGATTCCG", "ATTTCTCTCTCTCTCTGAGATCGATCGATCGAT"]
-    # emb = embedgenerator(tool = tool, sequences = sequences)
-    # embedding = emb.NTgenerator()
-    # print(embedding.shape)
+
     dataset = load_dataset("TerminatorJ/localization_multiRNA")
     #getting the embedding from NT
     tokenized_datasets = NucleotideTransformerEmbedder.get_embed(dataset, batch_size = 2)

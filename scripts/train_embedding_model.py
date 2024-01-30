@@ -14,20 +14,26 @@ from datasets import load_dataset, Value, Features
 from BERTLocRNA.utils.optional import Weights
 
 os.environ["HYDRA_FULL_ERROR"] = "1"
+#saving the cache file to ERDA
+os.environ["HF_HOME"] = "/tmp/erda/BERTLocRNA/cache"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 @hydra.main(config_path=f"../conf/train_conf", config_name="train_config" ,version_base=None)#identify the config from conf path
 def train(cfg : DictConfig):
+
     wandb.config = OmegaConf.to_container(
         cfg, resolve=True, throw_on_missing=True
         )
-    os.makedirs(cfg.output_dir , exist_ok = True)
-    print("output dir of this job:", cfg.output_dir)
-    
     # initialize wandb and document the configuration
     print("initializing")
     wandb.init(**cfg.wandb, dir = cfg.output_dir, config = cfg)
+    # wandb.config._service_wait = 100
+
+    os.makedirs(cfg.output_dir , exist_ok = True)
+    print("output dir of this job:", cfg.output_dir)
+    
+    
     #making the directory to save everything
     
     # save the config use this task to specific path
@@ -45,7 +51,7 @@ def train(cfg : DictConfig):
                                 "ids": Value(dtype='string')})
     #loading the dataset for a certain task
     dataset = load_dataset(**cfg[cfg.task], features=custom_features)
-    #Calculating the classweight
+    #Calculating the classweight, even though weighted result not gain performance
     if cfg.loss_weight:
         weight = Weights(cfg.nb_classes, cfg.sample_t)
         #getting the weight dict and the labels that are filtered according to abundance
@@ -57,14 +63,14 @@ def train(cfg : DictConfig):
         weight_dict = None
 
 
-
+    # import pdb; pdb.set_trace()
     #generating the embedding and save them
     train_dataloader, test_dataloader, eval_dataloader = embedder(dataset)
     
     #instantiate the trainner
     Trainer = MyTrainer(model = model, 
                         config = cfg.Trainer.config, 
-                        weight_dict = weight_dict,
+                        weight_dict = None,
                         flt_dict = flt_dict)
 
     #trainning the data

@@ -102,4 +102,5 @@ class CustomizedModel(nn.Module):
         pred = self.sigmoid(output)
 
         return pred
+        # return output
 

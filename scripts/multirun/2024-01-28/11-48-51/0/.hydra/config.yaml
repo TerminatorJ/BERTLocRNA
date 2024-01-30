@@ -1,0 +1,17 @@
+task: RNAlocalization
+embedder: RNAFM
+output_dir: /home/sxr280/BERTLocRNA/output/${task}/Figure
+ref_path: /home/sxr280/BERTLocRNA/data/Train_fold0_utr_cds.csv
+batch_size: 5
+split: train
+test: false
+plot: true
+Parnet:
+  _target_: BERTLocRNA.utils.visualization.NucleotideTransformerEmbedder
+  hidden_dim: 256
+  output_dir: ${output_dir}
+  ref_path: ${ref_path}
+  batch_size: ${batch_size}
+  split: ${split}
+  test: ${test}
+  plot: ${plot}
