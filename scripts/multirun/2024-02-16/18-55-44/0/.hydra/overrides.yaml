@@ -1,0 +1,3 @@
+- model=base_model
+- task=RNAlocalization
+- embedder=RNAFM\ parnet

@@ -88,6 +88,7 @@ class CustomizedModel(nn.Module):
 
         #The input should be embedding of different pre-trained methods
         RNA_type = RNA_type.long()
+        print("embeddings shape:", embed.shape)
         embed = self.dropout(self.maxpool(embed))
         output = self.Att(embed, x_mask) #[hidden, heads] 
         output = self.flatten(output)

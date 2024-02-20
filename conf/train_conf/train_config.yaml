@@ -13,7 +13,8 @@ hydra :
       embedder:
         RNAFM,
         parnet,
-        nucleotidetransformer
+        nucleotidetransformer,
+        DNABERT2
         
 
         
@@ -22,7 +23,6 @@ hydra :
 model: base_model
 task: RNAlocalization
 embedder: nucleotidetransformer
-batch_size: 64
 compartments: ["Nucleus","Exosome","Cytosol","Cytoplasm","Ribosome","Membrane","Endoplasmic reticulum", "Microvesicle", "Mitochondrion"]
 output_dir: ${hydra:runtime.cwd}/../output/${task}/${embedder} #save the path at the task path 
 nb_classes: 9
@@ -33,7 +33,7 @@ RNAlocalization:
   path: TerminatorJ/localization_multiRNA
 wandb:
   project: BERTLocRNA
-  name: benchmark_embedding
+  name: ${embedder}
 
 
 base_model:
@@ -52,39 +52,52 @@ base_model:
     activation_att: tanh
     attention: True
     RNA_dim: 4
-    pooling_size: 8
+    pooling_size: ${${embedder}.pool_size}
     hidden_dim: ${${embedder}.hidden_dim}
     RNA_order: ["UNK", "A", "C", "G", "T", "N", "Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
 
 parnet:
   _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
   model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
-  batch_size: ${batch_size}
+  batch_size: 32
   dataloader: true
   hidden_dim: 256
   collator: false
   pool_size: 8
+  task: ${task}
 
 
 nucleotidetransformer:
   _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
-  batch_size: ${batch_size}
+  batch_size: 32
   dataloader: true
   hidden_dim: 2560
   collator: true
   pool_size: 8
+  task: ${task}
 
 
 RNAFM:
   _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedder
   model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
-  batch_size: ${batch_size}
+  batch_size: 32
   dataloader: true
   hidden_dim: 640
   collator: true
   pool_size: 8
+  task: ${task}
 
+DNABERT2:
+  _target_: BERTLocRNA.utils.embedding_generator.DNABERT2Embedder
+  model_path: zhihan1996/DNABERT-2-117M
+  batch_size: 32
+  dataloader: true
+  hidden_dim: 768
+  collator: true
+  pool_size: 6
+  task: ${task}
+#DNABERT2 will raise errors if pool_size become 8 due to the dynamic tokenization
 
 
 Trainer:

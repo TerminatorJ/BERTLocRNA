@@ -261,10 +261,12 @@ class MyTrainer:
 
 
     def train(self, train_loader, val_loader):
+    
         samples = next(iter(train_loader))
         embed = samples["embedding"][:2].shape
         mask = samples["attention_mask"][:2].shape
         RNA_types = samples["RNA_type"][:2].shape
+        # print(embed,mask,RNA_types)
         summary(self.plmodel, input_size = [embed, mask, RNA_types], device = device)
         trainer = Trainer(accelerator = self.config.accelerator, strategy = self.config.strategy, max_epochs = self.config.max_epochs, devices = gpus, precision = self.config.precison, num_nodes = self.config.num_nodes, 
                 logger = self.wandb_logger,
@@ -272,6 +274,9 @@ class MyTrainer:
                 callbacks = self.make_callback())
         trainer.fit(self.plmodel, train_loader, val_loader)
 
+        # write model summary
+        with open(path_join(self.config.output_dir, "model.summary.txt"), "w") as f:
+            print(str(self.plmodel), file=f)
 
 
     def make_callback(self):

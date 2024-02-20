@@ -1,0 +1,1 @@
+[2024-02-02 16:20:45,545][datasets.packaged_modules.arrow.arrow][ERROR] - Failed to read file '/tmp/erda/BERTLocRNA/embeddings/RNAembedding_NTembedding/train/data-00012-of-00150.arrow' with error <class 'pyarrow.lib.ArrowInvalid'>: Tried reading schema message, was null or length 0

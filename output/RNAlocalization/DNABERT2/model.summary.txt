@@ -1,0 +1,19 @@
+LightningModel(
+  (network): CustomizedModel(
+    (fc1): Linear(in_features=2304, out_features=100, bias=True)
+    (fc2): Linear(in_features=104, out_features=9, bias=True)
+    (flatten): Flatten(start_dim=1, end_dim=-1)
+    (dropout): Dropout(p=0.25, inplace=False)
+    (embedding_layer): Embedding(19, 4)
+    (sigmoid): Sigmoid()
+    (Actvation): Actvation()
+    (Attention_layer): Attention_mask(
+      (activation): Tanh()
+      (W1): Linear(in_features=768, out_features=80, bias=False)
+      (W2): Linear(in_features=80, out_features=3, bias=False)
+    )
+    (maxpool): MaxPool1d(kernel_size=6, stride=6, padding=0, dilation=1, ceil_mode=False)
+  )
+  (learnable_loss): MultiTaskLossWrapper()
+  (loss_fn): BCELoss()
+)

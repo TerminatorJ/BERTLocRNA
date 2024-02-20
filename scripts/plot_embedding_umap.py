@@ -16,7 +16,6 @@ def plot(cfg : DictConfig):
 
     # save the config use this task to specific path
     OmegaConf.save(cfg, f"{cfg.output_dir}/vis_config.yaml")
-    print(cfg.umap)
     umap = hydra.utils.instantiate(cfg.umap)
     #making plot
     umap()

@@ -28,7 +28,7 @@ def train(cfg : DictConfig):
     # initialize wandb and document the configuration
     print("initializing")
     wandb.init(**cfg.wandb, dir = cfg.output_dir, config = cfg)
-    # wandb.config._service_wait = 100
+    wandb.config._service_wait = 100
 
     os.makedirs(cfg.output_dir , exist_ok = True)
     print("output dir of this job:", cfg.output_dir)
@@ -50,7 +50,8 @@ def train(cfg : DictConfig):
                                 "Xtag": Value(dtype="int64"),
                                 "ids": Value(dtype='string')})
     #loading the dataset for a certain task
-    dataset = load_dataset(**cfg[cfg.task], features=custom_features)
+    print("loading task:", cfg[cfg.task])
+    dataset = load_dataset(**cfg[cfg.task], features=custom_features, cache_dir = "/tmp/erda/BERTLocRNA/cache")
     #Calculating the classweight, even though weighted result not gain performance
     if cfg.loss_weight:
         weight = Weights(cfg.nb_classes, cfg.sample_t)

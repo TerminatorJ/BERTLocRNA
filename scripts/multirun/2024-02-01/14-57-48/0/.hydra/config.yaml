@@ -1,0 +1,31 @@
+embedder: DNABERT2 RNAFM nucleotidetransformer
+task: RNAembedding
+RNAlocalization:
+  path: TerminatorJ/localization_multiRNA
+RNAembedding:
+  path: TerminatorJ/RNAembedding_multiRNA
+nucleotidetransformer:
+  _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
+  model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
+  batch_size: 2
+  dataloader: false
+  task: ${task}
+parnet:
+  _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
+  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  batch_size: 50
+  dataloader: false
+  max_length: 8000
+  task: ${task}
+RNAFM:
+  _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedder
+  model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  batch_size: 4
+  dataloader: false
+  task: ${task}
+DNABERT2:
+  _target_: BERTLocRNA.utils.embedding_generator.DNABERT2Embedder
+  model_path: zhihan1996/DNABERT-2-117M
+  batch_size: 2
+  dataloader: false
+  task: ${task}

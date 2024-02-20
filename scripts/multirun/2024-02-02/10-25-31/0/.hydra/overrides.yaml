@@ -1,0 +1,2 @@
+- embedder=nucleotidetransformer
+- task=RNAembedding

@@ -1,0 +1,79 @@
+task: RNAlocalization_Lora
+embedder: nucleotidetransformer
+embedder_obj: '...'
+model: Lora_model
+output_dir: ${hydra:runtime.cwd}/../output/${task}/${embedder}
+RNAlocalization:
+  path: TerminatorJ/localization_multiRNA
+wandb:
+  project: BERTLocRNA
+  name: ${model}
+Lora_model:
+  _target_: BERTLocRNA.models.Lora_model.PLMFactory
+  PLM: embedder_obj
+  lora_config:
+    r: 32
+    lora_alpha: 64
+    target_modules:
+    - query
+    - value
+  model_config:
+    nb_classes: 9
+    drop_flat: 0.25
+    normalizeatt: true
+    activation: gelu
+    RNA_dim: 4
+    pooling_size: ${${embedder}.pool_size}
+    hidden_dim: ${${embedder}.hidden_dim}
+    RNA_order:
+    - UNK
+    - A
+    - C
+    - G
+    - T
+    - 'N'
+    - Y RNA
+    - lincRNA
+    - lncRNA
+    - mRNA
+    - miRNA
+    - ncRNA
+    - pseudo
+    - rRNA
+    - scRNA
+    - scaRNA
+    - snRNA
+    - snoRNA
+    - vRNA
+nucleotidetransformer:
+  _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerLora
+  model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
+  batch_size: 32
+  dataloader: true
+  hidden_dim: 2560
+  collator: true
+  pool_size: 8
+  task: ${task}
+Trainer:
+  config:
+    rna_ref:
+    - lncRNA
+    - mRNA
+    - miRNA
+    - snRNA
+    - snoRNA
+    accelerator: gpu
+    strategy: ddp
+    max_epochs: 200
+    precison: 32
+    num_nodes: 1
+    log_every_n_steps: 1000
+    patience: 10
+    gradient_clip: true
+    optimizer_cls: torch.optim.Adam
+    lr: 0.001
+    weight_decay: 1.0e-05
+    nb_classes: ${nb_classes}
+    output_dir: ${output_dir}
+    RNA_order: ${base_model.config.RNA_order}
+    compartments: ${compartments}
