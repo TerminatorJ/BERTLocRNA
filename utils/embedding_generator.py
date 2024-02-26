@@ -151,12 +151,12 @@ class baseclass:
         #gain embedding for left
         left_ids = left["input_ids"].int()
         left_masks = left["attention_mask"].int()
-        left_embeds = self.get_embed(left_ids, left_masks)[0]
+        left_embeds = self.get_embed(left_ids, left_masks)
         
         #gain embedding for truncated
         truncated_ids = truncated["input_ids"].int()
         truncated_masks = truncated["attention_mask"].int()
-        truncated_embeds = self.get_embed(truncated_ids, truncated_masks)[0]
+        truncated_embeds = self.get_embed(truncated_ids, truncated_masks)
 
         # print(left_masks.shape, left_embeds.shape, truncated_masks.shape, truncated_embeds.shape)
         #concatenate truncate with the truncated_dict
@@ -288,7 +288,7 @@ class NucleotideTransformerEmbedder(baseclass):
                               output_hidden_states=True
                              )['last_hidden_state'].detach().cpu().numpy() # get last hidden state
 
-        return outs, tokens_ids
+        return outs
 
     
 
@@ -331,7 +331,7 @@ class NucleotideTransformerEmbedder(baseclass):
         else:
             input_ids = left["input_ids"].int()
             masks = left["attention_mask"].int()
-            embedding = self.get_embed(input_ids, masks)[0]
+            embedding = self.get_embed(input_ids, masks)
 
         output = {"input_ids" : input_ids, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
         
@@ -397,7 +397,7 @@ class ParnetEmbedder(baseclass):
         tokens_ids = tokens_ids.to(device)
         outs = self.model(tokens_ids).detach().cpu().numpy() # get last hidden state
 
-        return outs, tokens_ids
+        return outs
     def segment_embedder(self, sample : DatasetDict) -> Dict:
         sequences = sample["Xall"]
         # Break down the sequence into segments, and ducument the truncated sequences
@@ -407,7 +407,7 @@ class ParnetEmbedder(baseclass):
                     return_tensors="pt"
                 )
 
-        embedding = self.get_embed(input_ids)[0]
+        embedding = self.get_embed(input_ids)
 
         output = {"input_ids" : input_ids, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
         
@@ -472,7 +472,7 @@ class RNAFMEmbedder(baseclass):
             results = self.model(tokens, repr_layers=[12])
             embeds = results["representations"][12]
         embeds = embeds.detach().cpu().numpy()
-        return embeds, tokens
+        return embeds
 
     def segment_embedder(self, sample : DatasetDict) -> Dict:
         #split the sequence to multiple pieces 8000/1024 ~ 8
@@ -484,7 +484,7 @@ class RNAFMEmbedder(baseclass):
         #process the left side firstly
         left_tokens = self.tokenizer(data_left)[2][:,1:-1] #filtered out the CLS and SEP tags
         left_masks = [[1]*len(seq) for seq in seq_modified]
-        left_embeds = self.get_embed(left_tokens)[0]
+        left_embeds = self.get_embed(left_tokens)
         right_embeds = []
         right_masks = []
         right_tokens = []
@@ -497,7 +497,7 @@ class RNAFMEmbedder(baseclass):
                 right_mask = [[1]*len(chunk) for chunk in chunks]#for a certain sequence
                 #getting the embedding
                 # import pdb; pdb.set_trace()
-                right_embed = self.get_embed(right_token)[0]
+                right_embed = self.get_embed(right_token)
                 right_embeds.append(right_embed)
                 right_masks.append(right_mask)
                 right_tokens.append(right_token)
@@ -582,7 +582,7 @@ class DNABERT2Embedder(baseclass):
         tokens_ids = tokens_ids.to(device)
         self.model = self.model.to(device)
         outs = self.model(tokens_ids)[0].detach().cpu().numpy() # [batch, sequence_length, 768]
-        return outs, tokens_ids
+        return outs
 
 
     def segment_embedder(self, sample : DatasetDict) -> Dict:
@@ -595,7 +595,7 @@ class DNABERT2Embedder(baseclass):
         tokens_ids = self.tokenizer(sequences, return_tensors = 'pt', padding=True)["input_ids"]
         #Getting masks
         masks = [[1]*len(id[(id != self.cls_id) & (id != self.sep_id) & (id != self.pad_id)]) for id in tokens_ids]
-        embedding_raw = self.get_embed(tokens_ids)[0] #[batch, sequence_length, 768]-> np.ndarray
+        embedding_raw = self.get_embed(tokens_ids) #[batch, sequence_length, 768]-> np.ndarray
         #Remove the CLS and SEP tags
         embedding = [embed[1:len(masks[idx])+1,:] for idx,embed in enumerate(embedding_raw)]
         output = {"input_ids" : tokens_ids, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths

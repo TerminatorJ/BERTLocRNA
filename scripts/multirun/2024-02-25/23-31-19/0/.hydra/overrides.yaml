@@ -1,0 +1,3 @@
+- model=FullPLM
+- task=RNAlocalization_Lora
+- tokenizer=nucleotidetransformer

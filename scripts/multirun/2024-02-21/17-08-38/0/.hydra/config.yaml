@@ -1,0 +1,91 @@
+task: RNAlocalization_Lora
+tokenizer: nucleotidetransformer
+model: FullPLM
+output_dir: ${hydra:runtime.cwd}/../output/${task}/${tokenizer}
+nb_classes: ${FullPLM.model_config.nb_classes}
+compartments:
+- Nucleus
+- Exosome
+- Cytosol
+- Cytoplasm
+- Ribosome
+- Membrane
+- Endoplasmic reticulum
+- Microvesicle
+- Mitochondrion
+loss_weight: false
+sample_t: 80
+RNAlocalization_Lora:
+  path: TerminatorJ/localization_multiRNA
+wandb:
+  project: BERTLocRNA
+  name: ${model}
+FullPLM:
+  model_config:
+    nb_classes: 9
+    drop_flat: 0.25
+    normalizeatt: true
+    activation: gelu
+    RNA_dim: 4
+    module: ${tokenizer}
+    pooling_size: ${${tokenizer}.pool_size}
+    hidden_dim: ${${tokenizer}.hidden_dim}
+    RNA_order:
+    - UNK
+    - A
+    - C
+    - G
+    - T
+    - 'N'
+    - Y RNA
+    - lincRNA
+    - lncRNA
+    - mRNA
+    - miRNA
+    - ncRNA
+    - pseudo
+    - rRNA
+    - scRNA
+    - scaRNA
+    - snRNA
+    - snoRNA
+    - vRNA
+nucleotidetransformer:
+  _target_: BERTLocRNA.utils.token_generator.NTModuleTokenizer
+  model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
+  batch_size: 2
+  dataloader: true
+  hidden_dim: 2560
+  collator: true
+  pool_size: 8
+  task: ${task}
+  lora_config:
+    r: 32
+    lora_alpha: 64
+    target_modules:
+    - query
+    - value
+Trainer:
+  config:
+    rna_ref:
+    - lncRNA
+    - mRNA
+    - miRNA
+    - snRNA
+    - snoRNA
+    accelerator: gpu
+    strategy: ddp
+    max_epochs: 200
+    precison: 32
+    num_nodes: 1
+    log_every_n_steps: 1000
+    patience: 10
+    gradient_clip: true
+    optimizer_cls: torch.optim.Adam
+    lr: 0.001
+    lora: true
+    weight_decay: 1.0e-05
+    nb_classes: ${nb_classes}
+    output_dir: ${output_dir}
+    RNA_order: ${${model}.model_config.RNA_order}
+    compartments: ${compartments}

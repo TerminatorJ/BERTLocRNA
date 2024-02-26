@@ -13,6 +13,7 @@ from BERTLocRNA.utils.trainer import MyTrainer
 from datasets import load_dataset, Value, Features
 from BERTLocRNA.utils.optional import Weights
 
+
 os.environ["HYDRA_FULL_ERROR"] = "1"
 #saving the cache file to ERDA
 os.environ["HF_HOME"] = "/tmp/erda/BERTLocRNA/cache"
@@ -21,21 +22,15 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 @hydra.main(config_path=f"../conf/train_conf", config_name="train_config" ,version_base=None)#identify the config from conf path
 def train(cfg : DictConfig):
-
     wandb.config = OmegaConf.to_container(
         cfg, resolve=True, throw_on_missing=True
         )
     # initialize wandb and document the configuration
-    print("initializing")
     wandb.init(**cfg.wandb, dir = cfg.output_dir, config = cfg)
     wandb.config._service_wait = 100
 
     os.makedirs(cfg.output_dir , exist_ok = True)
-    print("output dir of this job:", cfg.output_dir)
-    
-    
-    #making the directory to save everything
-    
+
     # save the config use this task to specific path
     OmegaConf.save(cfg, f"{cfg.output_dir}/train_config.yaml")
 

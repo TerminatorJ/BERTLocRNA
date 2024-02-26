@@ -1,0 +1,1603 @@
+FullPLM(
+  (block): NT_blcok(
+    (model): PeftModel(
+      (base_model): LoraModel(
+        (model): EsmModel(
+          (embeddings): EsmEmbeddings(
+            (word_embeddings): Embedding(4105, 2560, padding_idx=1)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (position_embeddings): Embedding(1002, 2560, padding_idx=1)
+          )
+          (encoder): EsmEncoder(
+            (layer): ModuleList(
+              (0): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (1): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (2): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (3): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (4): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (5): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (6): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (7): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (8): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (9): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (10): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (11): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (12): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (13): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (14): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (15): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (16): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (17): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (18): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (19): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (20): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (21): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (22): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (23): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (24): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (25): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (26): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (27): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (28): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (29): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (30): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+              (31): EsmLayer(
+                (attention): EsmAttention(
+                  (self): EsmSelfAttention(
+                    (query): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (key): Linear(in_features=2560, out_features=2560, bias=True)
+                    (value): lora.Linear(
+                      (base_layer): Linear(in_features=2560, out_features=2560, bias=True)
+                      (lora_dropout): ModuleDict(
+                        (default): Dropout(p=0.05, inplace=False)
+                      )
+                      (lora_A): ModuleDict(
+                        (default): Linear(in_features=2560, out_features=32, bias=False)
+                      )
+                      (lora_B): ModuleDict(
+                        (default): Linear(in_features=32, out_features=2560, bias=False)
+                      )
+                      (lora_embedding_A): ParameterDict()
+                      (lora_embedding_B): ParameterDict()
+                    )
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (output): EsmSelfOutput(
+                    (dense): Linear(in_features=2560, out_features=2560, bias=True)
+                    (dropout): Dropout(p=0.0, inplace=False)
+                  )
+                  (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+                )
+                (intermediate): EsmIntermediate(
+                  (dense): Linear(in_features=2560, out_features=10240, bias=True)
+                )
+                (output): EsmOutput(
+                  (dense): Linear(in_features=10240, out_features=2560, bias=True)
+                  (dropout): Dropout(p=0.0, inplace=False)
+                )
+                (LayerNorm): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+              )
+            )
+            (emb_layer_norm_after): LayerNorm((2560,), eps=1e-12, elementwise_affine=True)
+          )
+          (pooler): EsmPooler(
+            (dense): Linear(in_features=2560, out_features=2560, bias=True)
+            (activation): Tanh()
+          )
+          (contact_head): EsmContactPredictionHead(
+            (regression): Linear(in_features=640, out_features=1, bias=True)
+            (activation): Sigmoid()
+          )
+        )
+      )
+    )
+  )
+  (localizationhead):     (maxpool): MaxPool1d(kernel_size=8, stride=8, padding=0, dilation=1, ceil_mode=False)
+      (embedding_layer): Embedding(19, 4)
+      (activation): gelu()
+      (dropout): Dropout(p=0.25, inplace=False)
+      (last_layer): Linear(in_features=2564, out_features=9, bias=True)
+      (sigmoid): Sigmoid()
+  )
+)

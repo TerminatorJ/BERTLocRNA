@@ -11,12 +11,11 @@ sys.path.append("../")
 sys.path.append("../..")
 from datasets import load_dataset, Value, Features
 from BERTLocRNA.utils.optional import Weights
-from models.Lora_model import LoraModel
+from models.Lora_model import FullPLM
 from BERTLocRNA.utils.trainer import MyTrainer
-
+import traceback
 
 os.environ["HYDRA_FULL_ERROR"] = "1"
-#saving the cache file to ERDA
 os.environ["HF_HOME"] = "/tmp/erda/BERTLocRNA/cache"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -28,13 +27,13 @@ def train(cfg : DictConfig):
     os.makedirs(cfg.output_dir, exist_ok=True)
     # import pdb; pdb.set_trace() 
     print("output dir of this job:", cfg.output_dir)
-    # wandb.config = OmegaConf.to_container(
-    #     cfg, resolve=True, throw_on_missing=True
-    #     )
-    # # initialize wandb and document the configuration
-    # print("initializing")
-    # wandb.init(**cfg.wandb, dir = cfg.output_dir, config = cfg)
-    # wandb.config._service_wait = 100
+    wandb.config = OmegaConf.to_container(
+        cfg, resolve=True, throw_on_missing=True
+        )
+    # initialize wandb and document the configuration
+    print("initializing")
+    wandb.init(**cfg.wandb, dir = cfg.output_dir, config = cfg)
+    wandb.config._service_wait = 100
     
     # save the config use this task to specific path
     OmegaConf.save(cfg, f"{cfg.output_dir}/PEFT_config.yaml")
@@ -54,31 +53,20 @@ def train(cfg : DictConfig):
     if cfg.loss_weight:
         weight = Weights(cfg.nb_classes, cfg.sample_t)
         #getting the weight dict and the labels that are filtered according to abundance
-        weight_dict, flt_dict, pos_weight = weight.get_weight(dataset["train"]["Xtag"], dataset["train"]["label"], cfg.Lora_model.model_config.RNA_order, save_dir = f"{cfg.output_dir}")
+        weight_dict, flt_dict, pos_weight = weight.get_weight(dataset["train"]["Xtag"], dataset["train"]["label"], cfg.FullPLM.model_config.RNA_order, save_dir = f"{cfg.output_dir}")
     else:
         weight = Weights(cfg.nb_classes, cfg.sample_t)
         #getting the weight dict and the labels that are filtered according to abundance
-        weight_dict, flt_dict, pos_weight = weight.get_weight(dataset["train"]["Xtag"], dataset["train"]["label"], cfg.Lora_model.model_config.RNA_order, save_dir = f"{cfg.output_dir}")
+        weight_dict, flt_dict, pos_weight = weight.get_weight(dataset["train"]["Xtag"], dataset["train"]["label"], cfg.FullPLM.model_config.RNA_order, save_dir = f"{cfg.output_dir}")
         weight_dict = None
 
     #instantiate the embedder
-    print("embedder obj:", cfg[cfg.embedder])
-    embedder = hydra.utils.instantiate(cfg[cfg.embedder])
+    tokenizer = hydra.utils.instantiate(cfg[cfg.tokenizer])
+    train_dataloader, test_dataloader, eval_dataloader = tokenizer(dataset)#collated dataloader
+    full_plm = FullPLM(tokenizer.block, cfg[cfg.model].model_config)
 
-    #Call the lora function
-    Lora_model = hydra.utils.instantiate(cfg.Lora_model)
-    #manually initialize the object
-    Lora_model.PLM = embedder
-
-    
-
-
-    train_dataloader, test_dataloader, eval_dataloader = embedder(dataset)#collated dataloader
-    
-
-        
     #instantiate the trainner
-    Trainer = MyTrainer(model = Lora_model, 
+    Trainer = MyTrainer(model = full_plm, 
                         config = cfg.Trainer.config, 
                         weight_dict = None,
                         flt_dict = flt_dict)

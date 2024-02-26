@@ -7,20 +7,22 @@ hydra :
   sweeper:
     params:
       model:
-        Lora_model
+        FullPLM
       task:
         RNAlocalization_Lora
-      embedder:
+      tokenizer:
+        # DNABERT2
         nucleotidetransformer
+        # RNAFM
+        # parnet
 
 
 
 task: RNAlocalization_Lora
-embedder: nucleotidetransformer
-embedder_obj: None
-model: Lora_model
-output_dir: ${hydra:runtime.cwd}/../output/${task}/${embedder} #save the path at the task path 
-nb_classes: ${Lora_model.model_config.nb_classes}
+tokenizer: nucleotidetransformer
+model: FullPLM
+output_dir: ${hydra:runtime.cwd}/../output/${task}/${tokenizer} #save the path at the task path 
+nb_classes: ${FullPLM.model_config.nb_classes}
 compartments: ["Nucleus","Exosome","Cytosol","Cytoplasm","Ribosome","Membrane","Endoplasmic reticulum", "Microvesicle", "Mitochondrion"]
 loss_weight: False
 sample_t: 80 #the thredshold for each class, in overall 100 as filter
@@ -33,30 +35,74 @@ wandb:
   name: ${model}
 
 
-Lora_model:
-  _target_: BERTLocRNA.models.Lora_model.LoraModel #All data should input to this model
-  lora_config:
-    r: 32
-    lora_alpha: 64
-    target_modules: ["query", "value"]
+FullPLM:
   model_config:
     nb_classes: 9
     drop_flat: 0.25
     normalizeatt: True
     activation: gelu
     RNA_dim: 4
-    pooling_size: ${${embedder}.pool_size}
-    hidden_dim: ${${embedder}.hidden_dim}
+    pooling_size: ${${tokenizer}.pool_size}
+    hidden_dim: ${${tokenizer}.hidden_dim}
     RNA_order: ["UNK", "A", "C", "G", "T", "N", "Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
 
     
 
 nucleotidetransformer:
-  _target_: BERTLocRNA.utils.PEFT.NucleotideTransformerLora
+  _target_: BERTLocRNA.utils.token_generator.NTModuleTokenizer
+  lora_config: 
+    r: 32
+    lora_alpha: 64
+    target_modules: ["query", "value"]
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
-  batch_size: 32
+  batch_size: 1
+  run_batch: 3000
   dataloader: true
   hidden_dim: 2560
+  collator: true
+  task: ${task}
+  pool_size: 8
+  
+DNABERT2:
+  _target_: BERTLocRNA.utils.token_generator.DNABERT2ModuleTokenizer
+  model_path: zhihan1996/DNABERT-2-117M
+  lora_config: 
+    r: 32
+    lora_alpha: 64
+    target_modules: ["Wqkv"]
+  batch_size: 4
+  run_batch: 3000
+  dataloader: true
+  hidden_dim: 768
+  collator: true
+  pool_size: 6
+  task: ${task}
+  
+
+RNAFM:
+  _target_: BERTLocRNA.utils.token_generator.RNAFMModuleTokenizer
+  model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  lora_config: 
+    r: 32
+    lora_alpha: 64
+    target_modules: ["k_proj", "v_proj", "q_proj"]
+  batch_size: 8
+  run_batch: 3000
+  dataloader: true
+  hidden_dim: 640
+  collator: true
+  pool_size: 8
+  task: ${task}
+
+parnet:
+  _target_: BERTLocRNA.utils.token_generator.parnetModuleTokenizer
+  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  lora_config: None
+  batch_size: 8
+  fine_tune_layers: 0
+  run_batch: 3000
+  dataloader: true
+  hidden_dim: 256
   collator: true
   pool_size: 8
   task: ${task}
@@ -75,6 +121,7 @@ Trainer:
     gradient_clip: true
     optimizer_cls: torch.optim.Adam
     lr: 0.001
+    lora: True
     weight_decay: 1e-5
     nb_classes: ${nb_classes}
     output_dir: ${output_dir} 

@@ -36,9 +36,9 @@ class Pooling(nn.Module):
     
 
     
-class Actvation(nn.Module):
+class Activation(nn.Module):
     def __init__(self, name):
-        super(Actvation, self).__init__()
+        super(Activation, self).__init__()
         self.name = name
         self.layer_name = None
 
@@ -54,5 +54,8 @@ class Actvation(nn.Module):
             self.layer_name = "Activation_Leaky"
 
         return x
+    def __repr__(self):
+        return f"{self.name}()"
+        
     
 
