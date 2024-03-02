@@ -8,15 +8,15 @@ hydra:
   sweeper:
     params:
       embedder: 
-        # RNAFM,
+        RNAFM
         # DNABERT2,
-        nucleotidetransformer
+        # nucleotidetransformer
         # parnet
                 
     
       task:  
-        # RNAlocalization,
-        RNAembedding
+        RNAlocalization
+        # RNAembedding
 
 
 embedder: nucleotidetransformer

@@ -28,32 +28,27 @@ class DataCollatorLora(object):
     def multi_label(self, label: List[List[str]]) -> torch.Tensor:
         return torch.tensor([[int(i) for i in x] for x in label])
 
-    def trim(self, seq):
-        if len(seq) >= self.max_seq_len:
-            half_len = self.max_seq_len/2
-            trimmed_seq = torch.cat([seq[:int(half_len)], seq[-int(half_len):]])
-            return trimmed_seq
-        else:
-            return seq
 
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
         input_ids, masks, RNA_type, labels, ids = tuple(
             [instance[key] for instance in instances] for key in ("input_ids", "attention_mask", "RNA_type", "labels", "ids")
         )
+        # print("mask shape:", masks)
         if self.remove_CLS:
             input_ids = [i[1:] for i in input_ids]
             masks = [i[1:] for i in masks]
         if self.remove_SEP:
             input_ids = [i[:torch.sum(j)-1] for i,j in zip(input_ids, masks)]
             masks = [i[:torch.sum(i)-1] for i in masks]
-        input_ids_t = list(map(lambda x:  self.trim(x), input_ids))
+
+        # input_ids_t = list(map(lambda x:  self.trim(x), input_ids))
         input_ids_p = torch.nn.utils.rnn.pad_sequence(
-            input_ids_t, batch_first=True, padding_value=0
+            input_ids, batch_first=True, padding_value=0
         )
         masks = torch.nn.utils.rnn.pad_sequence(
             masks, batch_first=True, padding_value=0
         ).float()
-        # Get length by mask
+       
         labels = self.multi_label(labels)
         # Merge lincRNA and lncRNA as lncRNA
         idx = np.where(RNA_type == self.RNA_order.index("lincRNA"))[0]
@@ -74,7 +69,7 @@ class DataCollatorLora(object):
 class NTModuleTokenizer(NucleotideTransformerEmbedder):
     def __init__(self, lora_config, run_batch = 1024, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.block = NT_blcok(lora_config, self.model, self.hidden_dim)
+        self.block = NT_block(lora_config, self.model, self.hidden_dim)
         self.run_batch = run_batch
         
     def tokenization(self, sample : DatasetDict) -> Dict:
@@ -83,13 +78,17 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
         Sequence longer than longest positional embedding should be truncated, the maximun supported sequence length should be 6*1002, which means two segements should be enough because the input sequence is 8000 nt.
         '''
         sequences = sample["Xall"]
-        # Break down the sequence into segments, and ducument the truncated sequences
+        #trim the sequence longer than max_seq_len
+        sequences = [seq[:int(self.max_seq_len/2)]+seq[-int(self.max_seq_len/2):] if len(seq) > self.max_seq_len else seq for seq in sequences]
         tokens = self.tokenizer(
                     sequences,
                     truncation = True,
                     padding = "max_length",
                     return_tensors="pt"
                 )
+        #Trim the tokenized sequences
+
+
         #filter out the cls token
         input_ids = tokens["input_ids"].int()
         masks = tokens["attention_mask"].int()
@@ -123,6 +122,10 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
             test_dataloader = DataLoader(
                                             tokenized_datasets["test"], batch_size=self.batch_size, collate_fn=data_collator
                                         )
+            # for i in tokenized_datasets["train"]:
+            #     # print(i)
+            #     token_shape = i["input_ids"].shape
+            #     print(token_shape)
             return train_dataloader, test_dataloader, eval_dataloader
         else:
             return tokenized_datasets
@@ -133,7 +136,7 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
 class DNABERT2ModuleTokenizer(DNABERT2Embedder):
     def __init__(self, lora_config, run_batch = 1024, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.block = DNABERT2_blcok(lora_config, self.model, self.hidden_dim)
+        self.block = DNABERT2_block(lora_config, self.model, self.hidden_dim)
         self.run_batch = run_batch
         
 
@@ -144,10 +147,12 @@ class DNABERT2ModuleTokenizer(DNABERT2Embedder):
         Sequence longer than longest positional embedding should be truncated, the maximun supported sequence length should be 6*1002, which means two segements should be enough because the input sequence is 8000 nt.
         '''
         sequences = sample["Xall"]
+        sequences = [seq[:int(self.max_seq_len/2)]+seq[-int(self.max_seq_len/2):] if len(seq) > self.max_seq_len else seq for seq in sequences]
         #Tokenize the sequences
         tokens_ids = self.tokenizer(sequences, return_tensors = 'pt', padding=True)["input_ids"]
         #Getting masks
-        masks = [[1]*len(id[(id != self.cls_id) & (id != self.sep_id) & (id != self.pad_id)]) for id in tokens_ids]
+        # masks = [[1]*len(id[id != self.pad_id]) for id in tokens_ids]
+        masks = tokens_ids != self.pad_id
         output = {"input_ids" : tokens_ids, "attention_mask" : masks}#array with variant lengths
         
         return output
@@ -196,11 +201,11 @@ class RNAFMModuleTokenizer(RNAFMEmbedder):
         The input is a batch of sequences, which allows for faster preprocessing.
         '''
         sequences = sample["Xall"]
+        sequences = [seq[:int(self.max_seq_len/2)]+seq[-int(self.max_seq_len/2):] if len(seq) > self.max_seq_len else seq for seq in sequences]
         pair = [(id, seq) for id, seq in zip(sample["ids"], sequences)]
         tokens = self.tokenizer(pair)[2]
 
-        masks = [[1]*len(seq) for seq in sequences]
-
+        masks = tokens != self.pad_id
         output = {"input_ids" : tokens, "attention_mask" : masks}
         return output
 
@@ -250,6 +255,8 @@ class parnetModuleTokenizer(ParnetEmbedder):
         The input is a batch of sequences, which allows for faster preprocessing.
         '''
         sequences = sample["Xall"]
+        #parnet work exactly as 8000 nt, therefore, the following script won't effectively run
+        sequences = [seq[:int(self.max_seq_len/2)]+seq[-int(self.max_seq_len/2):] if len(seq) > self.max_seq_len else seq for seq in sequences]
         input_ids, masks = self.tokenizer(
                     sequences,
                     return_tensors="pt"

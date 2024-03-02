@@ -12,8 +12,8 @@ hydra :
         RNAlocalization_Lora
       tokenizer:
         # DNABERT2
-        nucleotidetransformer
-        # RNAFM
+        # nucleotidetransformer
+        RNAFM
         # parnet
 
 
@@ -32,7 +32,7 @@ RNAlocalization_Lora:
   path: TerminatorJ/localization_multiRNA
 wandb:
   project: BERTLocRNA
-  name: ${model}
+  name: ${tokenizer}_fine-tune
 
 
 FullPLM:
@@ -42,7 +42,7 @@ FullPLM:
     normalizeatt: True
     activation: gelu
     RNA_dim: 4
-    pooling_size: ${${tokenizer}.pool_size}
+    pooling_size: ${${tokenizer}.pooling_size}
     hidden_dim: ${${tokenizer}.hidden_dim}
     RNA_order: ["UNK", "A", "C", "G", "T", "N", "Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
 
@@ -61,7 +61,7 @@ nucleotidetransformer:
   hidden_dim: 2560
   collator: true
   task: ${task}
-  pool_size: 8
+  pooling_size: 8
   
 DNABERT2:
   _target_: BERTLocRNA.utils.token_generator.DNABERT2ModuleTokenizer
@@ -75,7 +75,7 @@ DNABERT2:
   dataloader: true
   hidden_dim: 768
   collator: true
-  pool_size: 6
+  pooling_size: 6
   task: ${task}
   
 
@@ -91,7 +91,7 @@ RNAFM:
   dataloader: true
   hidden_dim: 640
   collator: true
-  pool_size: 8
+  pooling_size: 8
   task: ${task}
 
 parnet:
@@ -104,7 +104,7 @@ parnet:
   dataloader: true
   hidden_dim: 256
   collator: true
-  pool_size: 8
+  pooling_size: 8
   task: ${task}
 
 

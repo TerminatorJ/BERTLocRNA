@@ -42,7 +42,7 @@ class Lora:
         print(f"trainable model parameters: {trainable_model_params}\nall model parameters: {all_model_params}\npercentage of trainable model parameters: {100 * trainable_model_params / all_model_params:.2f}%")
 
 
-class NT_blcok(nn.Module):
+class NT_block(nn.Module):
     def __init__(self, lora_config = None, model = None, hidden_dim = None):
         
         print("initializing NT block")

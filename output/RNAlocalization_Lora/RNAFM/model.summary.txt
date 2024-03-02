@@ -1,0 +1,13 @@
+LightningModel(
+  (network): FullPLM(
+    (localizationhead): (maxpool): MaxPool1d(kernel_size=8, stride=8, padding=0, dilation=1, ceil_mode=False)
+    (embedding_layer): Embedding(19, 4)
+    (activation): gelu()
+    (dropout): Dropout(p=0.25, inplace=False)
+    (last_layer): Linear(in_features=7604, out_features=9, bias=True)
+    (sigmoid): Sigmoid()
+    )
+  )
+  (learnable_loss): MultiTaskLossWrapper()
+  (loss_fn): BCELoss()
+)

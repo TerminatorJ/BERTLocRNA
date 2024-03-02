@@ -73,15 +73,10 @@ class baseclass:
             left_mask = left_masks[idx]
             if str(idx) in truncated_d.keys():
                 #remove the padding
-                # import pdb; pdb.set_trace()
-
-                print("count", count)
-                print("truncated_embeds", truncated_embeds.shape)
                 right_embed = truncated_embeds[count]
                 right_mask = truncated_masks[count]
                 if len(right_embed.shape)  != 3:
                     seq_length1 = np.sum(left_mask)
-                    #filter out the cls token
                     left_embed = left_embed[1:seq_length1]
                     left_mask = left_mask[1:seq_length1]
 
@@ -100,10 +95,11 @@ class baseclass:
                     mask_out.append(list(new_mask))
                     count+=1
                 else:
+                    print("left_embed", left_embed.shape)
                     seq_length1 = np.sum(left_mask)
                     #filter out the cls token
-                    left_embed = left_embed[:seq_length1]
-                    left_mask = left_mask[:seq_length1]
+                    left_embed = left_embed[1:seq_length1]
+                    left_mask = left_mask[1:seq_length1]
 
                     res = []
                     rmsk = []
@@ -391,6 +387,7 @@ class ParnetEmbedder(baseclass):
         self.batch_size = batch_size
         self.dataloader = dataloader
         self.max_seq_len = max_length
+        self.max_tokens = max_length
         self.hidden_dim = hidden_dim
         self.pool_size = pool_size
     def get_embed(self, tokens_ids : Tensor) -> np.ndarray:
@@ -463,6 +460,9 @@ class RNAFMEmbedder(baseclass):
         self.max_seq_len = 1024 #because this methods use one-hot-encode
         self.hidden_dim = hidden_dim
         self.pool_size = pool_size
+        self.cls_id = 0
+        self.sep_id = 2
+        self.pad_id = 1
         self.model.eval() 
 
     def get_embed(self, tokens : Tensor) -> Tensor:
@@ -481,9 +481,11 @@ class RNAFMEmbedder(baseclass):
         seq_modified, truncated_d = self.filter_sequences(sequences, self.max_seq_len)
         # indexing the sequence
         data_left = [(id, seq) for id, seq in zip(sample["ids"], seq_modified)]
-        #process the left side firstly
-        left_tokens = self.tokenizer(data_left)[2][:,1:-1] #filtered out the CLS and SEP tags
-        left_masks = [[1]*len(seq) for seq in seq_modified]
+        #tokenize the left side firstly
+        left_tokens = self.tokenizer(data_left)[2]
+        #getting the mask according to the tokens, the mask should be the true length
+        left_masks = [[1]*len(id[(id != self.pad_id) & (id != self.sep_id) & (id != self.cls_id)]) for id in left_tokens]
+        #Getting the left embeddings
         left_embeds = self.get_embed(left_tokens)
         right_embeds = []
         right_masks = []
@@ -493,15 +495,13 @@ class RNAFMEmbedder(baseclass):
             for idx, chunks in truncated_d.items():
                 # import pdb; pdb.set_trace()
                 data_right = [(sample["ids"][int(idx)], chunk) for chunk in chunks]
-                right_token = self.tokenizer(data_right)[2][:,1:-1] #filtered out the CLS and SEP
-                right_mask = [[1]*len(chunk) for chunk in chunks]#for a certain sequence
+                right_token = self.tokenizer(data_right)[2]
+                right_mask = [[1]*len(id[(id != self.pad_id) & (id != self.sep_id) & (id != self.cls_id)]) for id in right_token]
                 #getting the embedding
-                # import pdb; pdb.set_trace()
                 right_embed = self.get_embed(right_token)
                 right_embeds.append(right_embed)
                 right_masks.append(right_mask)
                 right_tokens.append(right_token)
-                # import pdb; pdb.set_trace()
             #integrate embeddings together
             embedding, masks = self.alignment(left_embeds, right_embeds, left_masks, right_masks, truncated_d)
 
@@ -510,11 +510,10 @@ class RNAFMEmbedder(baseclass):
             # input_ids = left_tokens.int()
             masks = left_masks
             embedding = left_embeds
-            #simple algnment according to the mask
+            #simple alignment according to the mask
             embedding = self.simple_alignment(masks, embedding)
-            # import pdb; pdb.set_trace()
-        # import pdb; pdb.set_trace()
-        output = {"input_ids" : len(masks)*[1], "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
+
+        output = {"input_ids" : left_tokens, "embedding" : embedding, "attention_mask" : masks}#array with variant lengths
         
         return output
 

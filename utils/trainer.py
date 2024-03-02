@@ -136,15 +136,12 @@ class LightningModel(pl.LightningModule):
 
 
     def forward(self, embed, mask, RNA_type = None):
-        print("start forward")
         embed = embed.to(device)
-        print("embed")
         mask = mask.to(device)
         if RNA_type != None:
             RNA_type = RNA_type.to(device)
         # print("string:",str(self.network))
         pred = self.network(embed, mask, RNA_type)
-        print("after prediction")
         return pred
     
     def configure_optimizers(self):
@@ -274,9 +271,9 @@ class MyTrainer:
         # mask = samples["attention_mask"][:2].shape
         # RNA_types = samples["RNA_type"][:2].shape
         # print(embed,mask,RNA_types)
-        print("embedding:", samples["embedding"][:2].shape)
-        print("mask:", samples["attention_mask"][:2].shape)
-        print("RNA_type", samples["RNA_type"][:2].shape)
+        # print("embedding:", samples["embedding"][:2].shape)
+        # print("mask:", samples["attention_mask"][:2].shape)
+        # print("RNA_type", samples["RNA_type"][:2].shape)
         embed = samples["embedding"][:2].to(device)
         mask = samples["attention_mask"][:2].to(device)
         RNA_types = samples["RNA_type"][:2].to(device)

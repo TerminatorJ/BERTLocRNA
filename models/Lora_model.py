@@ -21,7 +21,7 @@ class LocalizationHead(nn.Module):
         self.maxpool = nn.MaxPool1d(model_config.pooling_size, stride = model_config.pooling_size)
         self.embedding_layer = nn.Embedding(num_embeddings=len(model_config.RNA_order),embedding_dim=model_config.RNA_dim,_weight=torch.zeros((len(model_config.RNA_order), model_config.RNA_dim)))
         self.activation = Activation(model_config.activation)
-        self.flat_dim = int(model_config.hidden_dim*self.length + model_config.RNA_dim)
+        self.flat_dim = int(model_config.hidden_dim*self.length/self.model_config.pooling_size + model_config.RNA_dim)
         self.last_layer = nn.Linear(self.flat_dim , model_config.nb_classes)
         self.sigmoid = nn.Sigmoid()
         self.dropout = nn.Dropout(model_config.drop_flat)
@@ -30,26 +30,28 @@ class LocalizationHead(nn.Module):
         if len(idx) > 0:
             RNA_type[idx] = self.model_config.RNA_order.index("lncRNA")
         return RNA_type
-    def _reset_parameters(self, length):
-        # Reset parameters to their default values
-        self.flat_dim = int(self.model_config.hidden_dim * length + self.model_config.RNA_dim)
-        self.last_layer = nn.Linear(self.flat_dim, self.model_config.nb_classes).to(device)
 
     def __repr__(self):
-        return f"    (maxpool): {self.maxpool}\n" \
-            f"    (embedding_layer): {self.embedding_layer}\n" \
-            f"    (activation): {self.activation}\n" \
-            f"    (dropout): {self.dropout}\n" \
-            f"    (last_layer): {self.last_layer}\n" \
-            f"    (sigmoid): {self.sigmoid}\n" \
-            f")"
+        return f"(maxpool): {self.maxpool}\n" \
+               f"(embedding_layer): {self.embedding_layer}\n" \
+               f"(activation): {self.activation}\n" \
+               f"(dropout): {self.dropout}\n" \
+               f"(last_layer): {self.last_layer}\n" \
+               f"(sigmoid): {self.sigmoid}\n" \
+               f")"
     def forward(self, block_out, RNA_type):
-        self._reset_parameters(self.length)
+        # print("block dimension:", block_out.shape)
+        block_out = self.maxpool(block_out)
+        # print("block dimension after pooling:", block_out.shape)
         embedding_output = self.embedding_layer(self.mergelncRNA(RNA_type))#n*4
         out = torch.cat((block_out, embedding_output), dim=1)
+        # print("block dimension after pooling and embedding layer:", out.shape)
         out = self.activation(out)
+        # print(1)
         out = self.dropout(out)
+        # print("self.flat_dim", self.flat_dim)
         digit = self.last_layer(out)
+        # print(2)
         pred = self.sigmoid(digit)
         return pred
 
@@ -71,12 +73,15 @@ class FullPLM(nn.Module):
         
     def forward(self, tokens_ids : Tensor, x_mask : Tensor, RNA_type : Tensor):
         model_out = self.block(tokens_ids, x_mask)
+        # print(3)
         batch_size = model_out.size(0)
         length = model_out.size(2)
         self._reset_head(length)
+        # print(4)
         #flatten the embeddings
         out = model_out.reshape(batch_size, -1)
         pred = self.localizationhead(out, RNA_type)
+        # print(5)
         return pred
 
 
