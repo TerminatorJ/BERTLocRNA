@@ -1,3 +1,5 @@
+conditions: transfer
+output_layer: -1
 model: base_model
 task: RNAlocalization
 embedder: parnet
@@ -17,9 +19,11 @@ sample_t: 80
 loss_weight: true
 RNAlocalization:
   path: TerminatorJ/localization_multiRNA
+RNAlocalization_probe:
+  path: TerminatorJ/localization_multiRNA
 wandb:
   project: BERTLocRNA
-  name: ${embedder}
+  name: ${embedder}_probe_${conditions}_${output_layer}
 base_model:
   _target_: BERTLocRNA.models.base_model.CustomizedModel
   config:
@@ -67,6 +71,8 @@ parnet:
   collator: false
   pool_size: 8
   task: ${task}
+  output_layer: ${output_layer}
+  conditions: ${conditions}
 nucleotidetransformer:
   _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
@@ -76,6 +82,8 @@ nucleotidetransformer:
   collator: true
   pool_size: 8
   task: ${task}
+  output_layer: ${output_layer}
+  conditions: ${conditions}
 RNAFM:
   _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedder
   model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM

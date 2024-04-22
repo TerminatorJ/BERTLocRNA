@@ -20,7 +20,7 @@ os.environ["HF_HOME"] = "/tmp/erda/BERTLocRNA/cache"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-@hydra.main(config_path=f"../conf/train_conf", config_name="train_config" ,version_base=None)#identify the config from conf path
+@hydra.main(config_path=f"../conf/train_conf", config_name="localization_train_config" ,version_base=None)#identify the config from conf path
 def train(cfg : DictConfig):
     wandb.config = OmegaConf.to_container(
         cfg, resolve=True, throw_on_missing=True

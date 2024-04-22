@@ -1,30 +1,38 @@
 defaults:
  - _self_
 #  - override hydra/launcher: joblib
-
-
 hydra: 
   mode: MULTIRUN
   sweeper:
     params:
       embedder: 
-        RNAFM
+        # RNAFM
         # DNABERT2,
         # nucleotidetransformer
-        # parnet
+        parnet
                 
-    
+      output_layer: range(1,11)
+      conditions: 
+        # samedist
+        transfer
+        
+        # reinit
+        # # onehot 
       task:  
-        RNAlocalization
-        # RNAembedding
-
+        RNAlocalization_probe
+        # RNAembedding_probe
+        
 
 embedder: nucleotidetransformer
-task: RNAembedding
-
+task: RNAlocalization_probe
+output_layer: 1
+conditions: reinit
 
 
 RNAlocalization:
+  path: TerminatorJ/localization_multiRNA
+
+RNAlocalization_probe:
   path: TerminatorJ/localization_multiRNA
 
 RNAembedding:
@@ -33,9 +41,11 @@ RNAembedding:
 nucleotidetransformer:
   _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
-  batch_size: 2
+  batch_size: 40
   dataloader: false
   task: ${task}
+  output_layer: ${output_layer}
+  conditions: ${conditions}
 
 parnet:
   _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
@@ -44,6 +54,9 @@ parnet:
   dataloader: false
   max_length: 8000
   task: ${task}
+  output_layer: ${output_layer}
+  conditions: ${conditions}
+  ckp_name: network.PanRBPNet.2023-03-13.ckpt
 
 RNAFM:
   _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedder

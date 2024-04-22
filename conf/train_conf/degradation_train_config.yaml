@@ -1,0 +1,135 @@
+defaults:
+  # - override hydra/launcher: joblib
+  - _self_
+
+hydra :
+  mode: MULTIRUN
+  sweeper:
+    params:
+      model: 
+        base_model
+      task:
+        RNAdegradation
+      output_layer: -1
+      conditions: 
+        transfer
+      embedder:
+        Parnet
+        nucleotidetransformer,
+        DNABERT2,
+        RNAFM
+        
+
+        
+conditions: reinit
+output_layer: 1
+model: base_model
+task: RNAlocalization
+embedder: nucleotidetransformer
+compartments: ["Nucleus","Exosome","Cytosol","Cytoplasm","Ribosome","Membrane","Endoplasmic reticulum", "Microvesicle", "Mitochondrion"]
+output_dir: ${hydra:runtime.cwd}/../output/${task}/${embedder} #save the path at the task path 
+nb_classes: 9
+sample_t: 80 #the thredshold for each class, in overall 100 as filter
+loss_weight: True
+
+RNAdegradation:
+  path: TerminatorJ/RNA_degradation
+
+RNAlocalization_probe:
+  path: TerminatorJ/localization_multiRNA
+wandb:
+  project: BERTLocRNA
+  name: ${embedder}_probe_${conditions}_${output_layer}
+
+
+base_model:
+  _target_: BERTLocRNA.models.base_model.CustomizedModel #All embeddings should input to this model
+  config:
+    nb_classes: 9
+    dim_attention: 80
+    headnum: 3
+    drop_flat: 0.25
+    Att_regularizer_weight: 0.001
+    fc_dim: 100
+    normalizeatt: True
+    attmod: smooth
+    sharp_beta: 1
+    activation: gelu
+    activation_att: tanh
+    attention: True
+    RNA_dim: 4
+    pooling_size: ${${embedder}.pool_size}
+    hidden_dim: ${${embedder}.hidden_dim}
+    RNA_order: ["UNK", "A", "C", "G", "T", "N", "Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
+
+parnet:
+  _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
+  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  batch_size: 32
+  dataloader: true
+  hidden_dim: 256
+  collator: false
+  pool_size: 8
+  task: ${task}
+  output_layer: ${output_layer}
+  conditions: ${conditions}
+
+
+nucleotidetransformer:
+  _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
+  model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
+  batch_size: 32
+  dataloader: true
+  hidden_dim: 2560
+  collator: true
+  pool_size: 8
+  task: ${task}
+  output_layer: ${output_layer}
+  conditions: ${conditions}
+
+
+RNAFM:
+  _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedder
+  model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  batch_size: 32
+  dataloader: true
+  hidden_dim: 640
+  collator: true
+  pool_size: 8
+  task: ${task}
+
+DNABERT2:
+  _target_: BERTLocRNA.utils.embedding_generator.DNABERT2Embedder
+  model_path: zhihan1996/DNABERT-2-117M
+  batch_size: 32
+  dataloader: true
+  hidden_dim: 768
+  collator: true
+  pool_size: 6
+  task: ${task}
+#DNABERT2 will raise errors if pool_size become 8 due to the dynamic tokenization
+
+
+Trainer:
+  config:
+    rna_ref: ["lncRNA", "mRNA", "miRNA", "snRNA", "snoRNA"]
+    accelerator: gpu
+    strategy: ddp
+    max_epochs: 200
+    precision: 32
+    num_nodes: 1
+    log_every_n_steps: 1000
+    patience: 10
+    gradient_clip: true
+    optimizer_cls: torch.optim.Adam
+    lr: 0.001
+    weight_decay: 1e-5
+    nb_classes: ${nb_classes}
+    output_dir: ${output_dir} 
+    RNA_order: ${base_model.config.RNA_order}
+    compartments: ${compartments}
+
+
+
+
+

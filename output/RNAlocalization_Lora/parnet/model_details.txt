@@ -1,9 +1,89 @@
 FullPLM(
-  (localizationhead): (maxpool): MaxPool1d(kernel_size=8, stride=8, padding=0, dilation=1, ceil_mode=False)
-  (embedding_layer): Embedding(19, 4)
+  (block): Parnet_block(
+    (model): Parnet_model(
+      (parnet_model): RBPNet(
+        (stem): StemConv1D(
+          (conv1d): Conv1d(4, 256, kernel_size=(12,), stride=(1,), padding=same)
+          (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (act): ReLU()
+        )
+        (body): Sequential(
+          (0): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same)
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+          (1): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same)
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+          (2): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same, dilation=(3,))
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+          (3): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same, dilation=(5,))
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+          (4): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same, dilation=(9,))
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+          (5): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same, dilation=(16,))
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+          (6): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same, dilation=(28,))
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+          (7): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same, dilation=(50,))
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+          (8): ResConvBlock1D(
+            (conv1d): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=same, dilation=(87,))
+            (batch_norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (act): ReLU()
+            (dropout): Dropout1d(p=0.25, inplace=False)
+          )
+        )
+        (head): AdditiveMix(
+          (head_target): LinearProjection(
+            (pointwise_conv): Conv1d(256, 223, kernel_size=(1,), stride=(1,), bias=False)
+          )
+          (head_control): LinearProjection(
+            (pointwise_conv): Conv1d(256, 223, kernel_size=(1,), stride=(1,), bias=False)
+          )
+          (mix_coeff): SequenceLinearMix(
+            (gloabel_avg_pool): AdaptiveAvgPool1d(output_size=1)
+            (dense): Linear(in_features=256, out_features=223, bias=True)
+          )
+        )
+      )
+      (embedding_layer): Embedding(6, 4)
+    )
+    (maxpool): MaxPool1d(kernel_size=8000, stride=8000, padding=0, dilation=1, ceil_mode=False)
+  )
+  (localizationhead): (embedding_layer): Embedding(19, 4)
   (activation): gelu()
   (dropout): Dropout(p=0.25, inplace=False)
-  (last_layer): Linear(in_features=36, out_features=9, bias=True)
+  (last_layer): Linear(in_features=260, out_features=9, bias=True)
   (sigmoid): Sigmoid()
   )
 )

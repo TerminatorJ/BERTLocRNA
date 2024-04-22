@@ -17,10 +17,10 @@ import traceback
 
 os.environ["HYDRA_FULL_ERROR"] = "1"
 os.environ["HF_HOME"] = "/tmp/erda/BERTLocRNA/cache"
-
+os.environ["WANDB_DISABLE_JOB_CREATION"] = "True"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-@hydra.main(config_path=f"../conf/train_conf", config_name="PEFT_config" ,version_base=None)#identify the config from conf path
+@hydra.main(config_path=f"../conf/train_conf", config_name="localization_PEFT_config" ,version_base=None)#identify the config from conf path
 def train(cfg : DictConfig):
 
     #Creating the output dir recursively
@@ -32,7 +32,7 @@ def train(cfg : DictConfig):
         )
     # initialize wandb and document the configuration
     print("initializing")
-    wandb.init(**cfg.wandb, dir = cfg.output_dir, config = cfg)
+    wandb.init(project=cfg.wandb['project'], name=cfg.wandb['name'], dir = cfg.output_dir, config = cfg)
     wandb.config._service_wait = 100
     
     # save the config use this task to specific path
@@ -64,7 +64,6 @@ def train(cfg : DictConfig):
     tokenizer = hydra.utils.instantiate(cfg[cfg.tokenizer])
     train_dataloader, test_dataloader, eval_dataloader = tokenizer(dataset)#collated dataloader
     full_plm = FullPLM(tokenizer.block, cfg[cfg.model].model_config)
-
     #instantiate the trainner
     Trainer = MyTrainer(model = full_plm, 
                         config = cfg.Trainer.config, 
@@ -73,9 +72,9 @@ def train(cfg : DictConfig):
 
     #trainning the data
     Trainer.train(train_dataloader, eval_dataloader)
-    
+    print("skip the training, only getting the test performance###")
     # test 
-    Trainer.test(test_dataloader, flt_dict)
+    # Trainer.test(test_dataloader, flt_dict)
 
 if __name__ == "__main__":
     train()

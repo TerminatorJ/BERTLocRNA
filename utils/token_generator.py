@@ -41,10 +41,10 @@ class DataCollatorLora(object):
             input_ids = [i[:torch.sum(j)-1] for i,j in zip(input_ids, masks)]
             masks = [i[:torch.sum(i)-1] for i in masks]
 
-        # input_ids_t = list(map(lambda x:  self.trim(x), input_ids))
         input_ids_p = torch.nn.utils.rnn.pad_sequence(
             input_ids, batch_first=True, padding_value=0
         )
+        # print("input_ids_p:", input_ids_p, input_ids_p.shape)
         masks = torch.nn.utils.rnn.pad_sequence(
             masks, batch_first=True, padding_value=0
         ).float()
@@ -55,6 +55,7 @@ class DataCollatorLora(object):
         if len(idx) > 0:
             RNA_type[idx] = self.RNA_order.index("lncRNA")
         RNA_type = torch.tensor(RNA_type).long()
+        # print("input_ids_p", input_ids_p)
         return dict(
             embedding=input_ids_p,
             RNA_type=RNA_type,
@@ -67,9 +68,9 @@ class DataCollatorLora(object):
 
 # https://www.biorxiv.org/content/10.1101/2023.01.11.523679v2.full
 class NTModuleTokenizer(NucleotideTransformerEmbedder):
-    def __init__(self, lora_config, run_batch = 1024, *args, **kwargs):
+    def __init__(self, lora_config, run_batch = 1024, output_layer = None, conditions = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.block = NT_block(lora_config, self.model, self.hidden_dim)
+        self.block = NT_block(lora_config, self.model, self.hidden_dim, output_layer, conditions)
         self.run_batch = run_batch
         
     def tokenization(self, sample : DatasetDict) -> Dict:
@@ -86,8 +87,6 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
                     padding = "max_length",
                     return_tensors="pt"
                 )
-        #Trim the tokenized sequences
-
 
         #filter out the cls token
         input_ids = tokens["input_ids"].int()
@@ -112,7 +111,7 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
         tokenized_datasets.set_format("torch")
         if self.dataloader:
-            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = True)
+            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = False)#keep the CLS to get the sequence based representations
             train_dataloader = DataLoader(
                                             tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )
@@ -157,7 +156,6 @@ class DNABERT2ModuleTokenizer(DNABERT2Embedder):
         
         return output
 
-
     def __call__(self, dataset :Union[DatasetDict, None]):
 
         save_file = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
@@ -175,7 +173,7 @@ class DNABERT2ModuleTokenizer(DNABERT2Embedder):
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
         tokenized_datasets.set_format("torch")
         if self.dataloader:
-            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = True, remove_SEP = True)
+            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = False, remove_SEP = True)
             train_dataloader = DataLoader(
                                             tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )
@@ -193,7 +191,7 @@ class DNABERT2ModuleTokenizer(DNABERT2Embedder):
 class RNAFMModuleTokenizer(RNAFMEmbedder):
     def __init__(self, lora_config, run_batch = 1024, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.block = RNAFM_blcok(lora_config, self.model, self.hidden_dim)
+        self.block = RNAFM_block(lora_config, self.model, self.hidden_dim)
         self.run_batch = run_batch
 
     def tokenization(self, sample : DatasetDict) -> Dict:
@@ -221,13 +219,14 @@ class RNAFMModuleTokenizer(RNAFMEmbedder):
             # tokenized_datasets.save_to_disk(save_path)
         else:
             print("loading the dataset...")
+            print("save_file", save_file)
             tokenized_datasets = pickle.load(open(save_file, "rb"))
 
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
         tokenized_datasets.set_format("torch")
         if self.dataloader:
-            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = True, remove_SEP = True)
+            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = False, remove_SEP = True)
             train_dataloader = DataLoader(
                                             tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )
@@ -244,10 +243,10 @@ class RNAFMModuleTokenizer(RNAFMEmbedder):
 
 
 class parnetModuleTokenizer(ParnetEmbedder):
-    def __init__(self, lora_config, run_batch = 1024, *args, **kwargs):
+    def __init__(self, lora_config, run_batch = 1024, output_layer = None, conditions = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.model = Parnet_model(kwargs["model_path"], fine_tune_layers=kwargs["fine_tune_layers"])
-        self.block = Parnet_blcok(lora_config, self.model, self.hidden_dim)
+        self.model = Parnet_model(kwargs["model_path"], fine_tune_layers=kwargs["fine_tune_layers"], ckp_name = kwargs["ckp_name"], output_layer = output_layer, conditions = conditions)
+        self.block = Parnet_block(lora_config, self.model, self.hidden_dim, output_layer = output_layer)
         self.run_batch = run_batch
         
     def tokenization(self, sample : DatasetDict) -> Dict:

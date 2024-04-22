@@ -7,8 +7,8 @@ import os
 import numpy as np
 import sys
 sys.path.append("../")
-from BERTLocRNA.models.attention import Attention_mask
-from BERTLocRNA.models.layers import *
+from models.attention import Attention_mask
+from models.layers import *
 from torch import Tensor
 
 #make the code reproducible 
@@ -48,7 +48,7 @@ class CustomizedModel(nn.Module):
         self.embedding_layer = nn.Embedding(num_embeddings=len(self.config.RNA_order),embedding_dim=self.config.RNA_dim,_weight=torch.zeros((len(self.config.RNA_order), self.config.RNA_dim)))
         self.sigmoid = nn.Sigmoid()
         
-        self.Actvation = Actvation(self.config.activation)
+        self.Activation = Activation(self.config.activation)
         self.Attention_layer = Attention_mask(hidden = self.config.hidden_dim, att_dim = self.config.dim_attention, 
                                             r = self.config.headnum, activation = self.config.activation_att, 
                                             return_attention = True, attention_regularizer_weight = self.config.Att_regularizer_weight, 
@@ -97,7 +97,7 @@ class CustomizedModel(nn.Module):
         embedding_output = self.embedding_layer(self.mergelncRNA(RNA_type))#n*4
         output = self.fc1(output)
         output = torch.cat((output, embedding_output), dim=1)
-        output = self.Actvation(output)
+        output = self.Activation(output)
         output = self.dropout(output)
         output = self.fc2(output)
         pred = self.sigmoid(output)

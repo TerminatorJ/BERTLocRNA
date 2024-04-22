@@ -1,3 +1,0 @@
-- model=base_model
-- task=RNAlocalization
-- embedder=nucleotidetransformer

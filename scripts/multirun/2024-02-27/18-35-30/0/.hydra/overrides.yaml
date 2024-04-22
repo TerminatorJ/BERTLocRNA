@@ -1,3 +1,0 @@
-- model=FullPLM
-- task=RNAlocalization_Lora
-- tokenizer=DNABERT2

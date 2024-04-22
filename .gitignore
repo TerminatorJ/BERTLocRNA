@@ -1,7 +1,8 @@
 #ignore the saved data file
-/data/*
+/data/
 /localization_multiRNA/
 /embeddings/
+
 
 
 #ignore the model file
@@ -14,16 +15,33 @@
 
 
 #any log file
-./scripts/outputs/
+./scripts/outputs/*
 ./*.out
-./multirun/
-./scripts/multirun
+scripts/multirun/
+scripts/*.log
+**/*.LOG
 
 #wandb log file
 **/wandb/
 
 #checkpoints
 **/checkpoints
+**/old_checkpoints
 **/*.out
+
+
+#Large size
+./saved_model.tar.gz
+
+
+#output
+/output/*
+
+#images
+**/*.png
+
+#python file
+/scripts/python
+
 
 

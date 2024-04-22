@@ -1,0 +1,69 @@
+defaults:
+ - _self_
+#  - override hydra/launcher: joblib
+hydra: 
+  mode: MULTIRUN
+  sweeper:
+    params:
+      embedder: 
+        # RNAFM
+        # DNABERT2,
+        nucleotidetransformer
+        # parnet
+                
+      output_layer: -1
+      conditions: 
+        # samedist
+        transfer
+        
+        # reinit
+        # # onehot 
+      task:  
+        LoRNA
+        
+        
+
+embedder: nucleotidetransformer
+task: RNAlocalization_probe
+output_layer: 1
+conditions: reinit
+
+
+LoRNA:
+  path: TerminatorJ/LoRNA_localization
+
+
+nucleotidetransformer:
+  _target_: BERTLocRNA.utils.embedding_generator.NucleotideTransformerEmbedder
+  model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
+  batch_size: 40
+  dataloader: false
+  task: ${task}
+  output_layer: ${output_layer}
+  conditions: ${conditions}
+
+parnet:
+  _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
+  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  batch_size: 50
+  dataloader: false
+  max_length: 8000
+  task: ${task}
+  output_layer: ${output_layer}
+  conditions: ${conditions}
+  ckp_name: network.PanRBPNet.2023-03-13.ckpt
+
+RNAFM:
+  _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedder
+  model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  batch_size: 4
+  dataloader: false
+  task: ${task}
+
+DNABERT2:
+  _target_: BERTLocRNA.utils.embedding_generator.DNABERT2Embedder
+  model_path: zhihan1996/DNABERT-2-117M
+  batch_size: 2
+  dataloader: false
+  task: ${task}
+

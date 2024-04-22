@@ -18,14 +18,14 @@ def get_embedding(cfg : DictConfig) -> None:
     embedder = hydra.utils.instantiate(cfg[cfg.embedder])
     #generating the embedding using different embedders
     #loading the dataset for a certain task
-    if cfg.task == "RNAlocalization":
+    if cfg.task == "RNAlocalization" or cfg.task == "RNAlocalization_probe":
         custom_features = Features({"label": Value(dtype='string'), 
                                     "idx": Value(dtype="int64"),
                                     "Xall": Value(dtype='string'),
                                     "Xtag": Value(dtype="int64"),
                                     "ids": Value(dtype='string')})
-        dataset = load_dataset(**cfg[cfg.task], features=custom_features)
-    elif cfg.task == "RNAembedding":
+        dataset = load_dataset(**cfg[cfg.task], features=custom_features, cache_dir = "/tmp/erda/BERTLocRNA/cache")
+    elif cfg.task == "RNAembedding" :
         custom_features = Features({"label": Value(dtype='string'), 
                                     "Xall": Value(dtype='string'),
                                     "ids": Value(dtype='string')})

@@ -1,3 +1,0 @@
-- model=Lora_model
-- task=RNAlocalization_Lora
-- embedder=nucleotidetransformer
