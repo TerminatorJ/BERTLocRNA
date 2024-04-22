@@ -1,6 +1,6 @@
 defaults:
  - _self_
-#  - override hydra/launcher: joblib
+ - override hydra/launcher: joblib
 
 
 hydra: 
@@ -8,10 +8,10 @@ hydra:
   sweeper:
     params:
       embedder: 
-        RNAFM
-        # DNABERT2,
-        # nucleotidetransformer
-        # parnet
+        RNAFM,
+        DNABERT2,
+        nucleotidetransformer,
+        parnet
                 
     
       task:  
@@ -39,7 +39,7 @@ nucleotidetransformer:
 
 parnet:
   _target_: BERTLocRNA.utils.embedding_generator.ParnetEmbedder
-  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  model_path: /scratch/project_465001027/BERTLocRNA/RBPLLM/Parnet
   batch_size: 50
   dataloader: false
   max_length: 8000
@@ -47,7 +47,7 @@ parnet:
 
 RNAFM:
   _target_: BERTLocRNA.utils.embedding_generator.RNAFMEmbedder
-  model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  model_path: /scratch/project_465001027/BERTLocRNA/saved_model/RNAFM
   batch_size: 4
   dataloader: false
   task: ${task}

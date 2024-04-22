@@ -13,7 +13,7 @@ from BERTLocRNA.utils.embedding_generator import *
 from BERTLocRNA.utils.layers import *
 import pickle
 from BERTLocRNA.RBPLLM.Parnet import ParnetModel, ParnetTokenizer, Parnet_model
-hf_cache = "/tmp/erda/BERTLocRNA/cache"
+hf_cache = "/scratch/project_465001027/BERTLocRNA/cache"
 
 
 
@@ -41,10 +41,10 @@ class DataCollatorLora(object):
             input_ids = [i[:torch.sum(j)-1] for i,j in zip(input_ids, masks)]
             masks = [i[:torch.sum(i)-1] for i in masks]
 
-        # input_ids_t = list(map(lambda x:  self.trim(x), input_ids))
         input_ids_p = torch.nn.utils.rnn.pad_sequence(
             input_ids, batch_first=True, padding_value=0
         )
+        # print("input_ids_p:", input_ids_p, input_ids_p.shape)
         masks = torch.nn.utils.rnn.pad_sequence(
             masks, batch_first=True, padding_value=0
         ).float()
@@ -66,10 +66,77 @@ class DataCollatorLora(object):
 
 
 # https://www.biorxiv.org/content/10.1101/2023.01.11.523679v2.full
+# class NTModuleTokenizer(NucleotideTransformerEmbedder):
+#     def __init__(self, lora_config, run_batch = 1024, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.block = NT_block(lora_config, self.model, self.hidden_dim)
+#         self.run_batch = run_batch
+        
+#     def tokenization(self, sample : DatasetDict) -> Dict:
+#         '''
+#         The input is a batch of sequences, which allows for faster preprocessing.
+#         Sequence longer than longest positional embedding should be truncated, the maximun supported sequence length should be 6*1002, which means two segements should be enough because the input sequence is 8000 nt.
+#         '''
+#         sequences = sample["Xall"]
+#         #trim the sequence longer than max_seq_len
+#         sequences = [seq[:int(self.max_seq_len/2)]+seq[-int(self.max_seq_len/2):] if len(seq) > self.max_seq_len else seq for seq in sequences]
+#         print("sequences", len(sequences[0]))
+#         tokens = self.tokenizer(
+#                     sequences,
+#                     truncation = True,
+#                     padding = "max_length",
+#                     return_tensors="pt"
+#                 )
+#         print("tokens", tokens.shape)
+#         #Trim the tokenized sequences
+
+
+#         #filter out the cls token
+#         input_ids = tokens["input_ids"].int()
+#         masks = tokens["attention_mask"].int()
+#         output = {"input_ids" : input_ids, "attention_mask" : masks}#array with variant lengths
+#         return output
+
+
+#     def __call__(self, dataset :Union[DatasetDict, None]):
+
+#         save_file = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
+#         print("processing################################")
+        
+#         if not os.path.isfile(save_file):
+#             tokenized_datasets = dataset.map(self.tokenization, batched = True, batch_size = self.run_batch)
+#             pickle.dump(tokenized_datasets, open(save_file, "wb"))
+#         else:
+#             print("loading the dataset...")
+#             tokenized_datasets = pickle.load(open(save_file, "rb"))
+
+#         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
+#         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
+#         tokenized_datasets.set_format("torch")
+#         if self.dataloader:
+#             data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = False)#keep the CLS to get the sequence based representations
+#             train_dataloader = DataLoader(
+#                                             tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
+#                                         )
+#             eval_dataloader = DataLoader(
+#                                             tokenized_datasets["validation"], batch_size=self.batch_size, collate_fn=data_collator
+#                                         )
+#             test_dataloader = DataLoader(
+#                                             tokenized_datasets["test"], batch_size=self.batch_size, collate_fn=data_collator
+#                                         )
+#             # for i in tokenized_datasets["train"]:
+#             #     # print(i)
+#             #     token_shape = i["input_ids"].shape
+#             #     print(token_shape)
+#             return train_dataloader, test_dataloader, eval_dataloader
+#         else:
+#             return tokenized_datasets
+        
+# https://www.biorxiv.org/content/10.1101/2023.01.11.523679v2.full
 class NTModuleTokenizer(NucleotideTransformerEmbedder):
-    def __init__(self, lora_config, run_batch = 1024, *args, **kwargs):
+    def __init__(self, lora_config, run_batch = 1024, output_layer = None, conditions = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.block = NT_block(lora_config, self.model, self.hidden_dim)
+        self.block = NT_block(lora_config, self.model, self.hidden_dim, output_layer, conditions)
         self.run_batch = run_batch
         
     def tokenization(self, sample : DatasetDict) -> Dict:
@@ -86,8 +153,6 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
                     padding = "max_length",
                     return_tensors="pt"
                 )
-        #Trim the tokenized sequences
-
 
         #filter out the cls token
         input_ids = tokens["input_ids"].int()
@@ -96,9 +161,10 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
         return output
 
 
+
     def __call__(self, dataset :Union[DatasetDict, None]):
 
-        save_file = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
+        save_file = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
         print("processing################################")
         
         if not os.path.isfile(save_file):
@@ -106,13 +172,14 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
             pickle.dump(tokenized_datasets, open(save_file, "wb"))
         else:
             print("loading the dataset...")
+            print(save_file)
             tokenized_datasets = pickle.load(open(save_file, "rb"))
 
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
         tokenized_datasets.set_format("torch")
         if self.dataloader:
-            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = True)
+            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = False)#keep the CLS to get the sequence based representations
             train_dataloader = DataLoader(
                                             tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )
@@ -129,8 +196,6 @@ class NTModuleTokenizer(NucleotideTransformerEmbedder):
             return train_dataloader, test_dataloader, eval_dataloader
         else:
             return tokenized_datasets
-        
-   
 
 
 class DNABERT2ModuleTokenizer(DNABERT2Embedder):
@@ -157,10 +222,9 @@ class DNABERT2ModuleTokenizer(DNABERT2Embedder):
         
         return output
 
-
     def __call__(self, dataset :Union[DatasetDict, None]):
 
-        save_file = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
+        save_file = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
         print("processing################################")
         
         if not os.path.isfile(save_file):
@@ -212,7 +276,7 @@ class RNAFMModuleTokenizer(RNAFMEmbedder):
 
     def __call__(self, dataset :Union[DatasetDict, None]):
 
-        save_file = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
+        save_file = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
         print("processing################################")
         
         if not os.path.isfile(save_file):
@@ -221,13 +285,15 @@ class RNAFMModuleTokenizer(RNAFMEmbedder):
             # tokenized_datasets.save_to_disk(save_path)
         else:
             print("loading the dataset...")
+            print("save_file", save_file)
             tokenized_datasets = pickle.load(open(save_file, "rb"))
+            # print("after")
 
         tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
         tokenized_datasets = tokenized_datasets.rename_column("Xtag", "RNA_type")
         tokenized_datasets.set_format("torch")
         if self.dataloader:
-            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = True, remove_SEP = True)
+            data_collator = DataCollatorLora(self.max_seq_len, remove_CLS = False, remove_SEP = True)
             train_dataloader = DataLoader(
                                             tokenized_datasets["train"], shuffle=True, batch_size=self.batch_size, collate_fn=data_collator
                                         )
@@ -268,7 +334,7 @@ class parnetModuleTokenizer(ParnetEmbedder):
 
     def __call__(self, dataset :Union[DatasetDict, None]):
 
-        save_file = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
+        save_file = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding.pkl")
         print("processing################################")
         
         if not os.path.isfile(save_file):

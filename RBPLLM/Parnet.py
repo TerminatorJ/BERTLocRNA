@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch
 from torch import Tensor
 import os
+import numpy as np
 import torch.nn.functional as F
 
 device =  torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -25,7 +26,7 @@ class baseclass:
 
 
 class ParnetTokenizer(baseclass):
-    def from_pretrained(self, model_path, *args, **kwargs):
+    def from_pretrained(self, model_path, *args, **kwargs) -> Tuple[List]:
         model_path = os.path.join(model_path, "tokenizer",  "parnet.json")
         try:
             with open(model_path, 'r') as file:
@@ -45,10 +46,11 @@ class ParnetTokenizer(baseclass):
             padded_sequences = [F.pad(torch.tensor(seq), pad=(0, max_length - len(seq))) for seq in tokens_list]
             # Convert to a tensor
             tokens_list = torch.stack(padded_sequences)
-            masks = [torch.tensor([1] * len(seq) + [0] * (max_length - len(seq))) for seq in tokens_list]
-            masks = torch.stack(masks)
+            masks = [[1] * len(seq[seq!=0]) for seq in tokens_list]
+
+
         else:
-            raise ValueError("you must set return_tensors as pt to get the consistent tensor shape")
+            raise ValueError("you must set return_tensors to get the consistent tensor shape")
 
 
         return tokens_list, masks
@@ -81,7 +83,7 @@ class Parnet_model(nn.Module):
         embedding = self.embedding_layer(x) #[batch, T, 4]
         embedding = embedding.transpose(1,2)#[batch, 4, T] 
         embedding = embedding.to(torch.float32)
-        embedding = self.parnet_model.forward(embedding)#[batch, 256, T]
+        embedding = self.parnet_model(embedding)#[batch, 256, T]
         return embedding
 
 

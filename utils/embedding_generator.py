@@ -18,12 +18,11 @@ import time
 import shutil
 import fm
 import torch
-# from peft import (LoraConfig,get_peft_model, get_peft_model_state_dict)
 root_dir =  os.getcwd()
 
 device =  torch.device("cuda" if torch.cuda.is_available() else "cpu")
 path_join = lambda *path: os.path.abspath(os.path.join(*path))
-hf_cache = "/tmp/erda/BERTLocRNA/cache"
+hf_cache = "/scratch/project_465001027/BERTLocRNA/cache"
 
 
 
@@ -157,10 +156,6 @@ class baseclass:
         # print(left_masks.shape, left_embeds.shape, truncated_masks.shape, truncated_embeds.shape)
         #concatenate truncate with the truncated_dict
         return left_embeds, truncated_embeds, left_masks.detach().cpu().numpy(), truncated_masks.detach().cpu().numpy()
-    
-
-
-    
 
     def __call__(self, dataset :Union[DatasetDict, None], *args, **kwargs):
         return self.process(dataset)
@@ -232,13 +227,13 @@ class NucleotideTransformerEmbedder(baseclass):
         local_path = path_join(root_dir, "..", "saved_model", self.embedder_name)
         if not os.path.exists(local_path):
             if 'v2' in model_path:
-                self.model = AutoModelForMaskedLM.from_pretrained(model_path)
+                self.model = AutoModelForMaskedLM.from_pretrained(model_path, cache_dir = hf_cache)
                 self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
                 self.max_seq_len = 12282 # "model_max_length": 2048 * 6mer --> 12,288
                 self.max_tokens = 2048
                 self.v2 = True
             else:
-                self.model = AutoModel.from_pretrained(model_path)
+                self.model = AutoModel.from_pretrained(model_path, cache_dir = hf_cache)
                 self.tokenizer = AutoTokenizer.from_pretrained(model_path)
                 self.max_seq_len = 5994 # "model_max_length": 1000, 6-mer --> 6000
                 self.max_tokens = 1000
@@ -334,7 +329,7 @@ class NucleotideTransformerEmbedder(baseclass):
         return output
 
     def process(self, dataset :Union[DatasetDict, None]):
-        save_path = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding")
+        save_path = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding")
         print("processing################################")
         if not os.path.exists(save_path):
             tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
@@ -393,7 +388,6 @@ class ParnetEmbedder(baseclass):
     def get_embed(self, tokens_ids : Tensor) -> np.ndarray:
         tokens_ids = tokens_ids.to(device)
         outs = self.model(tokens_ids).detach().cpu().numpy() # get last hidden state
-
         return outs
     def segment_embedder(self, sample : DatasetDict) -> Dict:
         sequences = sample["Xall"]
@@ -412,7 +406,7 @@ class ParnetEmbedder(baseclass):
 
     def process(self, dataset : Union[DatasetDict, None]):
         
-        save_path = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding")
+        save_path = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding")
         print("embedding will be saved at:", save_path)
         if not os.path.exists(save_path):
             tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
@@ -451,7 +445,9 @@ class RNAFMEmbedder(baseclass):
                         hidden_dim : int = 640,
                         pool_size : int = 8,
                         **kwargs):
+        print("loading the model")
         self.model, self.alphabet = fm.pretrained.rna_fm_t12(path_join(model_path, "RNA-FM_pretrained.pth"))
+        print("after model")
         self.tokenizer = self.alphabet.get_batch_converter()
         self.embedder_name = "RNAFM"
         self.batch_size = batch_size
@@ -521,7 +517,7 @@ class RNAFMEmbedder(baseclass):
 
     def process(self, dataset : Union[DatasetDict, None]):
         
-        save_path = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding")
+        save_path = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding")
         print("embedding will be saved at:", save_path)
         if not os.path.exists(save_path):
             tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)
@@ -565,7 +561,7 @@ class DNABERT2Embedder(baseclass):
         self.embedder_name = "DNABERT2"
         model_path = "zhihan1996/DNABERT-2-117M"
         cache_dir = path_join(root_dir, "..", "saved_model", self.embedder_name)
-        self.model = AutoModel.from_pretrained(model_path, trust_remote_code=True)
+        self.model = AutoModel.from_pretrained(model_path, trust_remote_code=True, cache_dir = hf_cache)
         self.tokenizer = AutoTokenizer.from_pretrained(model_path, cache_dir = cache_dir, trust_remote_code = True)
         self.max_seq_len = 10000 
         self.batch_size = batch_size
@@ -602,7 +598,7 @@ class DNABERT2Embedder(baseclass):
         return output
     def process(self, dataset : Union[DatasetDict, None]):
         
-        save_path = os.path.join("/", "tmp", "erda", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding")
+        save_path = os.path.join("/", "scratch", "project_465001027", "BERTLocRNA", "embeddings", self.task + "_" + self.embedder_name + "embedding")
         print("embedding will be saved at:", save_path)
         if not os.path.exists(save_path):
             tokenized_datasets = dataset.map(self.segment_embedder, batched = True, batch_size = self.batch_size)

@@ -1,0 +1,121 @@
+task: RNAlocalization_MultiPEFT
+tokenizer: nucleotidetransformer
+model: FullPLM
+output_layer: 6
+conditions: samedist
+output_dir: ${hydra:runtime.cwd}/../output/${task}/${tokenizer}
+nb_classes: ${FullPLM.model_config.nb_classes}
+compartments:
+- Nucleus
+- Exosome
+- Cytosol
+- Cytoplasm
+- Ribosome
+- Membrane
+- Endoplasmic reticulum
+- Microvesicle
+- Mitochondrion
+loss_weight: false
+sample_t: 80
+RNAlocalization_MultiPEFT:
+  path: TerminatorJ/localization_multiRNA
+wandb:
+  project: BERTLocRNA
+  name: ${tokenizer}_multi_fine-tune-${output_layer}-${conditions}
+FullPLM:
+  model_config:
+    nb_classes: 9
+    drop_flat: 0.25
+    normalizeatt: true
+    activation: gelu
+    RNA_dim: 4
+    use_CLS: ${${tokenizer}.use_CLS}
+    pooling_size: ${${tokenizer}.pooling_size}
+    hidden_dim: ${${tokenizer}.hidden_dim}
+    RNA_order:
+    - UNK
+    - A
+    - C
+    - G
+    - T
+    - 'N'
+    - Y RNA
+    - lincRNA
+    - lncRNA
+    - mRNA
+    - miRNA
+    - ncRNA
+    - pseudo
+    - rRNA
+    - scRNA
+    - scaRNA
+    - snRNA
+    - snoRNA
+    - vRNA
+nucleotidetransformer:
+  _target_: BERTLocRNA.utils.token_generator.NTModuleTokenizer
+  lora_config:
+    r: 8
+    lora_alpha: 16
+    target_modules:
+    - query
+    - value
+  model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
+  batch_size: 4
+  run_batch: 1000
+  dataloader: true
+  hidden_dim: 2560
+  collator: true
+  manual_ckp: None
+  patience: 2
+  output_layer: ${output_layer}
+  conditions: ${conditions}
+  task: ${task}
+  pooling_size: 8
+  use_CLS: true
+parnet:
+  _target_: BERTLocRNA.utils.token_generator.parnetModuleTokenizer
+  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  lora_config: None
+  batch_size: 2
+  fine_tune_layers: 0
+  run_batch: 3000
+  output_layer: ${output_layer}
+  conditions: ${conditions}
+  dataloader: true
+  hidden_dim: 256
+  collator: true
+  pooling_size: 8
+  patience: 5
+  task: ${task}
+  use_CLS: false
+  ckp_name: network.PanRBPNet.2023-03-13.ckpt
+  manual_ckp: model-epoch=06-val_loss=0.28.ckpt
+Trainer:
+  config:
+    rna_ref:
+    - lncRNA
+    - mRNA
+    - miRNA
+    - snRNA
+    - snoRNA
+    accelerator: gpu
+    strategy: ddp
+    accumulate_grad_batches: 8
+    max_epochs: 200
+    precison: 32
+    num_nodes: 1
+    log_every_n_steps: 1000
+    patience: ${${tokenizer}.patience}
+    gradient_clip: true
+    optimizer_cls: torch.optim.Adam
+    lr: 0.001
+    lora: true
+    manual_ckp: ${${tokenizer}.manual_ckp}
+    weight_decay: 1.0e-05
+    nb_classes: ${nb_classes}
+    output_dir: ${output_dir}
+    RNA_order: ${${model}.model_config.RNA_order}
+    compartments: ${compartments}
+    local_log: true
+    log_name: ${tokenizer}_${output_layer}_${conditions}

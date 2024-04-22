@@ -18,11 +18,12 @@ class LocalizationHead(nn.Module):
         super(LocalizationHead, self).__init__()
         self.length = length
         self.model_config = model_config
-        self.maxpool = nn.MaxPool1d(model_config.pooling_size, stride = model_config.pooling_size)
         self.embedding_layer = nn.Embedding(num_embeddings=len(model_config.RNA_order),embedding_dim=model_config.RNA_dim,_weight=torch.zeros((len(model_config.RNA_order), model_config.RNA_dim)))
         self.activation = Activation(model_config.activation)
-        self.flat_dim = int(model_config.hidden_dim*self.length/self.model_config.pooling_size + model_config.RNA_dim)
-        self.last_layer = nn.Linear(self.flat_dim , model_config.nb_classes)
+        self.last_layer_2d = nn.Linear(model_config.hidden_dim + model_config.RNA_dim, model_config.nb_classes)
+        self.last_layer = nn.Linear(model_config.hidden_dim + model_config.RNA_dim, model_config.nb_classes)
+        self.flatten_dim = self.length * model_config.hidden_dim
+        self.last_layer_3d = nn.Linear(self.flatten_dim + model_config.RNA_dim, model_config.nb_classes)
         self.sigmoid = nn.Sigmoid()
         self.dropout = nn.Dropout(model_config.drop_flat)
     def mergelncRNA(self, RNA_type):
@@ -32,28 +33,34 @@ class LocalizationHead(nn.Module):
         return RNA_type
 
     def __repr__(self):
-        return f"(maxpool): {self.maxpool}\n" \
-               f"(embedding_layer): {self.embedding_layer}\n" \
+         
+        return f"(embedding_layer): {self.embedding_layer}\n" \
                f"(activation): {self.activation}\n" \
                f"(dropout): {self.dropout}\n" \
+               f"(last_layer_2d): {self.last_layer_2d}\n" \
+               f"(last_layer_3d): {self.last_layer_3d}\n" \
                f"(last_layer): {self.last_layer}\n" \
                f"(sigmoid): {self.sigmoid}\n" \
                f")"
+        # return f"(embedding_layer): {self.embedding_layer}\n" \
+        #        f"(activation): {self.activation}\n" \
+        #        f"(dropout): {self.dropout}\n" \
+        #        f"(last_layer): {self.last_layer}\n" \
+        #        f"(sigmoid): {self.sigmoid}\n" \
+        #        f")"
     def forward(self, block_out, RNA_type):
-        # print("block dimension:", block_out.shape)
-        block_out = self.maxpool(block_out)
-        # print("block dimension after pooling:", block_out.shape)
         embedding_output = self.embedding_layer(self.mergelncRNA(RNA_type))#n*4
-        out = torch.cat((block_out, embedding_output), dim=1)
-        # print("block dimension after pooling and embedding layer:", out.shape)
+        # self.length = block_out.shape[2]
+        out = torch.cat((block_out, embedding_output), dim=1)#[4, 256004]
         out = self.activation(out)
-        # print(1)
         out = self.dropout(out)
-        # print("self.flat_dim", self.flat_dim)
-        digit = self.last_layer(out)
-        # print(2)
+        if self.model_config["use_CLS"]:
+            digit = self.last_layer(out)
+        else:
+            digit = self.last_layer_3d(out)
         pred = self.sigmoid(digit)
         return pred
+
 
 
 
@@ -73,15 +80,14 @@ class FullPLM(nn.Module):
         
     def forward(self, tokens_ids : Tensor, x_mask : Tensor, RNA_type : Tensor):
         model_out = self.block(tokens_ids, x_mask)
-        # print(3)
-        batch_size = model_out.size(0)
-        length = model_out.size(2)
-        self._reset_head(length)
-        # print(4)
-        #flatten the embeddings
-        out = model_out.reshape(batch_size, -1)
-        pred = self.localizationhead(out, RNA_type)
-        # print(5)
+        #use the CLS embeddings
+        if self.model_config["use_CLS"]:
+            pred = self.localizationhead(model_out[:,:,0].view(-1,self.model_config["hidden_dim"]), RNA_type)
+        else:
+            length = model_out.shape[2]
+            batch = tokens_ids.shape[0]
+            self._reset_head(length)
+            pred = self.localizationhead(model_out.view(batch, -1), RNA_type)
         return pred
 
 

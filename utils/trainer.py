@@ -19,7 +19,9 @@ from typing import List, Tuple, Dict, Union
 import pandas as pd
 import glob
 import torch.nn.functional as F
-
+import csv
+import gc
+from pytorch_lightning.loggers import CSVLogger
 #make the code reproducible 
 # Set random seed for NumPy
 np.random.seed(42)
@@ -32,8 +34,8 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(42)
 
 device = torch.device("cuda" if torch.cuda.is_available else "cpu")
-# gpus = torch.cuda.device_count()
-gpus = 1
+gpus = torch.cuda.device_count()
+# gpus = 1
 path_join = lambda *path: os.path.abspath(os.path.join(*path))
 
 
@@ -59,6 +61,9 @@ class MultiTaskLossWrapper(nn.Module):
 
         return loss
 
+
+
+
 class LightningModel(pl.LightningModule):
     def __init__(self, model, config = None, 
                  weight_dict = None, flt_dict = None):
@@ -72,7 +77,6 @@ class LightningModel(pl.LightningModule):
         self.learnable_loss = MultiTaskLossWrapper(self.config.nb_classes)
         self.learnable_loss.to(device)
         self.loss_fn = nn.BCELoss()
-        print("pl model has be loaded")
     def binary_cross_entropy(self, x, y,focal=True):
         alpha = 0.7
         gamma = 2
@@ -187,7 +191,7 @@ class LightningModel(pl.LightningModule):
         loss += l1_regularization*0.001
         if not self.config.lora:
             loss += self._attention_regularizer(torch.transpose(self.network.att_weight, 1, 2))
-        self.log("train_loss", loss, on_epoch = True, on_step = True)
+        self.log("train_loss", loss, on_epoch = True, on_step = True, prog_bar = True)
 
         categorical_accuracy = self.categorical_accuracy(y_pred, y)
         categorical_accuracy_strict = self.categorical_accuracy_strict(y_pred, y)
@@ -196,7 +200,7 @@ class LightningModel(pl.LightningModule):
         self.log('train categorical_accuracy', categorical_accuracy, on_step = True, on_epoch=True, prog_bar = True)
         self.log('train categorical_accuracy_strict', categorical_accuracy_strict, on_step = True, on_epoch=True, prog_bar = True)
         self.log('train binary_accuracy', binary_accuracy, on_step = True, on_epoch=True, prog_bar = True)
- 
+
         return loss
     def categorical_accuracy_strict(self, y_pred, y_true):
     # Find the index of the maximum value in each row (i.e., the predicted class)
@@ -236,7 +240,11 @@ class LightningModel(pl.LightningModule):
             loss += self._attention_regularizer(torch.transpose(self.network.att_weight, 1, 2))
            
 
-        self.log("val_loss", loss, on_epoch = True, on_step = True)
+        self.log("val_loss", loss, on_epoch = True, on_step = True, prog_bar = True)
+
+        #saving the training step/loss/performance
+        # validation_loss_data.append((self.global_step, loss))
+        # validation_acc_data.append((self.global_step, binary_accuracy))
 
         return {"categorical_accuracy": categorical_accuracy, "categorical_accuracy_strict":categorical_accuracy_strict,
                 "binary_accuracy": binary_accuracy}
@@ -255,35 +263,26 @@ class MyTrainer:
         self.plmodel = LightningModel(model, config = self.config, 
                                       weight_dict = weight_dict, 
                                       flt_dict = flt_dict)
-        self.wandb_logger = WandbLogger(log_model = "all")
+        if not self.config.local_log:
+            self.logger = WandbLogger(log_model = "all")
+        else:
+            self.logger = CSVLogger(save_dir=f"{self.config.output_dir}", name = f"{self.config.log_name}") 
         self.ckpt_path = path_join(self.config.output_dir, "checkpoints")
         self.pred = None
         self.test_y = None
         self.plmodel.to(device)
+
         
 
 
     def train(self, train_loader, val_loader):
     
         samples = next(iter(train_loader))
-
-        # embed = samples["embedding"][:2].shape
-        # mask = samples["attention_mask"][:2].shape
-        # RNA_types = samples["RNA_type"][:2].shape
-        # print(embed,mask,RNA_types)
-        # print("embedding:", samples["embedding"][:2].shape)
-        # print("mask:", samples["attention_mask"][:2].shape)
-        # print("RNA_type", samples["RNA_type"][:2].shape)
         embed = samples["embedding"][:2].to(device)
         mask = samples["attention_mask"][:2].to(device)
         RNA_types = samples["RNA_type"][:2].to(device)
-        # summary_str = summary(self.plmodel, input_size = [embed, mask, RNA_types], device = device)
-
         #saving the model summary
-        # summary_file = "model_summary.txt"
         # Write the summary to a file
-        # with open(path_join(self.config.output_dir, summary_file), "w") as file1:
-        #     file1.write(summary_str)
         #also save the model details 
         detail_str = str(self.plmodel.network)
         detail_file = "model_details.txt"
@@ -292,60 +291,65 @@ class MyTrainer:
 
 
         trainer = Trainer(accelerator = self.config.accelerator, strategy = self.config.strategy, max_epochs = self.config.max_epochs, devices = gpus, precision = self.config.precison, num_nodes = self.config.num_nodes, 
-                logger = self.wandb_logger,
+                logger = self.logger,
                 log_every_n_steps = self.config.log_every_n_steps,
-                callbacks = self.make_callback())
-        print("after trainer")
+                callbacks = self.make_callback(), accumulate_grad_batches = self.config.accumulate_grad_batches)
         trainer.fit(self.plmodel, train_loader, val_loader)
-        print("after fitting")
         # write model summary
         with open(path_join(self.config.output_dir, "model.summary.txt"), "w") as f:
             print(str(self.plmodel), file=f)
+
+        #clear all GPU cache for testing or next run
+        gc.collect()
+        torch.cuda.empty_cache()
 
 
     def make_callback(self):
 
         callbacks = [
-            ModelCheckpoint(dirpath = self.ckpt_path, filename = "checkpoints_best", save_top_k = 1, verbose = True, mode = "min", monitor = "val_loss"),
+            ModelCheckpoint(dirpath = self.ckpt_path, save_top_k = 2, filename = "model-{epoch:02d}-{val_loss:.2f}", verbose = True, mode = "min", monitor = "val_loss"),
             EarlyStopping(monitor = "val_loss", min_delta = 0.00, patience = self.config.patience, verbose = True, mode = "min")
             ]
         return callbacks
     
-    def load_checkpoint(self):
-        checkpoint_orig = glob.glob(path_join(self.ckpt_path, "checkpoints_best.ckpt"))
-        # print("checkpoint_orig", checkpoint_orig)
-        checkpoint_topup = glob.glob(path_join(self.ckpt_path, "checkpoints_best-v*.ckpt"))
-        # print("checkpoint_topup", checkpoint_topup)
-        if not checkpoint_orig:
-            print("No checkpoint files found.")
-        else:
-            if checkpoint_topup:
-                latest_checkpoint = max(checkpoint_topup, key=lambda x: int(x.split('-v')[-1].split('.')[0]))
-                checkpoint = torch.load(latest_checkpoint, map_location = device)
+    def load_checkpoint(self, manual_path):
+        if manual_path == None:
+            checkpoint_orig = glob.glob(path_join(self.ckpt_path, "checkpoints_best.ckpt"))
+            # print("checkpoint_orig", checkpoint_orig)
+            checkpoint_topup = glob.glob(path_join(self.ckpt_path, "checkpoints_best-v*.ckpt"))
+            # print("checkpoint_topup", checkpoint_topup)
+            if not checkpoint_orig:
+                print("No checkpoint files found.")
             else:
-                checkpoint = torch.load(checkpoint_orig[0], map_location = device)
-        # checkpoint = torch.load(path_join(self.ckpt_path, "checkpoints_best-v24.ckpt"), map_location = device)
-        model_state = checkpoint['state_dict']
-        self.plmodel.load_state_dict(model_state)
+                if checkpoint_topup:
+                    latest_checkpoint = max(checkpoint_topup, key=lambda x: int(x.split('-v')[-1].split('.')[0]))
+                    checkpoint = torch.load(latest_checkpoint, map_location = device)
+                else:
+                    checkpoint = torch.load(checkpoint_orig[0], map_location = device)
+            # checkpoint = torch.load(path_join(self.ckpt_path, "checkpoints_best-v24.ckpt"), map_location = device)
+            model_state = checkpoint['state_dict']
+            self.plmodel.load_state_dict(model_state)
+        else:
+            checkpoint_orig = glob.glob(path_join(self.ckpt_path, manual_path))
+            checkpoint = torch.load(checkpoint_orig[0], map_location = device)
+            model_state = checkpoint['state_dict']
+            #get the model state dict
+            
+            self.plmodel.load_state_dict(model_state)
+                
         return self.plmodel #model with new parameters
     
     def test(self, test_loader, flt_dict):
 
         #only running the evaluation in 1 gpu
-
-        # if torch.distributed.get_rank() not in [0, -1]:
-        #     torch.distributed.barrier()
-
         print("evaluating only on one gpu")
-        torch.distributed.destroy_process_group()
-        self.plmodel = self.load_checkpoint()
+        # torch.distributed.destroy_process_group()
+        self.plmodel = self.load_checkpoint(self.config.manual_ckp)
         self.plmodel = self.plmodel.to(device)
         self.plmodel.eval()
         
         self.get_metrics_all(test_loader, flt_dict)
 
-        # if torch.distributed.get_rank() == 0:
-        #     torch.distributed.barrier()
         
 
 
@@ -404,7 +408,6 @@ class MyTrainer:
                     average_precision_c = np.nan
                     roc_auc_c = np.nan
                 
-                
                 y_pred_bi = np.where(y_pred[:, c] > t, 1, 0)
                 mcc_c = matthews_corrcoef(y_test[:, c], y_pred_bi)
                 mcc_sum += mcc_c
@@ -460,8 +463,6 @@ class MyTrainer:
                 auroc_micro = np.nan
                 auroc_macro = np.nan
 
-            # print("y_test_flt", y_test_flt.shape, y_test_flt)
-            # print("y_pred_bi_ac", y_pred_bi_ac.shape, y_pred_bi_ac)
             metrics_data.append({
                 'RNA': RNA,
                 'Compartment': 'micro',

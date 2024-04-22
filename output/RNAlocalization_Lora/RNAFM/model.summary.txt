@@ -1,10 +1,83 @@
 LightningModel(
   (network): FullPLM(
-    (localizationhead): (maxpool): MaxPool1d(kernel_size=8, stride=8, padding=0, dilation=1, ceil_mode=False)
-    (embedding_layer): Embedding(19, 4)
+    (block): RNAFM_blcok(
+      (model): PeftModel(
+        (base_model): LoraModel(
+          (model): RNABertModel(
+            (embed_tokens): Embedding(25, 640, padding_idx=1)
+            (layers): ModuleList(
+              (0-11): 12 x TransformerLayer(
+                (self_attn): MultiheadAttention(
+                  (k_proj): lora.Linear(
+                    (base_layer): Linear(in_features=640, out_features=640, bias=True)
+                    (lora_dropout): ModuleDict(
+                      (default): Dropout(p=0.05, inplace=False)
+                    )
+                    (lora_A): ModuleDict(
+                      (default): Linear(in_features=640, out_features=8, bias=False)
+                    )
+                    (lora_B): ModuleDict(
+                      (default): Linear(in_features=8, out_features=640, bias=False)
+                    )
+                    (lora_embedding_A): ParameterDict()
+                    (lora_embedding_B): ParameterDict()
+                  )
+                  (v_proj): lora.Linear(
+                    (base_layer): Linear(in_features=640, out_features=640, bias=True)
+                    (lora_dropout): ModuleDict(
+                      (default): Dropout(p=0.05, inplace=False)
+                    )
+                    (lora_A): ModuleDict(
+                      (default): Linear(in_features=640, out_features=8, bias=False)
+                    )
+                    (lora_B): ModuleDict(
+                      (default): Linear(in_features=8, out_features=640, bias=False)
+                    )
+                    (lora_embedding_A): ParameterDict()
+                    (lora_embedding_B): ParameterDict()
+                  )
+                  (q_proj): lora.Linear(
+                    (base_layer): Linear(in_features=640, out_features=640, bias=True)
+                    (lora_dropout): ModuleDict(
+                      (default): Dropout(p=0.05, inplace=False)
+                    )
+                    (lora_A): ModuleDict(
+                      (default): Linear(in_features=640, out_features=8, bias=False)
+                    )
+                    (lora_B): ModuleDict(
+                      (default): Linear(in_features=8, out_features=640, bias=False)
+                    )
+                    (lora_embedding_A): ParameterDict()
+                    (lora_embedding_B): ParameterDict()
+                  )
+                  (out_proj): Linear(in_features=640, out_features=640, bias=True)
+                )
+                (self_attn_layer_norm): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+                (fc1): Linear(in_features=640, out_features=5120, bias=True)
+                (fc2): Linear(in_features=5120, out_features=640, bias=True)
+                (final_layer_norm): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+              )
+            )
+            (contact_head): ContactPredictionHead(
+              (regression): Linear(in_features=240, out_features=1, bias=True)
+              (activation): Sigmoid()
+            )
+            (embed_positions): LearnedPositionalEmbedding(1026, 640, padding_idx=1)
+            (emb_layer_norm_before): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+            (emb_layer_norm_after): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+            (lm_head): RobertaLMHead(
+              (dense): Linear(in_features=640, out_features=640, bias=True)
+              (layer_norm): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+            )
+          )
+        )
+      )
+    )
+    (localizationhead): (embedding_layer): Embedding(19, 4)
     (activation): gelu()
     (dropout): Dropout(p=0.25, inplace=False)
-    (last_layer): Linear(in_features=7604, out_features=9, bias=True)
+    (last_layer_2d): Linear(in_features=644, out_features=9, bias=True)
+    (last_layer_3d): Linear(in_features=644, out_features=9, bias=True)
     (sigmoid): Sigmoid()
     )
   )

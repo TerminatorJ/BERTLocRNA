@@ -58,7 +58,7 @@ nucleotidetransformer:
     - query
     - value
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
-  batch_size: 1
+  batch_size: 4
   run_batch: 3000
   dataloader: true
   hidden_dim: 2560
@@ -73,7 +73,7 @@ DNABERT2:
     lora_alpha: 64
     target_modules:
     - Wqkv
-  batch_size: 4
+  batch_size: 2
   run_batch: 3000
   dataloader: true
   hidden_dim: 768
@@ -82,7 +82,7 @@ DNABERT2:
   task: ${task}
 RNAFM:
   _target_: BERTLocRNA.utils.token_generator.RNAFMModuleTokenizer
-  model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  model_path: /scratch/project_465001027/BERTLocRNA/saved_model/RNAFM
   lora_config:
     r: 32
     lora_alpha: 64
@@ -99,7 +99,7 @@ RNAFM:
   task: ${task}
 parnet:
   _target_: BERTLocRNA.utils.token_generator.parnetModuleTokenizer
-  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  model_path: /scratch/project_465001027/BERTLocRNA/RBPLLM/Parnet
   lora_config: None
   batch_size: 8
   fine_tune_layers: 0
@@ -119,6 +119,7 @@ Trainer:
     - snoRNA
     accelerator: gpu
     strategy: ddp
+    accumulate_grad_batches: 4
     max_epochs: 200
     precison: 32
     num_nodes: 1

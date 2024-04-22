@@ -16,7 +16,7 @@ from BERTLocRNA.utils.trainer import MyTrainer
 import traceback
 
 os.environ["HYDRA_FULL_ERROR"] = "1"
-os.environ["HF_HOME"] = "/tmp/erda/BERTLocRNA/cache"
+os.environ["HF_HOME"] = "/scratch/project_465001027/BERTLocRNA/cache"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -48,7 +48,7 @@ def train(cfg : DictConfig):
                                 "ids": Value(dtype='string')})
     #loading the dataset for a certain task
     print("loading task:", cfg.task)
-    dataset = load_dataset(**cfg[cfg.task], features=custom_features, cache_dir = "/tmp/erda/BERTLocRNA/cache")
+    dataset = load_dataset(**cfg[cfg.task], features=custom_features, cache_dir = "/scratch/project_465001027/BERTLocRNA/cache")
     #Calculating the classweight, even though weighted result not gain performance
     if cfg.loss_weight:
         weight = Weights(cfg.nb_classes, cfg.sample_t)
@@ -72,8 +72,8 @@ def train(cfg : DictConfig):
                         flt_dict = flt_dict)
 
     #trainning the data
-    Trainer.train(train_dataloader, eval_dataloader)
-    
+    # Trainer.train(train_dataloader, eval_dataloader)
+    print("skip the training, only getting the test performance###")
     # test 
     Trainer.test(test_dataloader, flt_dict)
 

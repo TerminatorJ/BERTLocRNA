@@ -11,16 +11,18 @@ hydra :
       task:
         RNAlocalization_Lora
       tokenizer:
-        # DNABERT2
+        # DNABERT2: use the flashattention, which was not supported by AMD GPU. Therefore, we just use DIKU slurm to run DNABERT2
         # nucleotidetransformer
         RNAFM
-        # parnet
+        # parnet: Parnet unable to train due to the AMD gpus
 
 
 
 task: RNAlocalization_Lora
 tokenizer: nucleotidetransformer
 model: FullPLM
+
+
 output_dir: ${hydra:runtime.cwd}/../output/${task}/${tokenizer} #save the path at the task path 
 nb_classes: ${FullPLM.model_config.nb_classes}
 compartments: ["Nucleus","Exosome","Cytosol","Cytoplasm","Ribosome","Membrane","Endoplasmic reticulum", "Microvesicle", "Mitochondrion"]
@@ -42,6 +44,7 @@ FullPLM:
     normalizeatt: True
     activation: gelu
     RNA_dim: 4
+    use_CLS: ${${tokenizer}.use_CLS}
     pooling_size: ${${tokenizer}.pooling_size}
     hidden_dim: ${${tokenizer}.hidden_dim}
     RNA_order: ["UNK", "A", "C", "G", "T", "N", "Y RNA", "lincRNA", "lncRNA", "mRNA", "miRNA", "ncRNA", "pseudo", "rRNA", "scRNA", "scaRNA", "snRNA", "snoRNA", "vRNA"]
@@ -51,17 +54,19 @@ FullPLM:
 nucleotidetransformer:
   _target_: BERTLocRNA.utils.token_generator.NTModuleTokenizer
   lora_config: 
-    r: 32
-    lora_alpha: 64
+    r: 8
+    lora_alpha: 16
     target_modules: ["query", "value"]
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
-  batch_size: 1
+  batch_size: 4
   run_batch: 3000
   dataloader: true
   hidden_dim: 2560
   collator: true
   task: ${task}
   pooling_size: 8
+  use_CLS: true
+  manual_ckp: "epoch=5-step=2748.ckpt"
   
 DNABERT2:
   _target_: BERTLocRNA.utils.token_generator.DNABERT2ModuleTokenizer
@@ -70,33 +75,36 @@ DNABERT2:
     r: 32
     lora_alpha: 64
     target_modules: ["Wqkv"]
-  batch_size: 4
+  batch_size: 2
   run_batch: 3000
   dataloader: true
   hidden_dim: 768
   collator: true
   pooling_size: 6
   task: ${task}
+  use_CLS: true
   
 
 RNAFM:
   _target_: BERTLocRNA.utils.token_generator.RNAFMModuleTokenizer
-  model_path: /home/sxr280/BERTLocRNA/saved_model/RNAFM
+  model_path: /scratch/project_465001027/BERTLocRNA/saved_model/RNAFM
   lora_config: 
-    r: 32
-    lora_alpha: 64
+    r: 8
+    lora_alpha: 16
     target_modules: ["k_proj", "v_proj", "q_proj"]
-  batch_size: 8
+  batch_size: 4
   run_batch: 3000
   dataloader: true
   hidden_dim: 640
   collator: true
   pooling_size: 8
   task: ${task}
+  use_CLS: true
+  manual_ckp: "model-epoch=03-val_loss=0.35.ckpt"
 
 parnet:
   _target_: BERTLocRNA.utils.token_generator.parnetModuleTokenizer
-  model_path: /home/sxr280/BERTLocRNA/RBPLLM/Parnet
+  model_path: /scratch/project_465001027/BERTLocRNA/RBPLLM/Parnet
   lora_config: None
   batch_size: 8
   fine_tune_layers: 0
@@ -106,6 +114,7 @@ parnet:
   collator: true
   pooling_size: 8
   task: ${task}
+  use_CLS: false
 
 
 Trainer:
@@ -113,15 +122,17 @@ Trainer:
     rna_ref: ["lncRNA", "mRNA", "miRNA", "snRNA", "snoRNA"]
     accelerator: gpu
     strategy: ddp
+    accumulate_grad_batches: 8
     max_epochs: 200
     precison: 32
     num_nodes: 1
     log_every_n_steps: 1000
-    patience: 10
+    patience: 2
     gradient_clip: true
     optimizer_cls: torch.optim.Adam
     lr: 0.001
     lora: True
+    manual_ckp: ${${tokenizer}.manual_ckp}
     weight_decay: 1e-5
     nb_classes: ${nb_classes}
     output_dir: ${output_dir} 

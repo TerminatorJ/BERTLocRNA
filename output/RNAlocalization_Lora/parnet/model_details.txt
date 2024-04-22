@@ -1,4 +1,93 @@
 FullPLM(
+  (block): Parnet_blcok(
+    (model): Parnet_model(
+      (parnet_model): PanRBPNet(
+        (stem): StemConv1D(
+          (conv1d): Conv1d(4, 512, kernel_size=(7,), stride=(1,), padding=same)
+          (batch_norm): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (act): ReLU()
+        )
+        (body): Conv1DTower(
+          (tower): Sequential(
+            (0): Sequential(
+              (0): ResConv1DBlock(
+                (conv1d): Conv1d(512, 384, kernel_size=(4,), stride=(1,), padding=same)
+                (batch_norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+                (linear): Conv1d(512, 384, kernel_size=(1,), stride=(1,), bias=False)
+              )
+              (1): ResConv1DBlock(
+                (conv1d): Conv1d(384, 384, kernel_size=(4,), stride=(1,), padding=same)
+                (batch_norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+              )
+              (2): ResConv1DBlock(
+                (conv1d): Conv1d(384, 384, kernel_size=(4,), stride=(1,), padding=same, dilation=(2,))
+                (batch_norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+              )
+              (3): ResConv1DBlock(
+                (conv1d): Conv1d(384, 384, kernel_size=(4,), stride=(1,), padding=same, dilation=(3,))
+                (batch_norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+              )
+              (4): ResConv1DBlock(
+                (conv1d): Conv1d(384, 384, kernel_size=(4,), stride=(1,), padding=same, dilation=(5,))
+                (batch_norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+              )
+              (5): ResConv1DBlock(
+                (conv1d): Conv1d(384, 384, kernel_size=(4,), stride=(1,), padding=same, dilation=(7,))
+                (batch_norm): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+              )
+            )
+            (1): Sequential(
+              (0): ResConv1DBlock(
+                (conv1d): Conv1d(384, 512, kernel_size=(4,), stride=(1,), padding=same, dilation=(11,))
+                (batch_norm): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+                (linear): Conv1d(384, 512, kernel_size=(1,), stride=(1,), bias=False)
+              )
+              (1): ResConv1DBlock(
+                (conv1d): Conv1d(512, 512, kernel_size=(4,), stride=(1,), padding=same, dilation=(17,))
+                (batch_norm): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+              )
+              (2): ResConv1DBlock(
+                (conv1d): Conv1d(512, 512, kernel_size=(4,), stride=(1,), padding=same, dilation=(25,))
+                (batch_norm): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+              )
+              (3): ResConv1DBlock(
+                (conv1d): Conv1d(512, 512, kernel_size=(4,), stride=(1,), padding=same, dilation=(38,))
+                (batch_norm): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (act): ReLU()
+                (dropout): Dropout1d(p=0.3, inplace=False)
+              )
+            )
+          )
+        )
+        (pointwise): Pointwise(
+          (pointwise): Conv1d(512, 256, kernel_size=(1,), stride=(1,), bias=False)
+          (act): ReLU()
+        )
+        (output): IndexEmbeddingOutput(
+          (conv1d): Conv1d(256, 223, kernel_size=(1,), stride=(1,))
+        )
+      )
+      (embedding_layer): Embedding(6, 4)
+    )
+  )
   (localizationhead): (maxpool): MaxPool1d(kernel_size=8, stride=8, padding=0, dilation=1, ceil_mode=False)
   (embedding_layer): Embedding(19, 4)
   (activation): gelu()

@@ -4,6 +4,9 @@
 /embeddings/
 
 
+#ignore the cache file
+/cache
+
 #ignore the model file
 /saved_model/
 
@@ -14,10 +17,10 @@
 
 
 #any log file
-./scripts/outputs/
+scripts/outputs/
 ./*.out
-./multirun/
-./scripts/multirun
+scripts/multirun/
+scripts/*.log
 
 #wandb log file
 **/wandb/

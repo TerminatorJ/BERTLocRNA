@@ -58,7 +58,7 @@ nucleotidetransformer:
     - query
     - value
   model_path: InstaDeepAI/nucleotide-transformer-2.5b-multi-species
-  batch_size: 1
+  batch_size: 4
   run_batch: 3000
   dataloader: true
   hidden_dim: 2560
@@ -73,7 +73,7 @@ DNABERT2:
     lora_alpha: 64
     target_modules:
     - Wqkv
-  batch_size: 4
+  batch_size: 2
   run_batch: 3000
   dataloader: true
   hidden_dim: 768
@@ -119,6 +119,7 @@ Trainer:
     - snoRNA
     accelerator: gpu
     strategy: ddp
+    accumulate_grad_batches: 4
     max_epochs: 200
     precison: 32
     num_nodes: 1
